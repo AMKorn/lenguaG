@@ -28,20 +28,16 @@ nodigits  = {nodigit}+
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
 %{
-	public static void main(String []args) {
-		if (args.length < 1) {
-			System.err.println("Indica un fitxer amb les dades d'entrada");
-			System.exit(0);
-		}
+	public static void lexicAnalysis(String file){
 		try {
-			FileReader in = new FileReader(args[0]);
+			FileReader in = new FileReader(file);
 			
 			Lexic parser = new Lexic(in);
-			parser.yylex();   // <- El mètode d'invocació per començar a parsejar el document
+			parser.yylex();   // This methods starts parsing the document
 		} catch (FileNotFoundException e) {
-			System.err.println("El fitxer d'entrada '"+args[0]+"' no existeix");
+			System.err.println("Input file " + file + " does not exist.");
 		} catch (IOException e) {
-			System.err.println("Error processant el fitxer d'entrada");
+			System.err.println("Error processing input file.");
 		}
 	}
 %}
