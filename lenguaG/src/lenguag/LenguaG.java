@@ -15,6 +15,8 @@ import lenguag.lexic.*;
  */
 public class LenguaG {
 
+    public static final boolean DEBUGGING = true;
+
     /**
      * @param args the command line arguments
      */
@@ -23,6 +25,7 @@ public class LenguaG {
             System.err.println("Input file is required.");
             System.exit(-1);
         }
+        if(DEBUGGING) System.out.println("Proceeding to read " + args[0]);
         Lexic.lexicAnalysis(args[0]);
     }
     
