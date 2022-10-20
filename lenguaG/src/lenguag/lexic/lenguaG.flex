@@ -1,11 +1,12 @@
 /**
  * Asignatura: 21780 - Compiladores
  * Miembros:
- * 	- Roman Colom, Marc
+ * 	- Román Colom, Marc
  * 	- Korn, Andreas Manuel
  * 	- Vilella Candia, Joan 
  */
-// Si estás en Lexic.java, OJO! Este archivo no debe ser modificado a mano: para hacer cambios usar jflex con lenguaG.flex
+// Si estás en Lexic.java, OJO! Este archivo no debe ser modificado manualmente: para hacer cambios hacerlo en lenguaG.flex 
+// y luego seleccionar dicho archivo como input en "lexical specification". El output se debe dejar tal cual.
 
 package lenguag.lexic;
 
