@@ -35,7 +35,7 @@ nodigits  = {nodigit}+
 		try {
 			FileReader in = new FileReader(args[0]);
 			
-			Prova parser = new Prova(in);
+			Lexic parser = new Lexic(in);
 			parser.yylex();   // <- El mètode d'invocació per començar a parsejar el document
 		} catch (FileNotFoundException e) {
 			System.err.println("El fitxer d'entrada '"+args[0]+"' no existeix");
