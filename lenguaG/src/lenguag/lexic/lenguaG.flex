@@ -6,7 +6,7 @@
  * 	- Vilella Candia, Joan 
  */
 // Si estás en Lexic.java, OJO! Este archivo no debe ser modificado manualmente: para hacer cambios hacerlo en lenguaG.flex 
-// y luego seleccionar dicho archivo como input en "lexical specification". El output se debe dejar tal cual.
+// y luego seleccionar dicho archivo como input de jflex en "lexical specification". El output se debe dejar tal cual.
 
 package lenguag.lexic;
 
