@@ -91,4 +91,6 @@ quote			= [\"|\']
 // Basicamente especificar los tokens que tenemos que devolver
 
 {resMain}		{ System.out.println("main"); }
-[^]				{ System.out.println("no se uwu no me pongas nervioso"); }
+
+// Errores
+[^]				{ System.out.println("no se uwu no me pongas nervioso no sé lo que significa " + yytext()); }

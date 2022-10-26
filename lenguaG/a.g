@@ -18,9 +18,7 @@ int partition(int[] array, int begin, int end) {
         if (array[j] <= pivot) {
             i++;
 
-            int swapTemp = array[i];
-            array[i] = array[j];
-            array[j] = swapTemp;
+            array[i] <<>> array[j];
         }
     }
 
