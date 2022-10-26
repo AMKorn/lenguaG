@@ -45,13 +45,14 @@ public class Lexic {
    * Translates characters to character classes
    */
   private static final String ZZ_CMAP_PACKED = 
-    "\11\0\1\13\1\14\1\15\1\15\1\14\22\0\1\13\1\0\1\0"+
-    "\2\0\1\0\1\0\1\13\1\0\1\0\1\11\1\0\1\0\1\0"+
-    "\1\0\1\12\1\2\11\2\1\0\1\0\1\0\1\0\1\0\2\0"+
-    "\32\1\1\0\1\0\1\0\1\0\1\1\1\0\1\4\1\1\1\1"+
-    "\1\1\1\1\1\1\1\1\1\1\1\5\2\1\1\10\1\3\1\6"+
-    "\1\1\2\1\1\1\1\1\1\1\1\1\1\7\1\1\3\1\1\0"+
-    "\1\13\1\0\7\0\1\15\u1fa2\0\1\15\1\15\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\udfe6\0";
+    "\11\0\1\26\1\30\1\31\1\31\1\30\22\0\1\26\1\0\1\25"+
+    "\2\0\1\0\1\0\1\27\1\0\1\0\1\23\1\0\1\0\1\0"+
+    "\1\4\1\24\1\3\1\6\6\10\2\2\1\0\1\0\1\0\1\0"+
+    "\1\0\2\0\6\12\24\1\1\0\1\0\1\0\1\0\1\1\1\0"+
+    "\1\16\1\5\1\14\1\14\1\14\1\14\1\13\1\13\1\17\2\13"+
+    "\1\22\1\15\1\20\1\7\2\13\1\13\1\13\1\13\1\13\1\21"+
+    "\1\13\1\11\2\13\1\0\1\27\1\0\7\0\1\31\u1fa2\0\1\31"+
+    "\1\31\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\udfe6\0";
 
   /** 
    * Translates characters to character classes
@@ -64,11 +65,12 @@ public class Lexic {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\3\2\1\1\1\3\2\2\1\0\1\4"+
-    "\1\2\1\5\1\0\1\6\1\4";
+    "\1\0\1\1\1\2\2\3\2\2\2\1\2\4\4\0"+
+    "\2\2\1\0\1\5\1\0\4\3\1\2\1\6\1\0"+
+    "\1\7\1\5";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[16];
+    int [] result = new int[29];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -93,11 +95,13 @@ public class Lexic {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\16\0\34\0\52\0\70\0\106\0\124\0\142"+
-    "\0\160\0\176\0\214\0\232\0\34\0\250\0\34\0\176";
+    "\0\0\0\32\0\64\0\116\0\150\0\202\0\234\0\266"+
+    "\0\320\0\352\0\u0104\0\u011e\0\u0138\0\u0152\0\u016c\0\u0186"+
+    "\0\u01a0\0\u01ba\0\u01d4\0\u01ee\0\u011e\0\u0138\0\u0152\0\u016c"+
+    "\0\u0208\0\64\0\u0222\0\32\0\u01ba";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[16];
+    int [] result = new int[29];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -120,15 +124,26 @@ public class Lexic {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\2\1\3\1\2\1\4\3\3\1\5\1\3\1\2"+
-    "\1\6\2\7\1\2\17\0\10\3\6\0\3\3\1\10"+
-    "\4\3\6\0\3\3\1\11\4\3\16\0\1\12\1\13"+
-    "\16\0\2\7\2\0\4\3\1\14\3\3\6\0\7\3"+
-    "\1\15\5\0\11\12\1\16\4\12\14\13\3\0\5\3"+
-    "\1\17\2\3\5\0\11\12\1\16\1\20\3\12";
+    "\1\2\1\3\1\4\1\5\1\2\1\3\1\4\1\3"+
+    "\1\4\4\3\1\6\3\3\1\7\1\3\1\2\1\10"+
+    "\1\11\1\12\1\13\1\12\1\2\33\0\3\3\1\0"+
+    "\16\3\11\0\2\4\1\14\1\0\1\4\1\0\1\4"+
+    "\25\0\1\14\1\15\1\0\1\16\1\0\1\17\21\0"+
+    "\3\3\1\0\11\3\1\20\4\3\10\0\3\3\1\0"+
+    "\11\3\1\21\4\3\32\0\1\22\1\23\12\0\1\24"+
+    "\1\0\1\24\1\0\1\24\1\0\10\24\35\0\3\12"+
+    "\6\0\1\24\1\0\1\24\1\0\1\24\1\0\10\24"+
+    "\3\0\3\12\3\0\2\25\2\0\1\25\1\0\1\25"+
+    "\24\0\1\26\2\0\1\26\26\0\1\27\2\0\1\27"+
+    "\1\0\1\27\23\0\2\30\1\0\2\30\1\0\1\30"+
+    "\1\0\1\30\1\0\1\30\1\0\1\30\14\0\3\3"+
+    "\1\0\12\3\1\31\3\3\10\0\3\3\1\0\15\3"+
+    "\1\32\7\0\23\22\1\33\6\22\30\23\27\0\1\34"+
+    "\1\0\1\34\3\0\3\3\1\0\13\3\1\32\2\3"+
+    "\7\0\23\22\1\33\1\35\5\22";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[182];
+    int [] result = new int[572];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -166,10 +181,11 @@ public class Lexic {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\1\11\7\1\1\0\3\1\1\0\2\1";
+    "\1\0\1\11\11\1\4\0\2\1\1\0\1\1\1\0"+
+    "\6\1\1\0\1\11\1\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[16];
+    int [] result = new int[29];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -279,7 +295,7 @@ public class Lexic {
     char [] map = new char[0x110000];
     int i = 0;  /* index in packed string  */
     int j = 0;  /* index in unpacked array */
-    while (i < 168) {
+    while (i < 176) {
       int  count = packed.charAt(i++);
       char value = packed.charAt(i++);
       do map[j++] = value; while (--count > 0);
@@ -577,32 +593,37 @@ public class Lexic {
             { System.out.println("no se uwu no me pongas nervioso no sé lo que significa " + yytext());
             } 
             // fall through
-          case 7: break;
-          case 2: 
-            { System.out.println(yytext());
-            } 
-            // fall through
           case 8: break;
-          case 3: 
-            { /* Do nothing */
+          case 2: 
+            { System.out.println("	Identificador?: " + yytext());
             } 
             // fall through
           case 9: break;
-          case 4: 
-            { /* We fully ignore comments */
+          case 3: 
+            { System.out.println("	Numero: " + yytext());
             } 
             // fall through
           case 10: break;
-          case 5: 
-            { System.out.println("val");
+          case 4: 
+            { /* Do nothing */
             } 
             // fall through
           case 11: break;
-          case 6: 
-            { System.out.println("main");
+          case 5: 
+            { /* We fully ignore comments */
             } 
             // fall through
           case 12: break;
+          case 6: 
+            { /* TODO */
+            } 
+            // fall through
+          case 13: break;
+          case 7: 
+            { System.out.println("	Carácter: " + yytext());
+            } 
+            // fall through
+          case 14: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

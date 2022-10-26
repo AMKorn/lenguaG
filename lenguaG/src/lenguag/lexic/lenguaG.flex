@@ -21,7 +21,15 @@ identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 array 			= {identifier}{arraySuffix}
 arraySuffix		= {lBracket}({identifier}|{number}){lBracket}
 
-number			= 0|[1-9][0-9]*					// Integer number specification for now
+integer 		= 0|[1-9][0-9]*
+float			= {integer}\.[0-9]+
+// Take the following three lines out if it's difficult to implement later down the line
+binary			= "0b"[01]+
+octal			= "0o"[0-7]+
+hexadecimal		= "0x"[0-9a-fA-F]+
+
+number			= {integer}|{float}
+				|{binary}|{octal}|{hexadecimal} // Just take this line out if it's difficult to implement later down the line
 character		= {quote}[a-z]{quote}
 boolean			= {resTrue}|{resFalse}
 
@@ -95,17 +103,20 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 
 %%
 
-// Regles/accions
-// Basicamente especificar los tokens que tenemos que devolver
+// Rules/actions
+// What each token has to return, or whatever actions we must take. Order is very important, whatever comes first has priority.
 
 {comment}		{ /* We fully ignore comments */ }
 
 // Reserved words
-{resMain}		{ System.out.println("main"); }
-{constant}		{ System.out.println("val"); }
+{resMain}		{ /* TODO */ }
+{constant}		{ /* TODO */ }
 
 // Non-reserved words
-{identifier}	{ System.out.println(yytext()); }
+{identifier}	{ System.out.println("	Identificador?: " + yytext()); }
+{number}		{ System.out.println("	Numero: " + yytext()); }
+{character}		{ System.out.println("	Carácter: " + yytext()); }
+{boolean}		{ System.out.println("	Booleano: " + yytext()); }
 
 {ws}			{ /* Do nothing */ }
 [^]				{ System.out.println("no se uwu no me pongas nervioso no sé lo que significa " + yytext()); }
