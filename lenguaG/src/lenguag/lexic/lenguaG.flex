@@ -13,13 +13,55 @@ package lenguag.lexic;
 import java.io.*;
 
 %%
-// Aquí van las declaraciones: es decir, la forma de los identificadores y los numeros.
+// Aquí van las declaraciones: es decir, la forma de los tokens.
 
-digit     = [0-9]
-nodigit   = [^0-9]
-digits    = {digit}+
-nodigits  = {nodigit}+
+// Identifyiers
+identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 
+array 			= {identifier}{arraySuffix}
+arraySuffix		= {lBracket}({identifier}|{number}){lBracket}
+
+number			= [0-9]+					// Simple number specification for now
+character		= {quote}[a-z]{quote}
+boolean			= {resTrue}|{resFalse}
+
+// Reserved words
+resMain			= "main"
+constant 		= "val"
+not				= "not"
+resOr			= "or"
+resAnd			= "and"
+resInt			= "int"
+resChar			= "char"
+resBool			= "bool"
+resTrue			= "true"
+resFalse		= "false"
+resIf			= "if"
+resElse			= "else"
+resWhile		= "while"
+resFor			= "for"
+
+// Symbols
+lParen			= \(
+rParen			= \)
+lKey			= \{
+rKey 			= \}
+lBracket		= \[
+rBracket		= \]
+endline			= ;
+swapSymbol 		= \<\<\>\>
+addSym			= \+
+subSym			= \-
+prodSym			= \*
+divSym			= \/
+modSym			= \%
+eqSym			= \=\=
+btSym			= \>
+beqSym			= \>\=
+ltSym			= \<
+leqSym			= \<\=
+neqSym			= !\=
+quote			= [\"|\']
 
 %public             // Per indicar que la classe és pública
 %class Lexic        // El nom de la classe
@@ -47,6 +89,5 @@ nodigits  = {nodigit}+
 // Regles/accions
 // Basicamente especificar los tokens que tenemos que devolver
 
-{digits}		{ System.out.println("He llegit el valor "+yytext()); }
-{nodigits}		{ /* Res a fer */ }
-
+{resMain}		{ System.out.println("main"); }
+[^]				{ System.out.println("no se uwu no me pongas nervioso"); }

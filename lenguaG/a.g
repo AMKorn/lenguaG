@@ -1,4 +1,6 @@
-aaaa
-1
-44532
-a1
+int main(){
+    int a = 0;
+    char[] uwu;
+    print(a);
+    a <<>> uwu;
+}

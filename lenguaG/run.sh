@@ -20,7 +20,7 @@ then
     echo "
     **** Running jflex ****
     "
-    jflex lenguag/lexic/lenguaG.flex
+    jflex lenguag/lexic/lenguaGmal.flex
 fi
 javac lenguag/*.java
 echo "
