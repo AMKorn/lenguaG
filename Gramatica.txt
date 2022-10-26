@@ -31,6 +31,7 @@ INSTRUCTION -> DECLARATION ENDLINE
     | ASSIGNATION ENDLINE
     | SWAP ENDLINE
     | FUNCTION_CALL ENDLINE
+    | RETURN ENDLINE
     | IF
     | LOOP
     | FOR.
@@ -128,3 +129,7 @@ HEADER_SEGMENT -> DECLARATION
     | FUNCTION_CALL. # Quitar si no implementamos pasar por referencia
 
 FUNCTION_CALL -> IDENTIFIER L_PAREN ARGS R_PAREN.
+
+RETURN -> return VALUE
+    | return OPERATION
+    | return.

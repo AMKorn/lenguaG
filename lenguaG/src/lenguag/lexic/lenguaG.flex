@@ -40,6 +40,7 @@ resIf			= "if"
 resElse			= "else"
 resWhile		= "while"
 resFor			= "for"
+resReturn		= "return"
 
 // Symbols
 lParen			= \(
