@@ -21,7 +21,7 @@ identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 array 			= {identifier}{arraySuffix}
 arraySuffix		= {lBracket}({identifier}|{number}){lBracket}
 
-number			= [0-9]+					// Simple number specification for now
+number			= 0|[1-9][0-9]*					// Integer number specification for now
 character		= {quote}[a-z]{quote}
 boolean			= {resTrue}|{resFalse}
 
@@ -64,9 +64,17 @@ leqSym			= \<\=
 neqSym			= !\=
 quote			= [\"|\']
 
+ws 				= [' '|\t'|'\r'|'\n']+
+
+commentLine		= \/\/
+commentBeg		= \/\*
+commentEnd		= \*\/
+comment			= {commentLine}.*				// Comment line symbol and any character except for \n, star times.
+				|{commentBeg}[^]*{commentEnd}
+
 %public             // Per indicar que la classe és pública
 %class Lexic        // El nom de la classe
-%int                // El tipus dels tokens identificats
+%int                // Type of identified tokens
 
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
@@ -90,7 +98,14 @@ quote			= [\"|\']
 // Regles/accions
 // Basicamente especificar los tokens que tenemos que devolver
 
-{resMain}		{ System.out.println("main"); }
+{comment}		{ /* We fully ignore comments */ }
 
-// Errores
+// Reserved words
+{resMain}		{ System.out.println("main"); }
+{constant}		{ System.out.println("val"); }
+
+// Non-reserved words
+{identifier}	{ System.out.println(yytext()); }
+
+{ws}			{ /* Do nothing */ }
 [^]				{ System.out.println("no se uwu no me pongas nervioso no sé lo que significa " + yytext()); }
