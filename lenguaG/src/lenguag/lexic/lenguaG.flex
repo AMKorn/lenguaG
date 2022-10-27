@@ -74,7 +74,7 @@ quote			= [\"|\']
 
 ws 				= [' '|\t'|'\r'|'\n']+
 
-commentLine		= \/\/
+commentLine		= ["\/\/"|'\#']
 commentBeg		= \/\*
 commentEnd		= \*\/
 comment			= {commentLine}.*				// Comment line symbol and any character except for \n, star times.
@@ -119,4 +119,4 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {boolean}		{ System.out.println("	Booleano: " + yytext()); }
 
 {ws}			{ /* Do nothing */ }
-[^]				{ System.out.println("no se uwu no me pongas nervioso no sé lo que significa " + yytext()); }
+[^]				{ System.out.println("UWU en la linea: " + yyline + " no se lo que significa " + yytext()); }

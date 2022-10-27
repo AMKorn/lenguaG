@@ -45,14 +45,14 @@ public class Lexic {
    * Translates characters to character classes
    */
   private static final String ZZ_CMAP_PACKED = 
-    "\11\0\1\26\1\30\1\31\1\31\1\30\22\0\1\26\1\0\1\25"+
-    "\2\0\1\0\1\0\1\27\1\0\1\0\1\23\1\0\1\0\1\0"+
-    "\1\4\1\24\1\3\1\6\6\10\2\2\1\0\1\0\1\0\1\0"+
-    "\1\0\2\0\6\12\24\1\1\0\1\0\1\0\1\0\1\1\1\0"+
-    "\1\16\1\5\1\14\1\14\1\14\1\14\1\13\1\13\1\17\2\13"+
-    "\1\22\1\15\1\20\1\7\2\13\1\13\1\13\1\13\1\13\1\21"+
-    "\1\13\1\11\2\13\1\0\1\27\1\0\7\0\1\31\u1fa2\0\1\31"+
-    "\1\31\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\udfe6\0";
+    "\11\0\1\26\1\31\1\32\1\32\1\31\22\0\1\26\1\0\1\25"+
+    "\1\30\1\0\1\0\1\0\1\27\1\0\1\0\1\23\1\0\1\0"+
+    "\1\0\1\4\1\24\1\3\1\6\6\10\2\2\1\0\1\0\1\0"+
+    "\1\0\1\0\2\0\6\12\24\1\1\0\1\0\1\0\1\0\1\1"+
+    "\1\0\1\16\1\5\1\14\1\14\1\14\1\14\1\13\1\13\1\17"+
+    "\2\13\1\22\1\15\1\20\1\7\2\13\1\13\1\13\1\13\1\13"+
+    "\1\21\1\13\1\11\2\13\1\0\1\27\1\0\7\0\1\32\u1fa2\0"+
+    "\1\32\1\32\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\udfe6\0";
 
   /** 
    * Translates characters to character classes
@@ -65,12 +65,12 @@ public class Lexic {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\1\2\2\3\2\2\2\1\2\4\4\0"+
-    "\2\2\1\0\1\5\1\0\4\3\1\2\1\6\1\0"+
-    "\1\7\1\5";
+    "\1\0\1\1\1\2\2\3\2\2\1\4\1\1\1\5"+
+    "\2\4\4\0\2\2\1\4\1\0\4\3\1\2\1\6"+
+    "\1\0\1\7\1\0\1\4";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[29];
+    int [] result = new int[30];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -95,13 +95,13 @@ public class Lexic {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\32\0\64\0\116\0\150\0\202\0\234\0\266"+
-    "\0\320\0\352\0\u0104\0\u011e\0\u0138\0\u0152\0\u016c\0\u0186"+
-    "\0\u01a0\0\u01ba\0\u01d4\0\u01ee\0\u011e\0\u0138\0\u0152\0\u016c"+
-    "\0\u0208\0\64\0\u0222\0\32\0\u01ba";
+    "\0\0\0\33\0\66\0\121\0\154\0\207\0\242\0\275"+
+    "\0\330\0\363\0\u010e\0\u0129\0\u0144\0\u015f\0\u017a\0\u0195"+
+    "\0\u01b0\0\u01cb\0\u01e6\0\u0201\0\u0144\0\u015f\0\u017a\0\u0195"+
+    "\0\u021c\0\66\0\u0237\0\33\0\u0252\0\u0237";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[29];
+    int [] result = new int[30];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -126,24 +126,24 @@ public class Lexic {
   private static final String ZZ_TRANS_PACKED_0 =
     "\1\2\1\3\1\4\1\5\1\2\1\3\1\4\1\3"+
     "\1\4\4\3\1\6\3\3\1\7\1\3\1\2\1\10"+
-    "\1\11\1\12\1\13\1\12\1\2\33\0\3\3\1\0"+
-    "\16\3\11\0\2\4\1\14\1\0\1\4\1\0\1\4"+
-    "\25\0\1\14\1\15\1\0\1\16\1\0\1\17\21\0"+
-    "\3\3\1\0\11\3\1\20\4\3\10\0\3\3\1\0"+
-    "\11\3\1\21\4\3\32\0\1\22\1\23\12\0\1\24"+
-    "\1\0\1\24\1\0\1\24\1\0\10\24\35\0\3\12"+
-    "\6\0\1\24\1\0\1\24\1\0\1\24\1\0\10\24"+
-    "\3\0\3\12\3\0\2\25\2\0\1\25\1\0\1\25"+
-    "\24\0\1\26\2\0\1\26\26\0\1\27\2\0\1\27"+
-    "\1\0\1\27\23\0\2\30\1\0\2\30\1\0\1\30"+
-    "\1\0\1\30\1\0\1\30\1\0\1\30\14\0\3\3"+
-    "\1\0\12\3\1\31\3\3\10\0\3\3\1\0\15\3"+
-    "\1\32\7\0\23\22\1\33\6\22\30\23\27\0\1\34"+
-    "\1\0\1\34\3\0\3\3\1\0\13\3\1\32\2\3"+
-    "\7\0\23\22\1\33\1\35\5\22";
+    "\1\11\1\12\1\13\1\14\1\12\1\2\34\0\3\3"+
+    "\1\0\16\3\12\0\2\4\1\15\1\0\1\4\1\0"+
+    "\1\4\26\0\1\15\1\16\1\0\1\17\1\0\1\20"+
+    "\22\0\3\3\1\0\11\3\1\21\4\3\11\0\3\3"+
+    "\1\0\11\3\1\22\4\3\10\0\23\14\1\23\5\14"+
+    "\7\0\1\24\1\0\1\24\1\0\1\24\1\0\10\24"+
+    "\36\0\2\12\1\0\1\12\1\0\26\14\2\13\1\14"+
+    "\1\12\1\0\31\14\4\0\2\25\2\0\1\25\1\0"+
+    "\1\25\25\0\1\26\2\0\1\26\27\0\1\27\2\0"+
+    "\1\27\1\0\1\27\24\0\2\30\1\0\2\30\1\0"+
+    "\1\30\1\0\1\30\1\0\1\30\1\0\1\30\15\0"+
+    "\3\3\1\0\12\3\1\31\3\3\11\0\3\3\1\0"+
+    "\15\3\1\32\10\0\31\23\2\33\25\0\1\34\1\0"+
+    "\1\34\4\0\3\3\1\0\13\3\1\32\2\3\10\0"+
+    "\23\33\1\35\32\33\1\35\1\36\6\33";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[572];
+    int [] result = new int[621];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -181,11 +181,11 @@ public class Lexic {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\1\11\11\1\4\0\2\1\1\0\1\1\1\0"+
-    "\6\1\1\0\1\11\1\1";
+    "\1\0\1\11\12\1\4\0\3\1\1\0\6\1\1\0"+
+    "\1\11\1\0\1\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[29];
+    int [] result = new int[30];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -295,7 +295,7 @@ public class Lexic {
     char [] map = new char[0x110000];
     int i = 0;  /* index in packed string  */
     int j = 0;  /* index in unpacked array */
-    while (i < 176) {
+    while (i < 178) {
       int  count = packed.charAt(i++);
       char value = packed.charAt(i++);
       do map[j++] = value; while (--count > 0);
@@ -590,7 +590,7 @@ public class Lexic {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { System.out.println("no se uwu no me pongas nervioso no sé lo que significa " + yytext());
+            { System.out.println("no se uwu no me pongas nervioso no sé en " + yyline + " lo que significa " + yytext());
             } 
             // fall through
           case 8: break;
@@ -605,12 +605,12 @@ public class Lexic {
             // fall through
           case 10: break;
           case 4: 
-            { /* Do nothing */
+            { /* We fully ignore comments */
             } 
             // fall through
           case 11: break;
           case 5: 
-            { /* We fully ignore comments */
+            { /* Do nothing */
             } 
             // fall through
           case 12: break;
