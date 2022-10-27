@@ -36,7 +36,7 @@ main {
 	quickSort(intArray, begin, end);
 }
 
-'a'
+'\n'
 
 // Function that sorts the array given
 # Function that sorts the array given

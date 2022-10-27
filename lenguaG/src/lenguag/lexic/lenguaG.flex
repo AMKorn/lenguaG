@@ -32,8 +32,8 @@ hexadecimal		= 0x[0-9a-fA-F]+
 
 number			= {integer}|{float}
 				|{binary}|{octal}|{hexadecimal} // Just take this line out if it's difficult to implement later down the line
-character		= {quote}[.]{quote}
-boolean			= {resTrue}|{resFalse}
+character		= {quote}\\?.{quote}	// any character, which could be escaped
+boolean			= {resTrue}|{resFalse}	// either true or false
 
 // Reserved words
 typeInt			= "int"
@@ -74,7 +74,7 @@ beqSym			= \>\=
 ltSym			= \<
 leqSym			= \<\=
 neqSym			= !\=
-quote			= \'
+quote			= '
 doubleQuotes	= \"
 
 ws 				= [ \t\r\n]+
@@ -94,6 +94,8 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
 %{
+	boolean isError = false;
+
 	public static void lexicAnalysis(String file){
 		try {
 			FileReader in = new FileReader(file);
@@ -134,4 +136,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {identifier}		{ System.out.println("	Identificador?: " + yytext()); }
 
 {ws}				{ /* Do nothing */ }
-[^]					{ System.out.println("Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]"); }
+[^]					{ if(!isError){
+						System.out.println("Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]");
+						isError = true;
+					  } }

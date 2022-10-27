@@ -11,7 +11,7 @@ import lenguag.lexic.*;
 
 /**
  *
- * @author jvile
+ * @authors Andreas, Joan, Marc
  */
 public class LenguaG {
 
