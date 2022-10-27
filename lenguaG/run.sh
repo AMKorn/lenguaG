@@ -15,12 +15,19 @@ fi
 
 cd src/ 
 
-if [ $mode = "--jflex" ]
+if [[ $mode == *"f"* ]]
 then
     echo "
     **** Running jflex ****
     "
     jflex lenguag/lexic/lenguaG.flex
+fi
+if [[ $mode == *"c"* ]]
+then
+    echo "
+    **** Running cup ****
+    "
+    # TODO cup command
 fi
 javac lenguag/*.java
 echo "

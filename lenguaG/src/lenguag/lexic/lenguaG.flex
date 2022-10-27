@@ -18,8 +18,8 @@ import java.io.*;
 // Identifyiers
 identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 
-array 			= {identifier}{arraySuffix}
-arraySuffix		= {lBracket}({identifier}|{number}){lBracket}
+array 			= {identifier}{arraySuffix}+
+arraySuffix		= {lBracket}({identifier}|{number})?{rBracket}
 
 integer 		= 0|[1-9][0-9]*
 float			= {integer}\.[0-9]+
@@ -83,6 +83,8 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 %public             // Per indicar que la classe és pública
 %class Lexic        // El nom de la classe
 %int                // Type of identified tokens
+%line
+%column
 
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
@@ -113,10 +115,11 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {constant}		{ /* TODO */ }
 
 // Non-reserved words
+{array}			{ System.out.println("		Array: " + yytext()); }
 {identifier}	{ System.out.println("	Identificador?: " + yytext()); }
 {number}		{ System.out.println("	Numero: " + yytext()); }
 {character}		{ System.out.println("	Carácter: " + yytext()); }
 {boolean}		{ System.out.println("	Booleano: " + yytext()); }
 
 {ws}			{ /* Do nothing */ }
-[^]				{ System.out.println("UWU en la linea: " + yyline + " no se lo que significa " + yytext()); }
+[^]				{ System.out.println("Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]"); }
