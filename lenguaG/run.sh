@@ -1,7 +1,9 @@
 if [ $# -eq 0 ]
 then
     echo "Unexpected format. Expected format:"
-    echo $0" [--jflex] file"
+    echo $0" [PARAMS] file"
+    echo "  f: jflex compilation"
+    echo "  c: cup compilation"
     exit 1
 elif [ $# -eq 1 ]
 then

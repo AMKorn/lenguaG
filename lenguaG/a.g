@@ -1,6 +1,6 @@
 int begin;
 int end;
-int[][] intArray;
+int[] intArray;
 
 // Function that sorts the array given
 void quickSort (int[] array, int begin, int end) {
@@ -35,3 +35,8 @@ main {
 	end = 0x24af;
 	quickSort(intArray, begin, end);
 }
+
+'a'
+
+// Function that sorts the array given
+# Function that sorts the array given

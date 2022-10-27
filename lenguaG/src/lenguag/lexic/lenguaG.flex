@@ -18,30 +18,34 @@ import java.io.*;
 // Identifyiers
 identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 
-array 			= {identifier}{arraySuffix}+
-arraySuffix		= {lBracket}({identifier}|{number})?{rBracket}
+arrayIdentifier	= {identifier}{arraySuffix}+ 	// When an existing arrays is indexed
+arraySuffix		= {lBracket}({identifier}|{number}){rBracket}
+
+typeArray		= ({typeInt}|{typeChar}|{typeBool}){lBracket}{rBracket}
 
 integer 		= 0|[1-9][0-9]*
-float			= {integer}\.[0-9]+
+float			= {integer}?\.[0-9]+
 // Take the following three lines out if it's difficult to implement later down the line
-binary			= "0b"[01]+
-octal			= "0o"[0-7]+
-hexadecimal		= "0x"[0-9a-fA-F]+
+binary			= 0b[01]+
+octal			= 0o[0-7]+
+hexadecimal		= 0x[0-9a-fA-F]+
 
 number			= {integer}|{float}
 				|{binary}|{octal}|{hexadecimal} // Just take this line out if it's difficult to implement later down the line
-character		= {quote}[a-z]{quote}
+character		= {quote}[.]{quote}
 boolean			= {resTrue}|{resFalse}
 
 // Reserved words
+typeInt			= "int"
+typeChar		= "char"
+typeBool		= "bool"
+typeVoid		= "void"
+
 resMain			= "main"
 constant 		= "val"
 not				= "not"
 resOr			= "or"
 resAnd			= "and"
-resInt			= "int"
-resChar			= "char"
-resBool			= "bool"
 resTrue			= "true"
 resFalse		= "false"
 resIf			= "if"
@@ -70,11 +74,12 @@ beqSym			= \>\=
 ltSym			= \<
 leqSym			= \<\=
 neqSym			= !\=
-quote			= [\"|\']
+quote			= \'
+doubleQuotes	= \"
 
-ws 				= [' '|\t'|'\r'|'\n']+
+ws 				= [ \t\r\n]+
 
-commentLine		= ["\/\/"|'\#']
+commentLine		= ["\/\/"\#]
 commentBeg		= \/\*
 commentEnd		= \*\/
 comment			= {commentLine}.*				// Comment line symbol and any character except for \n, star times.
@@ -108,18 +113,25 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 // Rules/actions
 // What each token has to return, or whatever actions we must take. Order is very important, whatever comes first has priority.
 
-{comment}		{ /* We fully ignore comments */ }
+{comment}			{ /* We fully ignore comments */ }
 
 // Reserved words
-{resMain}		{ /* TODO */ }
-{constant}		{ /* TODO */ }
+{resMain}			{ /* TODO */ }
+{constant}			{ /* TODO */ }
+{typeInt}			{ System.out.println(yytext()); }
+{typeChar}			{ System.out.println(yytext()); }
+{typeBool}			{ System.out.println(yytext()); }
+{typeVoid}			{ System.out.println(yytext()); }
 
 // Non-reserved words
-{array}			{ System.out.println("		Array: " + yytext()); }
-{identifier}	{ System.out.println("	Identificador?: " + yytext()); }
-{number}		{ System.out.println("	Numero: " + yytext()); }
-{character}		{ System.out.println("	Carácter: " + yytext()); }
-{boolean}		{ System.out.println("	Booleano: " + yytext()); }
+{character}			{ System.out.println("	Carácter: " + yytext()); }
+{number}			{ System.out.println("	Numero: " + yytext()); }
+{boolean}			{ System.out.println("	Booleano: " + yytext()); }
 
-{ws}			{ /* Do nothing */ }
-[^]				{ System.out.println("Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]"); }
+{typeArray}			{ System.out.println("		Array de tipo: " + yytext()); }
+{arrayIdentifier}	{ System.out.println("		Array: " + yytext()); }
+
+{identifier}		{ System.out.println("	Identificador?: " + yytext()); }
+
+{ws}				{ /* Do nothing */ }
+[^]					{ System.out.println("Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]"); }
