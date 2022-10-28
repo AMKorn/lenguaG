@@ -35,6 +35,8 @@ number			= {integer}|{float}
 character		= {quote}\\?.{quote}	// any character, which could be escaped
 boolean			= {resTrue}|{resFalse}	// either true or false
 
+value 			= {identifier}|{number}|{character}|{boolean}
+
 // Reserved words
 typeInt			= "int"
 typeChar		= "char"
@@ -53,6 +55,8 @@ resElse			= "else"
 resWhile		= "while"
 resFor			= "for"
 resReturn		= "return"
+resIn 			= "in"
+resOut 			= "out"
 
 // Symbols
 lParen			= \(
@@ -62,7 +66,9 @@ rKey 			= \}
 lBracket		= \[
 rBracket		= \]
 endline			= ;
-swapSymbol 		= \<\<\>\>
+comma			= ,
+
+swapSym 		= \<\<\>\>
 addSym			= \+
 subSym			= \-
 prodSym			= \*
@@ -103,9 +109,11 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 			Lexic parser = new Lexic(in);
 			parser.yylex();   // This methods starts parsing the document
 		} catch (FileNotFoundException e) {
+			// User error
 			System.err.println("Input file " + file + " does not exist.");
 		} catch (IOException e) {
-			System.err.println("Error processing input file.");
+			// Compiler error
+			System.err.println("!!!! COMPILER ERROR !!!! Error processing input file.");
 		}
 	}
 %}

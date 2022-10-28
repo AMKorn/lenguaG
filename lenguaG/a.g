@@ -2,7 +2,7 @@ int begin;
 int end;
 int[] intArray;
 
-// Function that sorts the array given
+// Function that sorts the given array
 void quickSort (int[] array, int begin, int end) {
     if (begin < end) {
         int partitionIndex = partition(arr, begin, end);
@@ -31,12 +31,7 @@ int partition(int[] array, int begin, int end) {
 
 main {
 	intArray = [5, 9, 4, 6, 5, 3];
-	begin = 0b010111;
-	end = 0x24af;
+	begin = 0;
+	end = 5;
 	quickSort(intArray, begin, end);
 }
-
-'\n'
-
-// Function that sorts the array given
-# Function that sorts the array given
