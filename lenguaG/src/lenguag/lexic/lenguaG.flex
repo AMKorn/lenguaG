@@ -9,7 +9,6 @@
 // y luego seleccionar dicho archivo como input de jflex en "lexical specification". El output se debe dejar tal cual.
 
 package lenguag.lexic;
-
 import java.io.*;
 
 %%
@@ -18,10 +17,10 @@ import java.io.*;
 // Identifyiers
 identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 
-arrayIdentifier	= {identifier}{arraySuffix}+ 	// When an existing arrays is indexed
+/* arrayIdentifier	= {identifier}{arraySuffix}+ 	// When an existing arrays is indexed
 arraySuffix		= {lBracket}({identifier}|{number}){rBracket}
 
-typeArray		= ({typeInt}|{typeChar}|{typeBool}){lBracket}{rBracket}
+typeArray		= ({typeInt}|{typeChar}|{typeBool}){lBracket}{rBracket} */
 
 integer 		= 0|[1-9][0-9]*
 float			= {integer}?\.[0-9]+
@@ -67,6 +66,7 @@ rBracket		= \]
 endline			= ;
 comma			= ,
 
+assign 			= \=
 swapSym 		= \<\<\>\>
 addSym			= \+
 subSym			= \-
@@ -78,7 +78,7 @@ btSym			= \>
 beqSym			= \>\=
 ltSym			= \<
 leqSym			= \<\=
-neqSym			= !\=
+neqSym			= \!\=
 quote			= '
 doubleQuotes	= \"
 
@@ -99,18 +99,10 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
 %{
-	boolean isError = false;
-
-	public static void lexicAnalysis(String file){
-		try {
-			FileReader in = new FileReader(file);
-			
-			Lexic parser = new Lexic(in);
-			parser.yylex();   // This methods starts parsing the document
-		} catch (FileNotFoundException e) {
-			// User error
-			System.err.println("Input file " + file + " does not exist.");
-		} catch (IOException e) {
+	public void analyze() {
+		try{
+			yylex();
+		} catch (IOException ioe){
 			// Compiler error
 			System.err.println("!!!! COMPILER ERROR !!!! Error processing input file.");
 		}
@@ -125,36 +117,58 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {comment}			{ /* We fully ignore comments */ }
 
 // Reserved words
-{resMain}			{ /* TODO */ }
-{constant}			{ /* TODO */ }
-{not}				{ /* TODO */ }
-{resOr}				{ /* TODO */ }
-{resAnd}			{ /* TODO */ }
-{resIf}				{ /* TODO */ }
-{resElse}			{ /* TODO */ }
-{resWhile}			{ /* TODO */ }
-{resFor}			{ /* TODO */ }
-{resReturn}			{ /* TODO */ }
-{resIn} 			{ /* TODO */ }
-{resOut} 			{ /* TODO */ }
-{typeInt}			{ System.out.println(yytext()); }
-{typeChar}			{ System.out.println(yytext()); }
-{typeBool}			{ System.out.println(yytext()); }
-{typeVoid}			{ System.out.println(yytext()); }
+{resMain}			{ System.out.println("Terminal : " + yytext()); }
+{constant}			{ System.out.println("Terminal : " + yytext()); }
+{not}				{ System.out.println("Terminal : " + yytext()); }
+{resOr}				{ System.out.println("Terminal : " + yytext()); }
+{resAnd}			{ System.out.println("Terminal : " + yytext()); }
+{resIf}				{ System.out.println("Terminal : " + yytext()); }
+{resElse}			{ System.out.println("Terminal : " + yytext()); }
+{resWhile}			{ System.out.println("Terminal : " + yytext()); }
+{resFor}			{ System.out.println("Terminal : " + yytext()); }
+{resReturn}			{ System.out.println("Terminal : " + yytext()); }
+{resIn} 			{ System.out.println("Terminal : " + yytext()); }
+{resOut} 			{ System.out.println("Terminal : " + yytext()); }
+
+// Symbols
+{lParen}			{ System.out.println("Símbol : " + yytext()); }
+{rParen}			{ System.out.println("Símbol : " + yytext()); }
+{lKey}				{ System.out.println("Símbol : " + yytext()); }
+{rKey} 				{ System.out.println("Símbol : " + yytext()); }
+{lBracket}			{ System.out.println("Símbol : " + yytext()); }
+{rBracket}			{ System.out.println("Símbol : " + yytext()); }
+{endline}			{ System.out.println("Símbol : " + yytext()); }
+{comma}				{ System.out.println("Símbol : " + yytext()); }
+
+{addSym}			{ System.out.println("Op: " + yytext()); }
+{subSym}			{ System.out.println("Op: " + yytext()); }
+{prodSym}			{ System.out.println("Op: " + yytext()); }
+{divSym}			{ System.out.println("Op: " + yytext()); }
+{modSym}			{ System.out.println("Op: " + yytext()); }
+{eqSym}				{ System.out.println("Op: " + yytext()); }
+{beqSym}			{ System.out.println("Op: " + yytext()); }
+{btSym}				{ System.out.println("Op: " + yytext()); }
+{leqSym}			{ System.out.println("Op: " + yytext()); }
+{ltSym}				{ System.out.println("Op: " + yytext()); }
+{neqSym}			{ System.out.println("Op: " + yytext()); }
+
+{assign}			{ System.out.println("AssignOp: " + yytext()); }
+{swapSym} 			{ System.out.println("AssignOp: " + yytext()); }
 
 // Non-reserved words
-{character}			{ System.out.println("	Carácter: " + yytext()); }
-{number}			{ System.out.println("	Numero: " + yytext()); }
-{boolean}			{ System.out.println("	Booleano: " + yytext()); }
-{string}			{ System.out.println("	String: " + yytext()); }
+{character}			{ System.out.println("		Carácter: " + yytext()); }
+{number}			{ System.out.println("		Numero: " + yytext()); }
+{boolean}			{ System.out.println("		Booleano: " + yytext()); }
+{string}			{ System.out.println("		String: " + yytext()); }
 
-{typeArray}			{ System.out.println("		Array de tipo: " + yytext()); }
-{arrayIdentifier}	{ System.out.println("		Array: " + yytext()); }
+//{typeArray}			{ System.out.println("	Array de tipo: " + yytext()); }
+//{arrayIdentifier}	{ System.out.println("	Array: " + yytext()); }
+{typeInt}			{ System.out.println("	Tipo: " + yytext()); }
+{typeChar}			{ System.out.println("	Tipo: " + yytext()); }
+{typeBool}			{ System.out.println("	Tipo: " + yytext()); }
+{typeVoid}			{ System.out.println("	Tipo: " + yytext()); }
 
-{identifier}		{ System.out.println("	Identificador?: " + yytext()); }
+{identifier}		{ System.out.println("Identificador: " + yytext()); }
 
 {ws}				{ /* Do nothing */ }
-[^]					{ //if(!isError){
-						System.out.println("Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]");
-						//isError = true;
-					  } //}
+[^]					{ System.out.println(" *** Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]"); }

@@ -8,6 +8,7 @@
 package lenguag;
 
 import lenguag.lexic.*;
+import java.io.*;
 
 /**
  *
@@ -22,11 +23,29 @@ public class LenguaG {
      */
     public static void main(String[] args) {
         if(args.length < 1){
+            // User error
             System.err.println("Input file is required.");
-            System.exit(-1);
+            return;
         }
-        if(DEBUGGING) System.out.println("Proceeding to read " + args[0]);
-        Lexic.lexicAnalysis(args[0]);
+        lexicAnalysis(args[0]);
     }
     
+    /**
+     * Prepares and analyses the file given by parameter.
+     * @param sourceCode - path to the source code.
+     */
+    private static void lexicAnalysis(String sourceCode){
+        String file = sourceCode;
+        if(DEBUGGING) System.out.println("Proceeding to read " + file);
+        FileReader in;
+        try { 
+            in = new FileReader(file);
+        } catch(FileNotFoundException fnf) {
+            // User error
+            System.err.println("Input file " + file + " does not exist.");
+            return;
+        }
+        Lexic la = new Lexic(in);
+        la.analyze();
+    }
 }
