@@ -34,7 +34,8 @@ number			= {integer}|{float}
 				|{binary}|{octal}|{hexadecimal} // Just take this line out if it's difficult to implement later down the line
 character		= {quote}\\?.{quote}	// any character, which could be escaped
 boolean			= {resTrue}|{resFalse}	// either true or false
-string 			= {doubleQuotes}[^]*{doubleQuotes}
+
+value 			= {identifier}|{number}|{character}|{boolean}
 
 // Reserved words
 typeInt			= "int"
@@ -127,16 +128,6 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 // Reserved words
 {resMain}			{ /* TODO */ }
 {constant}			{ /* TODO */ }
-{not}				{ /* TODO */ }
-{resOr}				{ /* TODO */ }
-{resAnd}			{ /* TODO */ }
-{resIf}				{ /* TODO */ }
-{resElse}			{ /* TODO */ }
-{resWhile}			{ /* TODO */ }
-{resFor}			{ /* TODO */ }
-{resReturn}			{ /* TODO */ }
-{resIn} 			{ /* TODO */ }
-{resOut} 			{ /* TODO */ }
 {typeInt}			{ System.out.println(yytext()); }
 {typeChar}			{ System.out.println(yytext()); }
 {typeBool}			{ System.out.println(yytext()); }
@@ -146,7 +137,6 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {character}			{ System.out.println("	Carácter: " + yytext()); }
 {number}			{ System.out.println("	Numero: " + yytext()); }
 {boolean}			{ System.out.println("	Booleano: " + yytext()); }
-{string}			{ System.out.println("	String: " + yytext()); }
 
 {typeArray}			{ System.out.println("		Array de tipo: " + yytext()); }
 {arrayIdentifier}	{ System.out.println("		Array: " + yytext()); }
@@ -154,7 +144,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {identifier}		{ System.out.println("	Identificador?: " + yytext()); }
 
 {ws}				{ /* Do nothing */ }
-[^]					{ //if(!isError){
+[^]					{ if(!isError){
 						System.out.println("Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]");
-						//isError = true;
-					  } //}
+						isError = true;
+					  } }
