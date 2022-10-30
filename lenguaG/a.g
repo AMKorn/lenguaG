@@ -35,3 +35,7 @@ main {
 	end = 5;
 	quickSort(intArray, begin, end);
 }
+
+# comentario
+"Hola esto es una cadena de caracteres
+que ocupa varias lineas"
