@@ -23,7 +23,7 @@ arraySuffix		= {lBracket}({identifier}|{number}){rBracket}
 typeArray		= ({typeInt}|{typeChar}|{typeBool}){lBracket}{rBracket} */
 
 integer 		= 0|[1-9][0-9]*
-float			= {integer}?\.[0-9]+
+float			= {integer}?\.[0-9]+(e{integer})?
 // Take the following three lines out if it's difficult to implement later down the line
 binary			= 0b[01]+
 octal			= 0o[0-7]+
@@ -37,6 +37,7 @@ string 			= {doubleQuotes}[^]*{doubleQuotes}
 
 // Reserved words
 typeInt			= "int"
+typeFloat 		= "float"
 typeChar		= "char"
 typeBool		= "bool"
 typeVoid		= "void"
@@ -131,14 +132,14 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {resOut} 			{ System.out.println("Terminal : " + yytext()); }
 
 // Symbols
-{lParen}			{ System.out.println("Símbol : " + yytext()); }
-{rParen}			{ System.out.println("Símbol : " + yytext()); }
-{lKey}				{ System.out.println("Símbol : " + yytext()); }
-{rKey} 				{ System.out.println("Símbol : " + yytext()); }
-{lBracket}			{ System.out.println("Símbol : " + yytext()); }
-{rBracket}			{ System.out.println("Símbol : " + yytext()); }
-{endline}			{ System.out.println("Símbol : " + yytext()); }
-{comma}				{ System.out.println("Símbol : " + yytext()); }
+{lParen}			{ System.out.println("Symbol : " + yytext()); }
+{rParen}			{ System.out.println("Symbol : " + yytext()); }
+{lKey}				{ System.out.println("Symbol : " + yytext()); }
+{rKey} 				{ System.out.println("Symbol : " + yytext()); }
+{lBracket}			{ System.out.println("Symbol : " + yytext()); }
+{rBracket}			{ System.out.println("Symbol : " + yytext()); }
+{endline}			{ System.out.println("Symbol : " + yytext()); }
+{comma}				{ System.out.println("Symbol : " + yytext()); }
 
 {addSym}			{ System.out.println("Op: " + yytext()); }
 {subSym}			{ System.out.println("Op: " + yytext()); }
@@ -156,19 +157,20 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {swapSym} 			{ System.out.println("AssignOp: " + yytext()); }
 
 // Non-reserved words
-{character}			{ System.out.println("		Carácter: " + yytext()); }
-{number}			{ System.out.println("		Numero: " + yytext()); }
-{boolean}			{ System.out.println("		Booleano: " + yytext()); }
+{character}			{ System.out.println("		Character: " + yytext()); }
+{number}			{ System.out.println("		Number: " + yytext()); }
+{boolean}			{ System.out.println("		Boolean: " + yytext()); }
 {string}			{ System.out.println("		String: " + yytext()); }
 
 //{typeArray}			{ System.out.println("	Array de tipo: " + yytext()); }
 //{arrayIdentifier}	{ System.out.println("	Array: " + yytext()); }
-{typeInt}			{ System.out.println("	Tipo: " + yytext()); }
-{typeChar}			{ System.out.println("	Tipo: " + yytext()); }
-{typeBool}			{ System.out.println("	Tipo: " + yytext()); }
-{typeVoid}			{ System.out.println("	Tipo: " + yytext()); }
+{typeInt}			{ System.out.println("	Type: " + yytext()); }
+{typeFloat}			{ System.out.println("	Type: " + yytext()); }
+{typeChar}			{ System.out.println("	Type: " + yytext()); }
+{typeBool}			{ System.out.println("	Type: " + yytext()); }
+{typeVoid}			{ System.out.println("	Type: " + yytext()); }
 
-{identifier}		{ System.out.println("Identificador: " + yytext()); }
+{identifier}		{ System.out.println("Identifier: " + yytext()); }
 
 {ws}				{ /* Do nothing */ }
 [^]					{ System.out.println(" *** Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]"); }
