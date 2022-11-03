@@ -17,11 +17,6 @@ import java.io.*;
 // Identifyiers
 identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 
-/* arrayIdentifier	= {identifier}{arraySuffix}+ 	// When an existing arrays is indexed
-arraySuffix		= {lBracket}({identifier}|{number}){rBracket}
-
-typeArray		= ({typeInt}|{typeChar}|{typeBool}){lBracket}{rBracket} */
-
 integer 		= 0|[1-9][0-9]*
 float			= {integer}?\.[0-9]+(e{integer})?
 // Take the following three lines out if it's difficult to implement later down the line
@@ -131,7 +126,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {resIn} 			{ System.out.println("Terminal : " + yytext()); }
 {resOut} 			{ System.out.println("Terminal : " + yytext()); }
 
-// Symbols
+// Terminals
 {lParen}			{ System.out.println("Symbol : " + yytext()); }
 {rParen}			{ System.out.println("Symbol : " + yytext()); }
 {lKey}				{ System.out.println("Symbol : " + yytext()); }
@@ -162,8 +157,6 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {boolean}			{ System.out.println("		Boolean: " + yytext()); }
 {string}			{ System.out.println("		String: " + yytext()); }
 
-//{typeArray}			{ System.out.println("	Array de tipo: " + yytext()); }
-//{arrayIdentifier}	{ System.out.println("	Array: " + yytext()); }
 {typeInt}			{ System.out.println("	Type: " + yytext()); }
 {typeFloat}			{ System.out.println("	Type: " + yytext()); }
 {typeChar}			{ System.out.println("	Type: " + yytext()); }
