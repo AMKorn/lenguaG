@@ -102,6 +102,7 @@ ARRAY_SUFFIX -> L_BRACKET VARIABLE R_BRACKET ARRAY_SUFFIX # variable must be int
     | .
 
 FIXED_VALUE -> INTEGER
+    | FLOAT
     | CHARACTER
     | LIST
     | BOOLEAN.
