@@ -40,7 +40,7 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\005\000\004\005\004\001\002\000\004\004\007\001" +
+    "\000\005\000\004\004\004\001\002\000\004\005\007\001" +
     "\002\000\004\002\006\001\002\000\004\002\001\001\002" +
     "\000\004\002\000\001\002" });
 
@@ -131,7 +131,13 @@ class CUP$Parser$actions {
           case 1: // BODY ::= DECLARATIONS MAIN 
             {
               SymbolBody RESULT =null;
-		 RESULT = new SymbolBody(ParserSym.MAIN, ParserSym.DECLARATIONS) 
+		int v1left = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int v1right = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		SymbolDecs v1 = (SymbolDecs)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		int v2left = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int v2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		SymbolMain v2 = (SymbolMain)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		 RESULT = new SymbolBody(v1, v2); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("BODY",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

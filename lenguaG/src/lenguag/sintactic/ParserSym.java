@@ -8,15 +8,15 @@ package lenguag.sintactic;
 /** CUP generated class containing symbol constants. */
 public class ParserSym {
   /* terminals */
-  public static final int DECLARATIONS = 3;
+  public static final int DECLARATIONS = 2;
   public static final int error = 1;
-  public static final int MAIN = 2;
+  public static final int MAIN = 3;
   public static final int EOF = 0;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "MAIN",
-  "DECLARATIONS"
+  "DECLARATIONS",
+  "MAIN"
   };
 }
 
