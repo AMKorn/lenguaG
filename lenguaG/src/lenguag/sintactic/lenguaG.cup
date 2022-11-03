@@ -1,0 +1,79 @@
+/**
+ Per compilar aquest fitxer s'ha d'haver instal·lat JavaCup
+
+  java -jar java-cup-11b.jar lenguaG.cup
+ **/
+
+/**
+ * Asignatura: 21780 - Compiladores
+ * Miembros:
+ * 	- Román Colom, Marc
+ * 	- Korn, Andreas Manuel
+ * 	- Vilella Candia, Joan 
+ */
+// Si estás en Lexic.java, OJO! Este archivo no debe ser modificado manualmente: para hacer cambios hacerlo en lenguaG.flex 
+// y luego seleccionar dicho archivo como input de jflex en "lexical specification". El output se debe dejar tal cual.
+package lenguag.sintactic;
+
+import java_cup.runtime.*;
+import lenguag.sintactic.symbols.*;
+
+class Parser;
+
+/**
+ ** Aquí es podria posar un codi 'ad hoc' però en aquest cas no és necessari.
+parser code {:
+    private Scanner scanner;
+    public Parser(Scanner scanner) { 
+        this.scanner = scanner;
+    }
+:}
+**/
+
+/**
+ ** També aquí es poden afegir accions a realitzar quan es requereix un token.
+scan with {:     next_token(); :}
+**/
+
+// Symbols
+
+non terminal    SymbolBase  BODY;
+
+/*terminal                ADD, SUB, MUL, DIV, MOD, LPAREN, RPAREN;
+terminal      String    valor;
+non terminal  SymbolE   E;
+non terminal  SymbolEp  Ep;
+non terminal  SymbolT   T;
+non terminal  SymbolTp  Tp;
+non terminal  SymbolF   F;
+
+
+precedence left  ADD, SUB;
+precedence left  MUL, DIV, MOD;*/
+
+start with BODY;
+
+BODY ::=  DECLARATIONS MAIN;
+
+/*
+E ::=  T:v1 Ep:v2       {: RESULT = new SymbolE((Integer)v1.value, v2);  :}
+     ;
+
+Ep ::= ADD T:v1 Ep:v2   {: RESULT = new SymbolEp(ParserSym.ADD, (Integer)v1.value, v2); :}
+     | SUB T:v1 Ep:v2   {: RESULT = new SymbolEp(ParserSym.SUB, (Integer)v1.value, v2); :} 
+     |                  {: RESULT = new SymbolEp(); :}
+     ;
+
+
+T ::=  F:v1 Tp:v2       {: RESULT = new SymbolT((Integer)v1.value, v2);     :}
+     ;
+
+Tp ::= MUL F:v1 Tp:v2   {: RESULT = new SymbolTp(ParserSym.MUL, (Integer)v1.value, v2); :}
+     | DIV F:v1 Tp:v2   {: RESULT = new SymbolTp(ParserSym.DIV, (Integer)v1.value, v2); :}
+     | MOD F:v1 Tp:v2   {: RESULT = new SymbolTp(ParserSym.MOD, (Integer)v1.value, v2); :}
+     |                  {: RESULT = new SymbolTp(); :}
+     ;
+
+F ::= LPAREN E:v RPAREN {: RESULT = new SymbolF((Integer)v.value);     :}
+     | valor:v          {: RESULT = new SymbolF(Integer.parseInt(v));  :}
+     ;*/

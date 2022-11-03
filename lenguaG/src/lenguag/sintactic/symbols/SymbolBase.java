@@ -1,0 +1,18 @@
+/**
+ * Asignatura: 21780 - Compiladores
+ * Miembros:
+ * 	- Román Colom, Marc
+ * 	- Korn, Andreas Manuel
+ * 	- Vilella Candia, Joan 
+ */
+package lenguag.sintactic.symbols;
+
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+
+public class SymbolBase extends ComplexSymbol {
+    private static int idSymbol = 0;
+
+    public SymbolBase(String variable, Integer valor){
+        super(variable, idSymbol++, valor);
+    }
+}

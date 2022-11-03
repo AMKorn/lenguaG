@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "lenguaG/src/lenguag/sintactic/java-cup-11b.jar"
+    ]
+}
