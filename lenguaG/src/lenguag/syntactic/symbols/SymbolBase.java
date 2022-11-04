@@ -5,7 +5,7 @@
  * 	- Korn, Andreas Manuel
  * 	- Vilella Candia, Joan 
  */
-package lenguag.sintactic.symbols;
+package lenguag.syntactic.symbols;
 
 import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
 

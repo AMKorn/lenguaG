@@ -85,18 +85,7 @@ non terminal SymbolMoreParams   MORE_PARAMS;
 precedence left  PROD, DIV, MOD, ADD, SUB;
 precedence left  AND, OR;
 
-/* 
-terminal                ADD, SUB, MUL, DIV, MOD, LPAREN, RPAREN;
-terminal      String    valor;
-non terminal  SymbolE   E;
-non terminal  SymbolEp  Ep;
-non terminal  SymbolT   T;
-non terminal  SymbolTp  Tp;
-non terminal  SymbolF   F;
-
-
-precedence left  ADD, SUB;
-precedence left  MUL, DIV, MOD;*/
+// Grammar
 
 start with BODY;
 

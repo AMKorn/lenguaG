@@ -5,7 +5,7 @@
  * 	- Korn, Andreas Manuel
  * 	- Vilella Candia, Joan 
  */
-package lenguag.sintactic.symbols;
+package lenguag.syntactic.symbols;
 
 /*
  * BODY -> DECLARATIONS MAIN.

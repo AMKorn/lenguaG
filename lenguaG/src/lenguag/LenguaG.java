@@ -17,6 +17,7 @@ import java.io.*;
 public class LenguaG {
 
     public static final boolean DEBUGGING = true;
+    public static final String OUTPUT_PATH = "../output/";
 
     /**
      * @param args the command line arguments
@@ -47,5 +48,16 @@ public class LenguaG {
         }
         Lexic la = new Lexic(in);
         la.analyze();
+        String tokens = la.writeTokens();
+        System.out.println(tokens);
+        FileWriter out;
+        try {
+            out = new FileWriter(OUTPUT_PATH + "tokens.txt");
+            out.write(tokens);
+            out.close();
+        } catch (IOException e) {
+            // !!! COMPILER ERROR !!!
+            e.printStackTrace();
+        }
     }
 }

@@ -11,7 +11,9 @@
 // y luego seleccionar dicho archivo como input de jflex en "lexical specification". El output se debe dejar tal cual.
 
 package lenguag.lexic;
+
 import java.io.*;
+import java.util.*;
 
 
 /**
@@ -313,13 +315,26 @@ public class Lexic {
   private int zzFinalHighSurrogate = 0;
 
   /* user code: */
+	private ArrayList<String> tokens;
+
 	public void analyze() {
+		tokens = new ArrayList<>();
 		try{
 			yylex();
 		} catch (IOException ioe){
 			// Compiler error
 			System.err.println("!!!! COMPILER ERROR !!!! Error processing input file.");
 		}
+	}
+
+	public String writeTokens(){
+		String tokenList = "";
+
+		for(String s : tokens){
+			tokenList += s + "\n";
+		}
+
+		return tokenList;
 	}
 
 
@@ -698,11 +713,11 @@ public class Lexic {
             }
           case 14: break;
           case 2: 
-            { System.out.println("Identifier: " + yytext());
+            { tokens.add("Identifier: " + yytext());
             }
           case 15: break;
           case 3: 
-            { System.out.println("		Number: " + yytext());
+            { tokens.add("		Number: " + yytext());
             }
           case 16: break;
           case 4: 
@@ -710,15 +725,15 @@ public class Lexic {
             }
           case 17: break;
           case 5: 
-            { System.out.println("Symbol : " + yytext());
+            { tokens.add("Symbol : " + yytext());
             }
           case 18: break;
           case 6: 
-            { System.out.println("AssignOp: " + yytext());
+            { tokens.add("AssignOp: " + yytext());
             }
           case 19: break;
           case 7: 
-            { System.out.println("Op: " + yytext());
+            { tokens.add("Op: " + yytext());
             }
           case 20: break;
           case 8: 
@@ -726,23 +741,23 @@ public class Lexic {
             }
           case 21: break;
           case 9: 
-            { System.out.println("Terminal : " + yytext());
+            { tokens.add("Terminal : " + yytext());
             }
           case 22: break;
           case 10: 
-            { System.out.println("		String: " + yytext());
+            { tokens.add("		String: " + yytext());
             }
           case 23: break;
           case 11: 
-            { System.out.println("Type: " + yytext());
+            { tokens.add("Type: " + yytext());
             }
           case 24: break;
           case 12: 
-            { System.out.println("		Character: " + yytext());
+            { tokens.add("		Character: " + yytext());
             }
           case 25: break;
           case 13: 
-            { System.out.println("		Boolean: " + yytext());
+            { tokens.add("		Boolean: " + yytext());
             }
           case 26: break;
           default:

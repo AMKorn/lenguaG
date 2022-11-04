@@ -1,0 +1,197 @@
+Type: int
+Identifier: begin
+Symbol : ;
+Type: int
+Identifier: end
+Symbol : ;
+Type: int
+Symbol : [
+Symbol : ]
+Identifier: intArray
+Symbol : ;
+Type: void
+Identifier: quickSort
+Symbol : (
+Type: int
+Symbol : [
+Symbol : ]
+Identifier: array
+Symbol : ,
+Type: int
+Identifier: begin
+Symbol : ,
+Type: int
+Identifier: end
+Symbol : )
+Symbol : {
+Terminal : if
+Symbol : (
+Identifier: begin
+Op: <
+Identifier: end
+Symbol : )
+Symbol : {
+Type: int
+Identifier: partitionIndex
+AssignOp: =
+Identifier: partition
+Symbol : (
+Identifier: arr
+Symbol : ,
+Identifier: begin
+Symbol : ,
+Identifier: end
+Symbol : )
+Symbol : ;
+Identifier: quickSort
+Symbol : (
+Identifier: array
+Symbol : ,
+Identifier: begin
+Symbol : ,
+Identifier: partitionIndex
+Op: -
+		Number: 1
+Symbol : )
+Symbol : ;
+Identifier: quickSort
+Symbol : (
+Identifier: array
+Symbol : ,
+Identifier: partitionIndex
+Op: +
+		Number: 1
+Symbol : ,
+Identifier: end
+Symbol : )
+Symbol : ;
+Symbol : }
+Symbol : }
+Type: int
+Identifier: partition
+Symbol : (
+Type: int
+Symbol : [
+Symbol : ]
+Identifier: array
+Symbol : ,
+Type: int
+Identifier: begin
+Symbol : ,
+Type: int
+Identifier: end
+Symbol : )
+Symbol : {
+Type: int
+Identifier: pivot
+AssignOp: =
+Identifier: array
+Symbol : [
+Identifier: end
+Symbol : ]
+Symbol : ;
+Type: int
+Identifier: i
+AssignOp: =
+Symbol : (
+Identifier: begin
+Op: -
+		Number: 1
+Symbol : )
+Symbol : ;
+Terminal : for
+Symbol : (
+Type: int
+Identifier: j
+AssignOp: =
+Identifier: begin
+Symbol : ;
+Identifier: j
+Op: <
+Identifier: end
+Symbol : ;
+Identifier: j
+Op: +
+Op: +
+Symbol : )
+Symbol : {
+Terminal : if
+Symbol : (
+Identifier: array
+Symbol : [
+Identifier: j
+Symbol : ]
+Op: <=
+Identifier: pivot
+Symbol : )
+Symbol : {
+Identifier: i
+Op: +
+Op: +
+Symbol : ;
+Identifier: array
+Symbol : [
+Identifier: i
+Symbol : ]
+AssignOp: <<>>
+Identifier: array
+Symbol : [
+Identifier: j
+Symbol : ]
+Symbol : ;
+Symbol : }
+Symbol : }
+Identifier: array
+Symbol : [
+Identifier: i
+Op: +
+		Number: 1
+Symbol : ]
+AssignOp: <<>>
+Identifier: array
+Symbol : [
+Identifier: end
+Symbol : ]
+Symbol : ;
+Terminal : return
+Identifier: i
+Op: +
+		Number: 1
+Symbol : ;
+Symbol : }
+Terminal : main
+Symbol : {
+Identifier: intArray
+AssignOp: =
+Symbol : [
+		Number: 5
+Symbol : ,
+		Number: 9
+Symbol : ,
+		Number: 4
+Symbol : ,
+		Number: 6
+Symbol : ,
+		Number: 5
+Symbol : ,
+		Number: 3
+Symbol : ]
+Symbol : ;
+Identifier: begin
+AssignOp: =
+		Number: 0
+Symbol : ;
+Identifier: end
+AssignOp: =
+		Number: 5
+Symbol : ;
+Identifier: quickSort
+Symbol : (
+Identifier: intArray
+Symbol : ,
+Identifier: begin
+Symbol : ,
+Identifier: end
+Symbol : )
+Symbol : ;
+Symbol : }

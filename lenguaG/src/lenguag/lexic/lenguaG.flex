@@ -9,7 +9,9 @@
 // y luego seleccionar dicho archivo como input de jflex en "lexical specification". El output se debe dejar tal cual.
 
 package lenguag.lexic;
+
 import java.io.*;
+import java.util.*;
 
 %%
 // Aquí van las declaraciones: es decir, la forma de los tokens.
@@ -95,13 +97,26 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
 %{
+	private ArrayList<String> tokens;
+
 	public void analyze() {
+		tokens = new ArrayList<>();
 		try{
 			yylex();
 		} catch (IOException ioe){
 			// Compiler error
 			System.err.println("!!!! COMPILER ERROR !!!! Error processing input file.");
 		}
+	}
+
+	public String writeTokens(){
+		String tokenList = "";
+
+		for(String s : tokens){
+			tokenList += s + "\n";
+		}
+
+		return tokenList;
 	}
 %}
 
@@ -113,57 +128,57 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {comment}			{ /* We fully ignore comments */ }
 
 // Reserved words
-{resMain}			{ System.out.println("Terminal : " + yytext()); }
-{constant}			{ System.out.println("Terminal : " + yytext()); }
-{not}				{ System.out.println("Terminal : " + yytext()); }
-{resOr}				{ System.out.println("Terminal : " + yytext()); }
-{resAnd}			{ System.out.println("Terminal : " + yytext()); }
-{resIf}				{ System.out.println("Terminal : " + yytext()); }
-{resElse}			{ System.out.println("Terminal : " + yytext()); }
-{resWhile}			{ System.out.println("Terminal : " + yytext()); }
-{resFor}			{ System.out.println("Terminal : " + yytext()); }
-{resReturn}			{ System.out.println("Terminal : " + yytext()); }
-{resIn} 			{ System.out.println("Terminal : " + yytext()); }
-{resOut} 			{ System.out.println("Terminal : " + yytext()); }
+{resMain}			{ tokens.add("Terminal : " + yytext()); }
+{constant}			{ tokens.add("Terminal : " + yytext()); }
+{not}				{ tokens.add("Terminal : " + yytext()); }
+{resOr}				{ tokens.add("Terminal : " + yytext()); }
+{resAnd}			{ tokens.add("Terminal : " + yytext()); }
+{resIf}				{ tokens.add("Terminal : " + yytext()); }
+{resElse}			{ tokens.add("Terminal : " + yytext()); }
+{resWhile}			{ tokens.add("Terminal : " + yytext()); }
+{resFor}			{ tokens.add("Terminal : " + yytext()); }
+{resReturn}			{ tokens.add("Terminal : " + yytext()); }
+{resIn} 			{ tokens.add("Terminal : " + yytext()); }
+{resOut} 			{ tokens.add("Terminal : " + yytext()); }
 // Types
-{typeInt}			{ System.out.println("Type: " + yytext()); }
-{typeFloat}			{ System.out.println("Type: " + yytext()); }
-{typeChar}			{ System.out.println("Type: " + yytext()); }
-{typeBool}			{ System.out.println("Type: " + yytext()); }
-{typeVoid}			{ System.out.println("Type: " + yytext()); }
+{typeInt}			{ tokens.add("Type: " + yytext()); }
+{typeFloat}			{ tokens.add("Type: " + yytext()); }
+{typeChar}			{ tokens.add("Type: " + yytext()); }
+{typeBool}			{ tokens.add("Type: " + yytext()); }
+{typeVoid}			{ tokens.add("Type: " + yytext()); }
 
 // Special characters
-{lParen}			{ System.out.println("Symbol : " + yytext()); }
-{rParen}			{ System.out.println("Symbol : " + yytext()); }
-{lKey}				{ System.out.println("Symbol : " + yytext()); }
-{rKey} 				{ System.out.println("Symbol : " + yytext()); }
-{lBracket}			{ System.out.println("Symbol : " + yytext()); }
-{rBracket}			{ System.out.println("Symbol : " + yytext()); }
-{endline}			{ System.out.println("Symbol : " + yytext()); }
-{comma}				{ System.out.println("Symbol : " + yytext()); }
+{lParen}			{ tokens.add("Symbol : " + yytext()); }
+{rParen}			{ tokens.add("Symbol : " + yytext()); }
+{lKey}				{ tokens.add("Symbol : " + yytext()); }
+{rKey} 				{ tokens.add("Symbol : " + yytext()); }
+{lBracket}			{ tokens.add("Symbol : " + yytext()); }
+{rBracket}			{ tokens.add("Symbol : " + yytext()); }
+{endline}			{ tokens.add("Symbol : " + yytext()); }
+{comma}				{ tokens.add("Symbol : " + yytext()); }
 
-{addSym}			{ System.out.println("Op: " + yytext()); }
-{subSym}			{ System.out.println("Op: " + yytext()); }
-{prodSym}			{ System.out.println("Op: " + yytext()); }
-{divSym}			{ System.out.println("Op: " + yytext()); }
-{modSym}			{ System.out.println("Op: " + yytext()); }
-{eqSym}				{ System.out.println("Op: " + yytext()); }
-{beqSym}			{ System.out.println("Op: " + yytext()); }
-{btSym}				{ System.out.println("Op: " + yytext()); }
-{leqSym}			{ System.out.println("Op: " + yytext()); }
-{ltSym}				{ System.out.println("Op: " + yytext()); }
-{neqSym}			{ System.out.println("Op: " + yytext()); }
+{addSym}			{ tokens.add("Op: " + yytext()); }
+{subSym}			{ tokens.add("Op: " + yytext()); }
+{prodSym}			{ tokens.add("Op: " + yytext()); }
+{divSym}			{ tokens.add("Op: " + yytext()); }
+{modSym}			{ tokens.add("Op: " + yytext()); }
+{eqSym}				{ tokens.add("Op: " + yytext()); }
+{beqSym}			{ tokens.add("Op: " + yytext()); }
+{btSym}				{ tokens.add("Op: " + yytext()); }
+{leqSym}			{ tokens.add("Op: " + yytext()); }
+{ltSym}				{ tokens.add("Op: " + yytext()); }
+{neqSym}			{ tokens.add("Op: " + yytext()); }
 
-{assign}			{ System.out.println("AssignOp: " + yytext()); }
-{swapSym} 			{ System.out.println("AssignOp: " + yytext()); }
+{assign}			{ tokens.add("AssignOp: " + yytext()); }
+{swapSym} 			{ tokens.add("AssignOp: " + yytext()); }
 
 // Non-reserved words
-{character}			{ System.out.println("		Character: " + yytext()); }
-{number}			{ System.out.println("		Number: " + yytext()); }
-{boolean}			{ System.out.println("		Boolean: " + yytext()); }
-{string}			{ System.out.println("		String: " + yytext()); }
+{character}			{ tokens.add("		Character: " + yytext()); }
+{number}			{ tokens.add("		Number: " + yytext()); }
+{boolean}			{ tokens.add("		Boolean: " + yytext()); }
+{string}			{ tokens.add("		String: " + yytext()); }
 
-{identifier}		{ System.out.println("Identifier: " + yytext()); }
+{identifier}		{ tokens.add("Identifier: " + yytext()); }
 
 {ws}				{ /* Do nothing */ }
 [^]					{ System.out.println(" *** Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]"); }

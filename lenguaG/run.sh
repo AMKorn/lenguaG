@@ -29,8 +29,9 @@ then
     echo "
     **** Running cup ****
     "
-    cd lenguag/sintactic
+    cd lenguag/syntactic/
     java -jar java-cup-11b.jar lenguaG.cup
+    cd ../..
 fi
 javac lenguag/*.java
 echo "
