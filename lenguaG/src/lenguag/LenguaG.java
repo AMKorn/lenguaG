@@ -41,20 +41,18 @@ public class LenguaG {
         FileReader in;
         try { 
             in = new FileReader(file);
+            Lexic la = new Lexic(in);
+            la.analyze();
+            String tokens = la.writeTokens();
+            System.out.println(tokens);
+            FileWriter out;
+            out = new FileWriter(OUTPUT_PATH + "tokens.txt");
+            out.write(tokens);
+            out.close();
         } catch(FileNotFoundException fnf) {
             // User error
             System.err.println("Input file " + file + " does not exist.");
             return;
-        }
-        Lexic la = new Lexic(in);
-        la.analyze();
-        String tokens = la.writeTokens();
-        System.out.println(tokens);
-        FileWriter out;
-        try {
-            out = new FileWriter(OUTPUT_PATH + "tokens.txt");
-            out.write(tokens);
-            out.close();
         } catch (IOException e) {
             // !!! COMPILER ERROR !!!
             e.printStackTrace();
