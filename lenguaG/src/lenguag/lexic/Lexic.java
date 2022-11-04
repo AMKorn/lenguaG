@@ -335,7 +335,7 @@ public class Lexic implements java_cup.runtime.Scanner {
   private int zzFinalHighSurrogate = 0;
 
   /* user code: */
-	private ArrayList<String> tokens;
+	private ArrayList<String> tokens = new ArrayList<>();
 
 	public void printTokens(){
 		System.out.println("Hola");

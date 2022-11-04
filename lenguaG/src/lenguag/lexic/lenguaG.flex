@@ -110,7 +110,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
 %{
-	private ArrayList<String> tokens;
+	private ArrayList<String> tokens = new ArrayList<>();
 
 	public void printTokens(){
 		System.out.println("Hola");
