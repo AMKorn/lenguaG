@@ -128,6 +128,10 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 
 		return tokenList;
 	}
+
+	private void writeError(String token, int line, int column){
+		System.out.println(" * Elemento no reconocido " + token + " en la posicion [line: " + line + ", column: " + column + "]");
+	}
 	
 	// Functions to streamline CUP symbol returns.
     private Symbol symbol(int type) {
@@ -201,4 +205,4 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {identifier}		{ tokens.add("Identifier: " + yytext()); return symbol(ParserSym.IDENTIFIER, yytext()); }
 
 {ws}				{ /* Do nothing */ }
-[^]					{ System.out.println(" *** Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]"); }
+[^]					{ writeError(yytext(), yyline+1, yycolumn+1); return symbol(ParserSym.error); }
