@@ -42,12 +42,6 @@ public class LenguaG {
             parser.parse();
 
             la.printTokens();
-            /* String tokens = la.writeTokens();
-            System.out.println(tokens);
-            FileWriter out;
-            out = new FileWriter(OUTPUT_PATH + "tokens.txt");
-            out.write(tokens);
-            out.close(); */
         } catch(FileNotFoundException fnf) {
             // User error
             System.err.println("Input file " + file + " does not exist.");
