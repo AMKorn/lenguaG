@@ -31,15 +31,7 @@ public class LenguaG {
             System.err.println("Input file is required.");
             return;
         }
-        lexicAnalysis(args[0]);
-    }
-    
-    /**
-     * Prepares and analyses the file given by parameter.
-     * @param sourceCode - path to the source code.
-     */
-    private static void lexicAnalysis(String sourceCode){
-        String file = sourceCode;
+        String file = args[0];
         if(DEBUGGING) System.out.println("Proceeding to read " + file);
         FileReader in;
         try { 
