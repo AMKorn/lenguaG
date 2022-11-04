@@ -37,83 +37,59 @@ scan with {:     next_token(); :}
 
 // Symbols
 
-terminal                    RES_MAIN, CONSTANT, NOT, TYPE_INTEGER, TYPE_FLOAT, TYPE_CHARACTER, TYPE_BOOLEAN;
-terminal                    L_PAREN, R_PAREN, L_KEY, R_KEY, L_BRACKET, R_BRACKET, EQUAL, COMMA, ENDLINE;
-terminal                    OP_SWAP, OP_ADD, OP_SUB, OP_PROD, OP_DIV, OP_MOD, OP_OR, OP_AND;
-terminal     String         IDENTIFIER;
-terminal     Integer        INTEGER;
-terminal     Float          FLOAT;
-terminal     Character      CHARACTER;
-terminal     Boolean        BOOLEAN;
-non terminal SymbolBody     BODY;
-non terminal SymbolDecs     DECLARATIONS;
-non terminal SymbolDec      DECLARATION;
-non terminal SymbolDecCont  CONT_DECLARATION;
-non terminal SymbolMain     MAIN;
-non terminal SymbolArgs     ARGS;
-non terminal SymbolArg      ARG;
-non terminal SymbolMoreArgs MORE_ARGS;
-non terminal SymbolInstrs   INSTRUCTIONS;
-non terminal SymbolInstr    INSTRUCTION;
-non terminal SymbolFunc     FUNCTION;
-non terminal SymbolType     TYPE;
-non terminal SymbolVar      VARIABLE;
-non terminal SymbolInit     INITIALIZATION;
-non terminal SymbolExpr     EXPRESSION;
-non terminal SymbolAssign   ASSIGNATION;
-non terminal SymbolSwap     SWAP;
-non terminal SymbolFuncCall FUNCTION_CALL;
-non terminal SymbolReturn   RETURN;
-non terminal SymbolIf       IF;
-non terminal SymbolLoop     LOOP;
-non terminal SymbolFor      FOR;
-non terminal SymbolIn       IN;
-non terminal SymbolOut      OUT;
-non terminal SymbolOper     OPERATION;
-non terminal SymbolValue    VALUE;
-non terminal SymbolOp       OP;
-non terminal SymbolOpRel    OP_REL;
-non terminal SymbolFixedVal FIXED_VALUE;
-non terminal SymbolArrSuff  ARRAY_SUFFIX;
-non terminal SymbolList     LIST;
-non terminal SymbolContList CONT_LIST;
-non terminal SymbolCond     CONDITION;
+terminal                        RES_MAIN, CONSTANT, NOT, TYPE_INTEGER, TYPE_FLOAT, TYPE_CHARACTER, TYPE_BOOLEAN;
+terminal                        RES_IF, RES_ELSE, RES_WHILE, RES_FOR, RES_RETURN;
+terminal                        L_PAREN, R_PAREN, L_KEY, R_KEY, L_BRACKET, R_BRACKET, EQUAL, COMMA, ENDLINE;
+terminal                        OP_SWAP, ADD, SUB, PROD, DIV, MOD, OR, AND, EQUALS, BIGGER, BEQ, LESSER, LEQ, NEQ;
+terminal     String             IDENTIFIER;
+terminal     Integer            INTEGER;
+terminal     Float              FLOAT;
+terminal     Character          CHARACTER;
+terminal     Boolean            BOOLEAN;
+non terminal SymbolBody         BODY;
+non terminal SymbolDecs         DECLARATIONS;
+non terminal SymbolDec          DECLARATION;
+non terminal SymbolDecCont      CONT_DECLARATION;
+non terminal SymbolMain         MAIN;
+non terminal SymbolArgs         ARGS;
+non terminal SymbolArg          ARG;
+non terminal SymbolMoreArgs     MORE_ARGS;
+non terminal SymbolInstrs       INSTRUCTIONS;
+non terminal SymbolInstr        INSTRUCTION;
+non terminal SymbolFunc         FUNCTION;
+non terminal SymbolType         TYPE;
+non terminal SymbolVar          VARIABLE;
+non terminal SymbolInit         INITIALIZATION;
+non terminal SymbolExpr         EXPRESSION;
+non terminal SymbolAssign       ASSIGNATION;
+non terminal SymbolSwap         SWAP;
+non terminal SymbolReturn       RETURN;
+non terminal SymbolIn           IN;
+non terminal SymbolOut          OUT;
+non terminal SymbolOper         OPERATION;
+non terminal SymbolValue        VALUE;
+non terminal SymbolOp           OP;
+non terminal SymbolOpRel        OP_REL;
+non terminal SymbolFixedVal     FIXED_VALUE;
+non terminal SymbolArrSuff      ARRAY_SUFFIX;
+non terminal SymbolList         LIST;
+non terminal SymbolContList     CONT_LIST;
+non terminal SymbolCond         CONDITION;
+non terminal SymbolIf           IF;
+non terminal SymbolElse         ELSE;
+non terminal SymbolLoop         LOOP;
+non terminal SymbolFor          FOR;
+non terminal SymbolForHeader    FOR_HEADER;
+non terminal SymbolHeaderSeg    HEADER_SEGMENT;
+non terminal SymbolFuncCall     FUNCTION_CALL;
+non terminal SymbolParams       PARAMS;
+non terminal SymbolParam        PARAM;
+non terminal SymbolMoreParams   MORE_PARAMS;
+
+precedence left  PROD, DIV, MOD, ADD, SUB;
+precedence left  AND, OR;
 
 /* 
-
-IF -> if L_PAREN CONDITION R_PAREN L_KEY INSTRUCTIONS R_KEY ELSE.
-ELSE -> else if L_PAREN CONDITION R_PAREN L_KEY INSTRUCTIONS R_KEY ELSE
-    | else L_KEY CONDITION R_KEY
-    | .
-
-LOOP -> while L_PAREN CONDITION R_PAREN L_KEY INSTRUCTIONS R_KEY.
-
-FOR -> FOR_HEADER L_KEY INSTRUCTIONS R_KEY.
-
-FOR_HEADER -> for L_PAREN HEADER_SEGMENT ENDLINE CONDITION ENDLINE HEADER_SEGMENT R_PAREN.
-
-HEADER_SEGMENT -> DECLARATION 
-    | ASSIGNATION 
-    | SWAP 
-    | FUNCTION_CALL. # Quitar si no implementamos pasar por referencia
-
-FUNCTION_CALL -> VARIABLE L_PAREN PARAMS R_PAREN.
-
-PARAMS -> PARAM MORE_PARAMS
-    | .
-
-MORE_PARAMS -> COMMA PARAM
-    | .
-
-PARAM -> VALUE.
-
-RETURN -> return EXPRESSION
-    | return OPERATION
-    | return.
-
-IN -> in L_PAREN PARAM R_PAREN.
-
-OUT -> out L_PAREN PARAM R_PAREN.
 terminal                ADD, SUB, MUL, DIV, MOD, LPAREN, RPAREN;
 terminal      String    valor;
 non terminal  SymbolE   E;
@@ -228,7 +204,7 @@ CONDITION -> EXPRESSION
 
 IF -> if L_PAREN CONDITION R_PAREN L_KEY INSTRUCTIONS R_KEY ELSE.
 ELSE -> else if L_PAREN CONDITION R_PAREN L_KEY INSTRUCTIONS R_KEY ELSE
-    | else L_KEY CONDITION R_KEY
+    | else L_KEY INSTRUCTIONS R_KEY
     | .
 
 LOOP -> while L_PAREN CONDITION R_PAREN L_KEY INSTRUCTIONS R_KEY.
