@@ -11,13 +11,12 @@
 package lenguag.lexic;
 
 // Other libraries
-import java.io.*;
+//import java.io.*;
 import java.util.*;
 import java_cup.runtime.*;
 
 // Our project imports
 import lenguag.syntactic.ParserSym;
-import lenguag.syntactic.symbols.*;
 
 %%
 %public             // Per indicar que la classe és pública
@@ -102,7 +101,7 @@ doubleQuotes	= \"
 
 ws 				= [ \t\r\n]+
 
-commentLine		= ["\/\/"\#]
+commentLine		= "//"|\#
 commentBeg		= \/\*
 commentEnd		= \*\/
 comment			= {commentLine}.*				// Comment line symbol and any character except for \n, star times.
