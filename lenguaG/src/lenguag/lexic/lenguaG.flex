@@ -125,8 +125,14 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {resReturn}			{ System.out.println("Terminal : " + yytext()); }
 {resIn} 			{ System.out.println("Terminal : " + yytext()); }
 {resOut} 			{ System.out.println("Terminal : " + yytext()); }
+// Types
+{typeInt}			{ System.out.println("Type: " + yytext()); }
+{typeFloat}			{ System.out.println("Type: " + yytext()); }
+{typeChar}			{ System.out.println("Type: " + yytext()); }
+{typeBool}			{ System.out.println("Type: " + yytext()); }
+{typeVoid}			{ System.out.println("Type: " + yytext()); }
 
-// Terminals
+// Special characters
 {lParen}			{ System.out.println("Symbol : " + yytext()); }
 {rParen}			{ System.out.println("Symbol : " + yytext()); }
 {lKey}				{ System.out.println("Symbol : " + yytext()); }
@@ -156,12 +162,6 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {number}			{ System.out.println("		Number: " + yytext()); }
 {boolean}			{ System.out.println("		Boolean: " + yytext()); }
 {string}			{ System.out.println("		String: " + yytext()); }
-
-{typeInt}			{ System.out.println("	Type: " + yytext()); }
-{typeFloat}			{ System.out.println("	Type: " + yytext()); }
-{typeChar}			{ System.out.println("	Type: " + yytext()); }
-{typeBool}			{ System.out.println("	Type: " + yytext()); }
-{typeVoid}			{ System.out.println("	Type: " + yytext()); }
 
 {identifier}		{ System.out.println("Identifier: " + yytext()); }
 

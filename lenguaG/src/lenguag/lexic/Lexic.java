@@ -734,7 +734,7 @@ public class Lexic {
             }
           case 23: break;
           case 11: 
-            { System.out.println("	Type: " + yytext());
+            { System.out.println("Type: " + yytext());
             }
           case 24: break;
           case 12: 

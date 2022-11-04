@@ -1,22 +1,18 @@
 /**
- Per compilar aquest fitxer s'ha d'haver instal·lat JavaCup
-
-  java -jar java-cup-11b.jar lenguaG.cup
- **/
-
-/**
  * Asignatura: 21780 - Compiladores
  * Miembros:
  * 	- Román Colom, Marc
  * 	- Korn, Andreas Manuel
  * 	- Vilella Candia, Joan 
+ *********************************************************
+ * Para compilar este código es necesario hacerlo con CUP:
+ *
+ * java -jar java-cup-11b.jar lenguaG.cup
  */
-// Si estás en Lexic.java, OJO! Este archivo no debe ser modificado manualmente: para hacer cambios hacerlo en lenguaG.flex 
-// y luego seleccionar dicho archivo como input de jflex en "lexical specification". El output se debe dejar tal cual.
-package lenguag.sintactic;
+package lenguag.syntactic;
 
 import java_cup.runtime.*;
-import lenguag.sintactic.symbols.*;
+import lenguag.syntactic.symbols.*;
 
 class Parser;
 
