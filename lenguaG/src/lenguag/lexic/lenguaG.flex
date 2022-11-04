@@ -14,6 +14,18 @@ import java.io.*;
 import java.util.*;
 
 %%
+%public             // Per indicar que la classe és pública
+%class Lexic        // El nom de la classe
+
+%int                // Type of identified tokens
+
+%line				// So that jflex keeps track of the line
+%column				// and the column
+
+/* %eofval{
+	symbol(ParserSym.EOF)
+%eofval} */
+
 // Aquí van las declaraciones: es decir, la forma de los tokens.
 
 // Identifyiers
@@ -87,12 +99,6 @@ commentBeg		= \/\*
 commentEnd		= \*\/
 comment			= {commentLine}.*				// Comment line symbol and any character except for \n, star times.
 				|{commentBeg}[^]*{commentEnd}
-
-%public             // Per indicar que la classe és pública
-%class Lexic        // El nom de la classe
-%int                // Type of identified tokens
-%line
-%column
 
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
