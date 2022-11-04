@@ -33,9 +33,9 @@ then
     java -jar java-cup-11b.jar lenguaG.cup
     cd ../..
 fi
-javac lenguag/*.java
+javac -cp .:lenguag/syntactic/java-cup-11b-runtime.jar lenguag/*.java
 echo "
     ***** Program output *****
 "
-java lenguag.LenguaG ../$file
+java -cp .:lenguag/syntactic/java-cup-11b-runtime.jar lenguag.LenguaG ../$file
 cd ..

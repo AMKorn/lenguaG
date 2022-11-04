@@ -7,8 +7,11 @@
  */
 package lenguag;
 
-import lenguag.lexic.*;
 import java.io.*;
+import java_cup.runtime.*;
+
+import lenguag.lexic.*;
+import lenguag.syntactic.*;
 
 /**
  *
@@ -42,18 +45,25 @@ public class LenguaG {
         try { 
             in = new FileReader(file);
             Lexic la = new Lexic(in);
-            la.analyze();
-            String tokens = la.writeTokens();
+            SymbolFactory sf = new ComplexSymbolFactory();
+            Parser parser = new Parser(la, sf);
+            parser.parse();
+
+            la.printTokens();
+            /* String tokens = la.writeTokens();
             System.out.println(tokens);
             FileWriter out;
             out = new FileWriter(OUTPUT_PATH + "tokens.txt");
             out.write(tokens);
-            out.close();
+            out.close(); */
         } catch(FileNotFoundException fnf) {
             // User error
             System.err.println("Input file " + file + " does not exist.");
             return;
         } catch (IOException e) {
+            // !!! COMPILER ERROR !!!
+            e.printStackTrace();
+        } catch (Exception e) {
             // !!! COMPILER ERROR !!!
             e.printStackTrace();
         }
