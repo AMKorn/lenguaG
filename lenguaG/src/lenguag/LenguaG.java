@@ -20,22 +20,26 @@ import lenguag.syntactic.*;
 public class LenguaG {
 
     public static final boolean DEBUGGING = true;
-    public static final String OUTPUT_PATH = "../output/";
+
+    public static String outputPath = "../output/";
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // Args management
         if(args.length < 1){
             // User error
             System.err.println("Input file is required.");
             return;
         }
         String file = args[0];
-        if(DEBUGGING) System.out.println("Proceeding to read " + file);
-        FileReader in;
+        if(args.length > 1) outputPath += args[1];
+
+        // Compilation
+        if(DEBUGGING) System.out.println("Proceeding to read " + file.split("/")[1]);
         try { 
-            in = new FileReader(file);
+            FileReader in = new FileReader(file);
             Lexic la = new Lexic(in);
             SymbolFactory sf = new ComplexSymbolFactory();
             Parser parser = new Parser(la, sf);
