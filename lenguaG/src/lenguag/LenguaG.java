@@ -42,14 +42,14 @@ public class LenguaG {
         // Compilation
         if(DEBUGGING) System.out.println("Proceeding to read " + file);
         try { 
-            // DO NOT DELETE YET! To be used later
-            // In case the output folder does not exist, we create it.
-            File outf = new File(OUTPUT_PATH);
-            outf.mkdirs();
-            // We write the file
-            FileWriter out = new FileWriter(outputFile);
-            out.write("Hola");
-            out.close();
+            // // DO NOT DELETE YET! To be used later
+            // // In case the output folder does not exist, we create it.
+            // File outf = new File(OUTPUT_PATH);
+            // outf.mkdirs();
+            // // We write the file
+            // FileWriter out = new FileWriter(outputFile);
+            // out.write("Hola");
+            // out.close();
 
             FileReader in = new FileReader(file);
             Lexic la = new Lexic(in);
