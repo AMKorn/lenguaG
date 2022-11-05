@@ -42,6 +42,7 @@ terminal     Integer            INTEGER;
 terminal     Float              FLOAT;
 terminal     Character          CHARACTER;
 terminal     Boolean            BOOLEAN;
+terminal     String             STRING;
 non terminal SymbolBody         BODY;
 non terminal SymbolDecs         DECLARATIONS;
 non terminal SymbolDec          DECLARATION;
@@ -188,7 +189,8 @@ TYPE -> TYPE_INTEGER ARRAY_SUFFIX
     | TYPE_BOOLEAN ARRAY_SUFFIX
     | VOID.
 
-LIST -> L_BRACKET VALUE CONT_LIST.
+LIST -> L_BRACKET VALUE CONT_LIST
+    | STRING.
 CONT_LIST -> COMMA VALUE CONT_LIST
     | R_BRACKET
     | error R_BRACKET.

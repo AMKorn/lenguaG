@@ -38,12 +38,12 @@ import lenguag.syntactic.ParserSym;
 // Identifyiers
 identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 
-integer 		= 0|[1-9][0-9]*
+integer 		= 0|\-?[1-9][0-9]*
 float			= {integer}?\.[0-9]+(e{integer})?
 // Take the following three lines out if it's difficult to implement later down the line
-binary			= 0b[01]+
-octal			= 0o[0-7]+
-hexadecimal		= 0x[0-9a-fA-F]+
+binary			= \-?0b[01]+
+octal			= \-?0o[0-7]+
+hexadecimal		= \-?0x[0-9a-fA-F]+
 
 int_number		= {integer}
 				|{binary}|{octal}|{hexadecimal} // Just take this line out if it's difficult to implement later down the line
@@ -110,6 +110,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
 %{
+	private boolean thereIsLexicalError = false;
 	private ArrayList<String> tokens = new ArrayList<>();
 
 	public void printTokens(){
@@ -133,6 +134,24 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 		System.out.println(" * Elemento no reconocido " + token + " en la posicion [line: " + line + ", column: " + column + "]");
 	}
 	
+	private int parseNum(String s){
+		if(s.charAt(0) != 0 || s.length() == 1) return Integer.parseInt(s);	// Does not have a prefix. We also check length in the case it's only a 0.
+		char base = s.charAt(1);
+		String[] sParts = s.split(""+base);
+		switch(base){
+			case 'b':
+				return Integer.parseInt(sParts[1], 2);
+			case 'o':
+				return Integer.parseInt(sParts[1], 8);
+			case 'x':
+				return Integer.parseInt(sParts[1], 16);
+			default:
+				thereIsLexicalError = true;
+				writeError(s, yyline, yycolumn);
+				return 0;
+		}
+	}
+
 	// Functions to streamline CUP symbol returns.
     private Symbol symbol(int type) {
         return new Symbol(type, yyline, yycolumn);
@@ -196,11 +215,18 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {swapSym} 			{ tokens.add("AssignOp: " + yytext()); return symbol(ParserSym.OP_SWAP); }
 
 // Non-reserved words
-{character}			{ tokens.add("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext()); }
-{float}				{ tokens.add("Float: " + yytext()); return symbol(ParserSym.FLOAT, 1.0); }
-{int_number}		{ tokens.add("Number: " + yytext()); return symbol(ParserSym.INTEGER, 1); }
-{boolean}			{ tokens.add("Boolean: " + yytext()); return symbol(ParserSym.INTEGER, true); }
-{string}			{ tokens.add("string: " + yytext()); return symbol(ParserSym.INTEGER, yytext());}
+{character}			{ tokens.add("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext().charAt(0)); }
+{float}				{ tokens.add("Float: " + yytext()); return symbol(ParserSym.FLOAT, Float.parseFloat(yytext())); }
+{int_number}		{ tokens.add("Number: " + yytext()); 
+						// As thereIsLexicalError may be modified inside of parseNum, we have to store its previous value.
+						boolean prev = thereIsLexicalError;
+						thereIsLexicalError = false;
+						Integer value = parseNum(yytext());
+						if(thereIsLexicalError) return symbol(ParserSym.error);
+						thereIsLexicalError = prev;
+						return symbol(ParserSym.INTEGER, value); }
+{boolean}			{ tokens.add("Boolean: " + yytext()); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext())); }
+{string}			{ tokens.add("string: " + yytext()); return symbol(ParserSym.STRING, yytext());}
 
 {identifier}		{ tokens.add("Identifier: " + yytext()); return symbol(ParserSym.IDENTIFIER, yytext()); }
 
