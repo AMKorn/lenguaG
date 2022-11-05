@@ -9,7 +9,6 @@ package lenguag;
 
 import java.io.*;
 import java_cup.runtime.*;
-
 import lenguag.lexic.*;
 import lenguag.syntactic.*;
 
@@ -20,8 +19,9 @@ import lenguag.syntactic.*;
 public class LenguaG {
 
     public static final boolean DEBUGGING = true;
+    public static final String OUTPUT_PATH = "../output/";
 
-    public static String outputPath = "../output/";
+    public static String outputFile = OUTPUT_PATH;
 
     /**
      * @param args the command line arguments
@@ -29,16 +29,28 @@ public class LenguaG {
     public static void main(String[] args) {
         // Args management
         if(args.length < 1){
-            // User error
+            // User error. No file given as input.
             System.err.println("Input file is required.");
             return;
         }
+        // Input file is given on the first arg
         String file = args[0];
-        if(args.length > 1) outputPath += args[1];
+        // Output file is either given on the second arg, or defaulted to out.
+        outputFile += (args.length > 1) ? args[1] : "out";
+        System.out.println(outputFile);
 
         // Compilation
-        if(DEBUGGING) System.out.println("Proceeding to read " + file.split("/")[1]);
+        if(DEBUGGING) System.out.println("Proceeding to read " + file);
         try { 
+            // DO NOT DELETE YET! To be used later
+            // In case the output folder does not exist, we create it.
+            File outf = new File(OUTPUT_PATH);
+            outf.mkdirs();
+            // We write the file
+            FileWriter out = new FileWriter(outputFile);
+            out.write("Hola");
+            out.close();
+
             FileReader in = new FileReader(file);
             Lexic la = new Lexic(in);
             SymbolFactory sf = new ComplexSymbolFactory();
