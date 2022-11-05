@@ -37,12 +37,14 @@ public class LenguaG {
         String file = args[0];
         // Output file is either given on the second arg, or defaulted to out.
         outputFile += (args.length > 1) ? args[1] : "out";
-        System.out.println(outputFile);
 
         // Compilation
-        if(DEBUGGING) System.out.println("Proceeding to read " + file);
+        if(DEBUGGING) {
+            System.out.println("Proceeding to read " + file);
+            System.out.println("Will write to " + outputFile);
+        }
         try { 
-            // // DO NOT DELETE YET! To be used later
+            // DO NOT DELETE YET! To be used later
             // // In case the output folder does not exist, we create it.
             // File outf = new File(OUTPUT_PATH);
             // outf.mkdirs();

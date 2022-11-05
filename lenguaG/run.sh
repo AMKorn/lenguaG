@@ -1,11 +1,10 @@
 usage="Unexpected format. Expected format:
     "$0" [FLAGS] [input_file [output_file]]
-        -f: jflex compilation
-        -c: cup compilation
-        -j: recompile java classes
-        -i: input file. If not given, does not run the main program, 
-            but will compile the other flags given. An output may also be
-            given, otherwise the output will equal the input name.
+        -f: Jflex compilation
+        -c: CUP compilation
+        -j: Recompile java classes
+        -i: Input expected. Will try to run the program.
+            Requires input file.
 
 "
 
@@ -22,6 +21,7 @@ input=0
 
 while getopts fcji flag
 do
+    flagged=1;
     case "${flag}" in
         f) flex=1;;
         c) cup=1;;
@@ -32,9 +32,12 @@ do
     esac
 done
 
-# echo "flex: $flex"
-# echo "cup: $cup"
-# echo "input: $input $input_file $output_file"
+if [[ ! -n $flagged ]]
+then
+    echo "hi"
+    input_file=$1
+    output_file=$2
+fi
 
 cd src/
 
@@ -62,11 +65,14 @@ then
     echo "
     Done!"
 fi
-if [[ $input == 1 ]]
+if [[ -n $input_file ]]
 then
     echo "
     **** Program output ****
     "
     java -cp .:lenguag/syntactic/java-cup-11b-runtime.jar lenguag.LenguaG ../$input_file $output_file
-fi 
+elif [[ $input == 1 ]]
+then
+    echo "$usage" | grep -B 1 'input file'
+fi
 cd ..
