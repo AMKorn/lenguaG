@@ -7,6 +7,19 @@
  */
 package lenguag.syntactic.symbols;
 
-public class SymbolMain {
+/**
+ * MAIN -> main L_PAREN ARGS R_PAREN L_KEY INSTRUCTIONS R_KEY.
+ */
+
+public class SymbolMain extends SymbolBase {
+    SymbolArgs args;
+    SymbolInstrs instructions;
+    
+    public SymbolMain(SymbolArgs args, SymbolInstrs instructions) {
+        super("Main", 1);
+        this.args = args;
+        this.instructions = instructions;
+    }
+    
     
 }
