@@ -7,6 +7,33 @@
  */
 package lenguag.syntactic.symbols;
 
-public class SymbolDecs {
+/**
+ * DECLARATIONS -> DECLARATION DECLARATIONS 
+    | FUNCTION DECLARATIONS 
+    | .
+ */
+
+public class SymbolDecs extends SymbolBase {
+    
+    SymbolDec declaration;
+    SymbolDecs declarations;
+    SymbolFunc function;
+    
+    public SymbolDecs(SymbolDec declaration, SymbolDecs declarations) {
+        super("Declarations", 0);
+        this.declaration = declaration;
+        this.declarations = declarations;
+    }
+    
+    public SymbolDecs(SymbolFunc function, SymbolDecs declarations) {
+        super("Declarations", 0);
+        this.function = function;
+        this.declarations = declarations;
+    }
+    
+    public SymbolDecs() {
+        super("Declarations", 0); 
+        
+    }
     
 }
