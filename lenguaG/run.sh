@@ -34,7 +34,6 @@ done
 
 if [[ ! -n $flagged ]]
 then
-    echo "hi"
     input_file=$1
     output_file=$2
 fi
