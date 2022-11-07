@@ -11,12 +11,19 @@ package lenguag.syntactic.symbols;
  * DECLARATION -> CONSTANT CONT_DECLARATION
     | CONT_DECLARATION.
  */
-public class SymbolDec extends SymbolBase {    
+public class SymbolDec extends SymbolBase {
+    private boolean constant;
     SymbolDecCont cont_declaration;
     
     public SymbolDec(SymbolDecCont cont_declaration) {
         super("Declaration", 0);
         this.cont_declaration = cont_declaration;
+        constant = false;
     }
     
+    public SymbolDec(int CONSTANT, SymbolDecCont cont_declaration){
+        super("Declaration", 0);
+        this.cont_declaration = cont_declaration;
+        constant = true;
+    }
 }

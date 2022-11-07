@@ -16,8 +16,9 @@ package lenguag.syntactic.symbols;
 public class SymbolDecs extends SymbolBase {
     
     SymbolDec declaration;
-    SymbolDecs declarations;
     SymbolFunc function;
+    
+    SymbolDecs declarations;
     
     public SymbolDecs(SymbolDec declaration, SymbolDecs declarations) {
         super("Declarations", 0);
