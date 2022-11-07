@@ -92,35 +92,32 @@ precedence left  AND, OR;
 
 start with BODY;
 
-BODY ::=  DECLARATIONS:v1 MAIN:v2     {: RESULT = new SymbolBody(v1, v2); :};
+BODY ::=  DECLARATIONS:v1 MAIN:v2                                       {: RESULT = new SymbolBody(v1, v2); :};
 
-/*
-BODY -> DECLARATIONS MAIN.
+MAIN ::= RES_MAIN L_PAREN ARGS:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY   {: RESULT = new SymbolMain(v1, v2); :};
 
-MAIN -> main L_PAREN ARGS R_PAREN L_KEY INSTRUCTIONS R_KEY.
+DECLARATIONS ::= DECLARATION:v1 ENDLINE DECLARATIONS:v2                 {: RESULT = new SymbolDecs(v1, v2) :}
+    | FUNCTION:v1 DECLARATIONS:v2                                       {: RESULT = new SymbolDecs(v1, v2) :}
+    | error ENDLINE                                                     {: RESULT = ParserSym.error :}
+    | error R_KEY                                                       {: RESULT = ParserSym.error :}
+    |                                                                   {: RESULT = new SymbolDecs() :};
 
-DECLARATIONS -> DECLARATION ENDLINE DECLARATIONS 
-    | FUNCTION DECLARATIONS 
-    | error ENDLINE
-    | error R_KEY
-    | .
+DECLARATION ::= CONSTANT CONT_DECLARATION:v                             {: RESULT = new SymbolDec(v, true) :}
+    | CONT_DECLARATION:v                                                {: RESULT = new SymbolDec(v) :};
 
-DECLARATION -> CONSTANT CONT_DECLARATION
-    | CONT_DECLARATION.
+CONT_DECLARATION ::= TYPE:v1 VARIABLE:v2 EQUAL EXPRESSION:v3            {: RESULT = new SymbolDecCont(v1, v2, v3); :}
+    | TYPE:v1 VARIABLE:v2 EQUAL OPERATION:v3                            {: RESULT = new SymbolDecCont(v1, v2, v3); :}
+    | TYPE:v1 VARIABLE:v2                                               {: RESULT = new SymbolDecCont(v1, v2); :};
 
-CONT_DECLARATION ->	TYPE VARIABLE EQUAL EXPRESSION
-    | TYPE VARIABLE EQUAL OPERATION
-    | TYPE VARIABLE.
+FUNCTION ::= TYPE:v1 VARIABLE:v2 ARGS:v3 INSTRUCTIONS:v4                {: RESULT = new SymbolFunc(v1, v2, v3, v4) :};
 
-FUNCTION -> TYPE VARIABLE L_PAREN ARGS R_PAREN L_KEY INSTRUCTIONS R_KEY.
+ARGS ::= ARG:v1 MORE_ARGS:v2                                            {: RESULT = new SymbolArgs(v1, v2) :}
+    |                                                                   {: RESULT = new SymbolArgs() :};
 
-ARGS -> ARG MORE_ARGS
-    | .
+MORE_ARGS ::= COMMA ARG:v1 MORE_ARGS:v2                                 {: RESULT = new SymbolMoreArgs(v1, v2); :}
+    |                                                                   {: RESULT = new SymbolMoreArgs(); :};
 
-MORE_ARGS -> COMMA ARG MORE_ARGS
-    | .
-
-ARG -> TYPE VARIABLE.
+/*ARG -> TYPE VARIABLE.
 
 INSTRUCTIONS -> INSTRUCTION INSTRUCTIONS
     | .
