@@ -117,35 +117,35 @@ ARGS ::= ARG:v1 MORE_ARGS:v2                                            {: RESUL
 MORE_ARGS ::= COMMA ARG:v1 MORE_ARGS:v2                                 {: RESULT = new SymbolMoreArgs(v1, v2); :}
     |                                                                   {: RESULT = new SymbolMoreArgs(); :};
 
-/*ARG -> TYPE VARIABLE.
+ARG ::= TYPE:v1 VARIABLE:v2                                             {: RESULT = new SymbolArg(v1, v2); :};
 
-INSTRUCTIONS -> INSTRUCTION INSTRUCTIONS
-    | .
+INSTRUCTIONS ::= INSTRUCTION:v1 INSTRUCTIONS:v2                         {: RESULT = new SymbolInstrs(v1, v2); :}
+    |                                                                   {: RESULT = new SymbolInstrs(); :};
 
-INSTRUCTION -> DECLARATION ENDLINE
-    | ASSIGNATION ENDLINE
-    | SWAP ENDLINE
-    | FUNCTION_CALL ENDLINE
-    | RETURN ENDLINE
-    | IF
-    | LOOP
-    | FOR
-    | IN ENDLINE
-    | OUT ENDLINE
-    | error ENDLINE
-    | error R_KEY.
+INSTRUCTION ::= DECLARATION:v ENDLINE                                   {: RESULT = new SymbolInstr(v); :}
+    | ASSIGNATION:v ENDLINE                                             {: RESULT = new SymbolInstr(v); :}
+    | SWAP:v ENDLINE                                                    {: RESULT = new SymbolInstr(v); :}
+    | FUNCTION_CALL:v ENDLINE                                           {: RESULT = new SymbolInstr(v); :}
+    | RETURN:v ENDLINE                                                  {: RESULT = new SymbolInstr(v); :}
+    | IF:v                                                              {: RESULT = new SymbolInstr(v); :}
+    | LOOP:v                                                            {: RESULT = new SymbolInstr(v); :}
+    | FOR:v                                                             {: RESULT = new SymbolInstr(v); :}
+    | IN:v ENDLINE                                                      {: RESULT = new SymbolInstr(v); :}
+    | OUT:v ENDLINE                                                     {: RESULT = new SymbolInstr(v); :}
+    | error ENDLINE                                                     {: RESULT = ParserSym.error; :}
+    | error R_KEY                                                       {: RESULT = ParserSym.error; :};
 
-ASSIGNATION -> VARIABLE EQUAL OPERATION 
-    | VARIABLE EQUAL EXPRESSION.
+ASSIGNATION ::= VARIABLE:v1 EQUAL OPERATION:v2                          {: RESULT = new SymbolAssign(v1, v2); :} 
+    | VARIABLE:v1 EQUAL EXPRESSION:v2                                   {: RESULT = new SymbolAssign(v1, v2); :};
 
-SWAP -> VARIABLE <<>> VARIABLE.
+SWAP ::= VARIABLE:v1 OP_SWAP VARIABLE:v2                                {: RESULT = new SymbolSwap(v1, v2); :};
 
-EXPRESSION -> VALUE
+/*EXPRESSION ::= VALUE
     | L_PAREN EXPRESSION R_PAREN
     | L_PAREN OPERATION R_PAREN
-    | NOT EXPRESSION.
+    | NOT EXPRESSION;
 
-OPERATION -> EXPRESSION OP EXPRESSION.
+/*OPERATION -> EXPRESSION OP EXPRESSION.
 
 OP -> ADDITION
     | SUBSTRACTION
