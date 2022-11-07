@@ -12,7 +12,8 @@ import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
 public class SymbolBase extends ComplexSymbol {
     private static int idSymbol = 0;
 
-    public SymbolBase(String variable, Integer valor){
-        super(variable, idSymbol++, valor);
+    public SymbolBase(String variable, Object value){
+        super(variable, idSymbol++, value);
     }
+    
 }

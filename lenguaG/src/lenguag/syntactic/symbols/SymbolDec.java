@@ -12,18 +12,24 @@ package lenguag.syntactic.symbols;
     | CONT_DECLARATION.
  */
 public class SymbolDec extends SymbolBase {
-    private boolean constant;
+    private boolean isConstant;
     SymbolDecCont cont_declaration;
     
     public SymbolDec(SymbolDecCont cont_declaration) {
         super("Declaration", 0);
         this.cont_declaration = cont_declaration;
-        constant = false;
+        isConstant = false;
+        // Add variable to tabla de variables
     }
     
-    public SymbolDec(int CONSTANT, SymbolDecCont cont_declaration){
+    public SymbolDec(SymbolDecCont cont_declaration, boolean isConstant){
         super("Declaration", 0);
         this.cont_declaration = cont_declaration;
-        constant = true;
+        this.isConstant = isConstant;
+        // Add variable to tabla de variables
+    }
+
+    public boolean isConstant(){
+        return isConstant;
     }
 }
