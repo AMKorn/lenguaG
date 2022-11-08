@@ -5,8 +5,9 @@
 
 package lenguag.syntactic;
 
-import java_cup.runtime.*;
 import lenguag.syntactic.symbols.*;
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -436,6 +437,51 @@ public class Parser extends java_cup.runtime.lr_parser {
 
   /** <code>error</code> Symbol index. */
   public int error_sym() {return 1;}
+
+
+
+
+    /**********************************************************************
+     * sobrecàrrega de mètodes per gestionar els errors que es localitzin *
+     **********************************************************************/
+
+    @Override
+    public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
+        report_error("Error sintàctic catastròfic", cur_token);
+        done_parsing();        
+    }
+
+    @Override
+    public void syntax_error(Symbol cur_token) {
+        report_error("de sintaxis", cur_token);
+    }
+
+    @Override
+    public void report_error(String message, Object info) {
+        StringBuilder msg = new StringBuilder("ERROR");
+        if (info instanceof Symbol) {
+            ComplexSymbol token = (ComplexSymbol)info;
+            Location l = token.getLeft();
+            
+            if (l != null) {
+                msg.append(" (fila: ")
+                   .append(l.getLine())
+                   .append(", columna: ")
+                   .append(l.getColumn())
+                   .append(")");
+            }
+        }
+        msg.append(": ").append(message);
+        
+        System.err.println(msg);
+    }
+
+    @Override
+    public void report_fatal_error(String message, Object info) throws Exception {
+        report_error("Error catastròfic ("+message+")", info);
+        done_parsing();
+    }
+
 
 
 /** Cup generated class to encapsulate user supplied action code.*/

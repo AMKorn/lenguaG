@@ -59,6 +59,13 @@ public class LenguaG {
             Parser parser = new Parser(la, sf);
             parser.parse();
 
+            if(la.getError()){
+                System.err.println("Lexic analysis failed due to: " 
+                                + la.writeErrors()
+                                + "Ending compilation process.");
+                return;
+            }
+
             la.printTokens();
         } catch(FileNotFoundException fnf) {
             // User error

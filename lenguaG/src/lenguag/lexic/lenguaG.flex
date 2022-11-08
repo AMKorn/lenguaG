@@ -39,7 +39,7 @@ import lenguag.syntactic.ParserSym;
 identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 
 integer 		= 0|\-?[1-9][0-9]*
-float			= {integer}?\.[0-9]+(e{integer})?
+//float			= {integer}?\.[0-9]+(e{integer})?
 // Take the following three lines out if it's difficult to implement later down the line
 binary			= \-?0b[01]+
 octal			= \-?0o[0-7]+
@@ -53,7 +53,7 @@ string 			= {doubleQuotes}[^]*{doubleQuotes}
 
 // Reserved words
 typeInt			= "int"
-typeFloat 		= "float"
+//typeFloat 		= "float"
 typeChar		= "char"
 typeBool		= "bool"
 typeVoid		= "void"
@@ -110,11 +110,11 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 // El següent codi es copiarà també, dins de la classe. És a dir, si es posa res ha de ser en el format adient: mètodes, atributs, etc. 
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
 %{
-	private boolean thereIsLexicalError = false;
 	private ArrayList<String> tokens = new ArrayList<>();
 
+	private ArrayList<String> errors = new ArrayList<>();
+
 	public void printTokens(){
-		System.out.println("Hola");
 		for(String s: tokens){
 			System.out.println(s);
 		}
@@ -130,12 +130,30 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 		return tokenList;
 	}
 
-	private void writeError(String token, int line, int column){
-		System.out.println(" * Elemento no reconocido " + token + " en la posicion [line: " + line + ", column: " + column + "]");
+	public String writeErrors(){
+		String errorsList = "";
+
+		for(String s : errors){
+			errorsList += s + "\n";
+		}
+
+		return errorsList;
+	}
+
+	public boolean getError(){
+		return !errors.isEmpty();
+	}
+
+	private String errorMessage(){
+		return " * Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]";
 	}
 	
-	private int parseNum(String s){
-		if(s.charAt(0) != 0 || s.length() == 1) return Integer.parseInt(s);	// Does not have a prefix. We also check length in the case it's only a 0.
+	private int parseNum(String s) throws NumberFormatException {
+		// We check if it's a negative number.
+		if(s.charAt(0) == '-') return -(parseNum(s.substring(0)));
+		// We check whether the first number is a 0, if so there might be a prefix specifying base, unless it's just a 0 by itself.
+		if(s.charAt(0) != '0' || s.length() == 1) return Integer.parseInt(s);
+		// If 
 		char base = s.charAt(1);
 		String[] sParts = s.split(""+base);
 		switch(base){
@@ -146,19 +164,17 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 			case 'x':
 				return Integer.parseInt(sParts[1], 16);
 			default:
-				thereIsLexicalError = true;
-				writeError(s, yyline, yycolumn);
-				return 0;
+				throw new NumberFormatException(errorMessage());
 		}
 	}
 
 	// Functions to streamline CUP symbol returns.
     private Symbol symbol(int type) {
-        return new Symbol(type, yyline, yycolumn);
+        return new Symbol(type, yyline+1, yycolumn+1);
     }
     
     private Symbol symbol(int type, Object value) {
-        return new Symbol(type, yyline, yycolumn, value);
+        return new Symbol(type, yyline+1, yycolumn+1, value);
     }
 %}
 
@@ -184,7 +200,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {resOut} 			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_OUT); }
 // Types
 {typeInt}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_INTEGER); }
-{typeFloat}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_FLOAT); }
+//{typeFloat}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_FLOAT); }
 {typeChar}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_CHARACTER); }
 {typeBool}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_BOOLEAN); }
 {typeVoid}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_VOID); }
@@ -216,19 +232,21 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 
 // Non-reserved words
 {character}			{ tokens.add("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext().charAt(0)); }
-{float}				{ tokens.add("Float: " + yytext()); return symbol(ParserSym.FLOAT, Float.parseFloat(yytext())); }
+//{float}				{ tokens.add("Float: " + yytext()); return symbol(ParserSym.FLOAT, Float.parseFloat(yytext())); }
 {int_number}		{ tokens.add("Number: " + yytext()); 
-						// As thereIsLexicalError may be modified inside of parseNum, we have to store its previous value.
-						boolean prev = thereIsLexicalError;
-						thereIsLexicalError = false;
-						Integer value = parseNum(yytext());
-						if(thereIsLexicalError) return symbol(ParserSym.error);
-						thereIsLexicalError = prev;
-						return symbol(ParserSym.INTEGER, value); }
+						try {Integer value = parseNum(yytext());
+							return symbol(ParserSym.INTEGER, value); 
+						} catch(NumberFormatException nf) {
+							errors.add(errorMessage()); 
+							return symbol(ParserSym.error);
+						}
+					}
 {boolean}			{ tokens.add("Boolean: " + yytext()); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext())); }
 {string}			{ tokens.add("string: " + yytext()); return symbol(ParserSym.STRING, yytext());}
 
 {identifier}		{ tokens.add("Identifier: " + yytext()); return symbol(ParserSym.IDENTIFIER, yytext()); }
 
 {ws}				{ /* Do nothing */ }
-[^]					{ writeError(yytext(), yyline+1, yycolumn+1); return symbol(ParserSym.error); }
+[^]					{ errors.add(errorMessage()); 
+						return symbol(ParserSym.error); 
+					}
