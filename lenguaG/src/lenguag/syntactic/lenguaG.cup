@@ -48,9 +48,9 @@ non terminal SymbolDecs         DECLARATIONS;
 non terminal SymbolDec          DECLARATION;
 non terminal SymbolDecCont      CONT_DECLARATION;
 non terminal SymbolMain         MAIN;
-non terminal SymbolArgs         ARGS;
+non terminal SymbolArgs         ARGS, MORE_ARGS;
 non terminal SymbolArg          ARG;
-non terminal SymbolMoreArgs     MORE_ARGS;
+// non terminal SymbolMoreArgs     MORE_ARGS;
 non terminal SymbolInstrs       INSTRUCTIONS;
 non terminal SymbolInstr        INSTRUCTION;
 non terminal SymbolFunc         FUNCTION;
@@ -66,21 +66,22 @@ non terminal SymbolOper         OPERATION;
 non terminal SymbolValue        VALUE;
 non terminal SymbolOp           OP;
 non terminal SymbolOpRel        OP_REL;
-non terminal SymbolFixedVal     FIXED_VALUE;
+// non terminal SymbolFixedVal     FIXED_VALUE;
+non terminal Object             FIXED_VALUE;
 non terminal SymbolArrSuff      ARRAY_SUFFIX;
-non terminal SymbolList         LIST;
-non terminal SymbolContList     CONT_LIST;
+non terminal SymbolList         LIST, CONT_LIST;
+// non terminal SymbolContList     CONT_LIST;
 non terminal SymbolCond         CONDITION;
 non terminal SymbolIf           IF;
 non terminal SymbolElse         ELSE;
 non terminal SymbolLoop         LOOP;
 non terminal SymbolFor          FOR;
-non terminal SymbolForHeader    FOR_HEADER;
+// non terminal SymbolForHeader    FOR_HEADER;
 non terminal SymbolHeaderSeg    HEADER_SEGMENT;
 non terminal SymbolFuncCall     FUNCTION_CALL;
-non terminal SymbolParams       PARAMS;
-non terminal SymbolParam        PARAM;
-non terminal SymbolMoreParams   MORE_PARAMS;
+non terminal SymbolParams       PARAMS, MORE_PARAMS;
+// non terminal SymbolParam        PARAM;
+// non terminal SymbolMoreParams   MORE_PARAMS;
 
 precedence left  PROD, DIV, MOD, ADD, SUB;
 precedence left  AND, OR;
@@ -98,9 +99,9 @@ MAIN ::= RES_MAIN L_PAREN ARGS:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY   {: RESUL
 
 DECLARATIONS ::= DECLARATION:v1 ENDLINE DECLARATIONS:v2                 {: RESULT = new SymbolDecs(v1, v2); :}
     | FUNCTION:v1 DECLARATIONS:v2                                       {: RESULT = new SymbolDecs(v1, v2); :}
-    | error ENDLINE                                                     {: RESULT = ParserSym.error; :}
-    | error R_KEY                                                       {: RESULT = ParserSym.error; :}
     |                                                                   {: RESULT = new SymbolDecs(); :};
+    // | error ENDLINE                                                     {: RESULT = null /*Error treatment*/ :}
+    // | error R_KEY                                                       {: RESULT = null /*Error treatment*/ :}
 
 DECLARATION ::= CONSTANT CONT_DECLARATION:v                             {: RESULT = new SymbolDec(v, true); :}
     | CONT_DECLARATION:v                                                {: RESULT = new SymbolDec(v); :};
@@ -109,13 +110,15 @@ CONT_DECLARATION ::= TYPE:v1 VARIABLE:v2 EQUAL EXPRESSION:v3            {: RESUL
     | TYPE:v1 VARIABLE:v2 EQUAL OPERATION:v3                            {: RESULT = new SymbolDecCont(v1, v2, v3); :}
     | TYPE:v1 VARIABLE:v2                                               {: RESULT = new SymbolDecCont(v1, v2); :};
 
-FUNCTION ::= TYPE:v1 VARIABLE:v2 ARGS:v3 INSTRUCTIONS:v4                {: RESULT = new SymbolFunc(v1, v2, v3, v4); :};
+FUNCTION ::= TYPE:v1 VARIABLE:v2 L_PAREN ARGS:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY 
+                                                                        {: RESULT = new SymbolFunc(v1, v2, v3, v4); :};
 
 ARGS ::= ARG:v1 MORE_ARGS:v2                                            {: RESULT = new SymbolArgs(v1, v2); :}
     |                                                                   {: RESULT = new SymbolArgs(); :};
 
-MORE_ARGS ::= COMMA ARG:v1 MORE_ARGS:v2                                 {: RESULT = new SymbolMoreArgs(v1, v2); :}
-    |                                                                   {: RESULT = new SymbolMoreArgs(); :};
+// Idea: moreArgs is same as Args
+MORE_ARGS ::= COMMA ARG:v1 MORE_ARGS:v2                                 {: RESULT = new SymbolArgs(v1, v2); :}
+    |                                                                   {: RESULT = new SymbolArgs(); :};
 
 ARG ::= TYPE:v1 VARIABLE:v2                                             {: RESULT = new SymbolArg(v1, v2); :};
 
@@ -131,102 +134,109 @@ INSTRUCTION ::= DECLARATION:v ENDLINE                                   {: RESUL
     | LOOP:v                                                            {: RESULT = new SymbolInstr(v); :}
     | FOR:v                                                             {: RESULT = new SymbolInstr(v); :}
     | IN:v ENDLINE                                                      {: RESULT = new SymbolInstr(v); :}
-    | OUT:v ENDLINE                                                     {: RESULT = new SymbolInstr(v); :}
-    | error ENDLINE                                                     {: RESULT = ParserSym.error; :}
-    | error R_KEY                                                       {: RESULT = ParserSym.error; :};
+    | OUT:v ENDLINE                                                     {: RESULT = new SymbolInstr(v); :};
+    // | error ENDLINE                                                     {: RESULT = null /*Error treatment*/ :}
+    // | error R_KEY                                                       {: RESULT = null /*Error treatment*/ :};
 
 ASSIGNATION ::= VARIABLE:v1 EQUAL OPERATION:v2                          {: RESULT = new SymbolAssign(v1, v2); :} 
     | VARIABLE:v1 EQUAL EXPRESSION:v2                                   {: RESULT = new SymbolAssign(v1, v2); :};
 
 SWAP ::= VARIABLE:v1 OP_SWAP VARIABLE:v2                                {: RESULT = new SymbolSwap(v1, v2); :};
 
-/*EXPRESSION ::= VALUE
-    | L_PAREN EXPRESSION R_PAREN
-    | L_PAREN OPERATION R_PAREN
-    | NOT EXPRESSION;
+EXPRESSION ::= VALUE:v                                                  {: RESULT = new SymbolExpr(v); :}
+    | L_PAREN EXPRESSION:v R_PAREN                                      {: RESULT = new SymbolExpr(v); :}
+    | L_PAREN OPERATION:v R_PAREN                                       {: RESULT = new SymbolExpr(v); :}
+    | NOT EXPRESSION:v1                                                 {: RESULT = new SymbolExpr(v1, false); :};
 
-/*OPERATION -> EXPRESSION OP EXPRESSION.
+OPERATION ::= EXPRESSION:v1 OP:v2 EXPRESSION:v3                         {: RESULT = new SymbolOper(v1, v2, v3) :};
 
-OP -> ADDITION
-    | SUBSTRACTION
-    | PRODUCT
-    | DIVISION
-    | MODULE
-    | OR
-    | AND
-    | OP_REL.
+OP ::= ADD                                                              {: RESULT = new SymbolOp(ParserSym.ADD); :}
+    | SUB                                                               {: RESULT = new SymbolOp(ParserSym.SUB); :}
+    | PROD                                                              {: RESULT = new SymbolOp(ParserSym.PROD); :}
+    | DIV                                                               {: RESULT = new SymbolOp(ParserSym.DIV); :}
+    | MOD                                                               {: RESULT = new SymbolOp(ParserSym.MOD); :}
+    | OR                                                                {: RESULT = new SymbolOp(ParserSym.OR); :}
+    | AND                                                               {: RESULT = new SymbolOp(ParserSym.AND); :}
+    | OP_REL:v                                                          {: RESULT = new SymbolOp(v); :};
 
-OP_REL -> IS_EQUAL
-    | BIGGER
-    | BEQ
-    | LESSER
-    | LEQ
-    | NEQ.
+OP_REL ::= IS_EQUAL                                                     {: RESULT = new SymbolOpRel(ParserSym.IS_EQUAL); :}
+    | BIGGER                                                            {: RESULT = new SymbolOpRel(ParserSym.IS_EQUAL); :}
+    | BEQ                                                               {: RESULT = new SymbolOpRel(ParserSym.BEQ); :}
+    | LESSER                                                            {: RESULT = new SymbolOpRel(ParserSym.LESSER); :}
+    | LEQ                                                               {: RESULT = new SymbolOpRel(ParserSym.LEQ); :}
+    | NEQ                                                               {: RESULT = new SymbolOpRel(ParserSym.NEQ); :};
 
-VALUE -> VARIABLE
-    | FIXED_VALUE
-    | FUNCTION_CALL.
+VALUE ::= VARIABLE:v                                                    {: RESULT = new SymbolValue(v); :}
+    | FIXED_VALUE:v                                                     {: RESULT = new SymbolValue(v); :}
+    | FUNCTION_CALL:v                                                   {: RESULT = new SymbolValue(v); :};
 
-VARIABLE -> IDENTIFIER ARRAY_SUFFIX.
+VARIABLE ::= IDENTIFIER:v1 ARRAY_SUFFIX:v2                              {: RESULT = new SymbolVar(v1, v2); :};
 
-ARRAY_SUFFIX -> L_BRACKET VARIABLE R_BRACKET ARRAY_SUFFIX # variable must be integer
-    | .
+ARRAY_SUFFIX ::= L_BRACKET VARIABLE:v1 R_BRACKET ARRAY_SUFFIX:v2        {: RESULT = new SymbolArrSuff(v1, v2); :}
+    |                                                                   {: RESULT = new SymbolArrSuff(); :};
 
-FIXED_VALUE -> INTEGER
-    | FLOAT
-    | CHARACTER
-    | LIST
-    | BOOLEAN.
+FIXED_VALUE ::= INTEGER:v                                               {: RESULT = v; /* Returns Integer */ :} 
+    | FLOAT:v                                                           {: RESULT = v; /* Returns Float */ :}
+    | CHARACTER:v                                                       {: RESULT = v; /* Returns Character */ :}
+    | LIST:v                                                            {: RESULT = v; /* Returns SymbolList */ :}
+    | BOOLEAN:v                                                         {: RESULT = v; /* Returns Integer */ :};
 
-TYPE -> TYPE_INTEGER ARRAY_SUFFIX
-    | TYPE_FLOAT ARRAY_SUFFIX
-    | TYPE_CHARACTER ARRAY_SUFFIX
-    | TYPE_BOOLEAN ARRAY_SUFFIX
-    | VOID.
+TYPE ::= TYPE_INTEGER ARRAY_SUFFIX:v                                    {: RESULT = new SymbolType(ParserSym.TYPE_INTEGER, v); :}
+    | TYPE_FLOAT ARRAY_SUFFIX:v                                         {: RESULT = new SymbolType(ParserSym.TYPE_FLOAT, v); :}
+    | TYPE_CHARACTER ARRAY_SUFFIX:v                                     {: RESULT = new SymbolType(ParserSym.TYPE_CHARACTER, v); :}
+    | TYPE_BOOLEAN ARRAY_SUFFIX:v                                       {: RESULT = new SymbolType(ParserSym.TYPE_BOOLEAN, v); :}
+    | TYPE_VOID                                                         {: RESULT = new SymbolType(ParserSym.TYPE_VOID); :};
 
-LIST -> L_BRACKET VALUE CONT_LIST
-    | STRING.
-CONT_LIST -> COMMA VALUE CONT_LIST
-    | R_BRACKET
-    | error R_BRACKET.
+LIST ::= L_BRACKET VALUE:v1 CONT_LIST:v2                                {: RESULT = new SymbolList(v1, v2); :};
+//    | STRING;     // TODO maybe
 
-CONDITION -> EXPRESSION
-    | OPERATION.
+CONT_LIST ::= COMMA VALUE:v1 CONT_LIST:v2                               {: RESULT = new SymbolList(v1, v2); :}
+    | R_BRACKET                                                         {: RESULT = new SymbolList(); :};
+//    | error R_BRACKET;
 
-IF -> if L_PAREN CONDITION R_PAREN L_KEY INSTRUCTIONS R_KEY ELSE.
-ELSE -> else if L_PAREN CONDITION R_PAREN L_KEY INSTRUCTIONS R_KEY ELSE
-    | else L_KEY INSTRUCTIONS R_KEY
-    | .
+CONDITION ::= EXPRESSION:v                                              {: RESULT = new SymbolCond(v); :}
+    | OPERATION:v                                                       {: RESULT = new SymbolCond(v); :};
 
-LOOP -> while L_PAREN CONDITION R_PAREN L_KEY INSTRUCTIONS R_KEY.
+IF ::= RES_IF L_PAREN CONDITION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY ELSE:v3 
+                                                                        {: RESULT = new SymbolIf(v1, v2, v3); :};
 
-FOR -> FOR_HEADER L_KEY INSTRUCTIONS R_KEY.
+ELSE ::= RES_ELSE IF:v                                                  {: RESULT = new SymbolElse(v); :}
+    | RES_ELSE L_KEY INSTRUCTIONS R_KEY                                     {: RESULT = new SymbolElse(v); :}
+    |                                                                   {: RESULT = new SymbolElse(); :};
 
-FOR_HEADER -> for L_PAREN HEADER_SEGMENT ENDLINE CONDITION ENDLINE HEADER_SEGMENT R_PAREN.
+LOOP ::= RES_WHILE L_PAREN CONDITION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY {: RESULT = new SymbolLoop(v1, v2); :};
 
-HEADER_SEGMENT -> DECLARATION 
-    | ASSIGNATION 
-    | SWAP 
-    | FUNCTION_CALL. # Quitar si no implementamos pasar por referencia
+FOR ::= RES_FOR L_PAREN HEADER_SEGMENT:v1 ENDLINE CONDITION:v2 ENDLINE HEADER_SEGMENT:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY
+                                                                        {: RESULT = new SymbolFor(v1, v2, v3, v4); :};
 
-FUNCTION_CALL -> VARIABLE L_PAREN PARAMS R_PAREN.
+//FOR_HEADER -> for L_PAREN HEADER_SEGMENT ENDLINE CONDITION ENDLINE HEADER_SEGMENT R_PAREN.*/
 
-PARAMS -> PARAM MORE_PARAMS
-    | .
+HEADER_SEGMENT ::= DECLARATION:v                                        {: RESULT = new SymbolHeaderSeg(v); :}
+    | ASSIGNATION:v                                                     {: RESULT = new SymbolHeaderSeg(v); :}
+    | SWAP:v                                                            {: RESULT = new SymbolHeaderSeg(v); :}
+    | FUNCTION_CALL:v                                                   {: RESULT = new SymbolHeaderSeg(v); :}; 
+    // ^- Quitar si no implementamos pasar por referencia
 
-MORE_PARAMS -> COMMA PARAM MORE_PARAMS
-    | .
+FUNCTION_CALL ::= VARIABLE:v1 L_PAREN PARAMS:v2 R_PAREN                 {: RESULT = new SymbolFuncCall(v1, v2); :};
 
-PARAM -> VALUE.
+// PARAMS ::= PARAM:v1 MORE_PARAMS:v2                                      {: RESULT = new SymbolParams(v1, v2); :}
+PARAMS ::= VALUE:v1 MORE_PARAMS:v2                                      {: RESULT = new SymbolParams(v1, v2); :}
+    |                                                                   {: RESULT = new SymbolParams(); :};
 
-RETURN -> return EXPRESSION
-    | return OPERATION
-    | return.
+// MORE_PARAMS ::= COMMA PARAM:v1 MORE_PARAMS:v2                           {: RESULT = new SymbolParams(v1, v2); :}
+MORE_PARAMS ::= COMMA VALUE:v1 MORE_PARAMS:v2                           {: RESULT = new SymbolParams(v1, v2); :}
+    |                                                                   {: RESULT = new SymbolParams(); :};
 
-IN -> in L_PAREN PARAM R_PAREN.
+//PARAM := VALUE                                                          {: RESULT = new SymbolParam()}.
 
-OUT -> out L_PAREN PARAM R_PAREN.
-************************************************************************************************************************************
+RETURN ::= RES_RETURN EXPRESSION:v                                      {: RESULT = new SymbolReturn(v); :}
+    | RES_RETURN OPERATION:v                                            {: RESULT = new SymbolReturn(v); :}
+    | RES_RETURN                                                        {: RESULT = new SymbolReturn(); :};
+
+IN ::= RES_IN L_PAREN VARIABLE:v R_PAREN                                {: RESULT = new SymbolIn(v); :};
+
+OUT ::= RES_OUT L_PAREN VALUE:v R_PAREN                                 {: RESULT = new SymbolOut(v); :};
+/************************************************************************************************************************************
 E ::=  T:v1 Ep:v2       {: RESULT = new SymbolE((Integer)v1.value, v2);  :}
      ;
 
