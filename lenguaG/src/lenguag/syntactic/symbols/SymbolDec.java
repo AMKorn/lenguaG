@@ -35,15 +35,15 @@ public class SymbolDec extends SymbolBase {
     
     // TODO get SymbolDecCont - tengo que pensar como quiero hacerlo. Creo que voy a meter todos los metodos getter y setter de DecCont aqui
     // por ahora lo dejo asi
-    SymbolType getType(){
-        return cont_declaration.type;
+    public int getType(){
+        return cont_declaration.getType();
     }
 
     SymbolVar getVar(){
-        return cont_declaration.variable;
+        return cont_declaration.getVar();
     }
 
     SymbolBase getValue(){
-        return cont_declaration.value;
+        return cont_declaration.getValue();
     }
 }

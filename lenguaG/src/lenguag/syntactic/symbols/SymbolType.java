@@ -35,6 +35,7 @@ public class SymbolType extends SymbolBase {
     }
 
     public int getType(){
+        // TODO return type_array if it's an array
         return type;
     }
 
