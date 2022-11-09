@@ -28,19 +28,19 @@ parser code {:
 **/
 parser code {:
 
-    /**********************************************************************
-     * sobrecàrrega de mètodes per gestionar els errors que es localitzin *
-     **********************************************************************/
+    /**
+     * error treatment methods override 
+     **/
 
     @Override
     public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
-        report_error("Error sintàctic catastròfic", cur_token);
+        report_error("Catastrophical syntactical error", cur_token);
         done_parsing();        
     }
 
     @Override
     public void syntax_error(Symbol cur_token) {
-        report_error("de sintaxis", cur_token);
+        report_error("Syntactical error", cur_token);
     }
 
     @Override
@@ -65,7 +65,7 @@ parser code {:
 
     @Override
     public void report_fatal_error(String message, Object info) throws Exception {
-        report_error("Error catastròfic ("+message+")", info);
+        report_error("Catastrophical error ("+message+")", info);
         done_parsing();
     }
 
