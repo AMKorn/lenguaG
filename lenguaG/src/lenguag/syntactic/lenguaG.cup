@@ -197,7 +197,7 @@ EXPRESSION ::= VALUE:v                                                  {: RESUL
              | NOT EXPRESSION:v1                                        {: RESULT = new SymbolExpr(v1, true); :}
              ;
 
-OPERATION ::= EXPRESSION:v1 OP:v2 EXPRESSION:v3                         {: RESULT = new SymbolOper(v1, v2, v3) :}
+OPERATION ::= EXPRESSION:v1 OP:v2 EXPRESSION:v3                         {: RESULT = new SymbolOper(v1, v2, v3); :}
             ;
 
 OP ::= ADD                                                              {: RESULT = new SymbolOp(ParserSym.ADD); :}
