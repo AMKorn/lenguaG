@@ -15,7 +15,7 @@ public class SymbolArg extends SymbolBase {
     SymbolVar variable;
 
     public SymbolArg(SymbolType v1, SymbolVar v2) {
-        super("Argument", 0)
+        super("Argument", 0);
         this.type = v1;
         this.variable = v2;
     }

@@ -13,30 +13,22 @@ package lenguag.syntactic.symbols;
     | TYPE:v1 VARIABLE:v2   
  */
 public class SymbolDecCont extends SymbolBase {
-    SymbolExpr expression;
-    SymbolOper operation; 
+    //SymbolExpr expression;
+    //SymbolOper operation; 
     SymbolType type;
     SymbolVar variable;
+    SymbolBase value;
 
     public SymbolDecCont(SymbolType v1, SymbolVar v2, SymbolExpr v3) {
         super("Cont_Declaration", 0);
         this.type = v1;
         this.variable = v2;
-        this.expression = v3;
+        this.value = v3;
     }
 
-    public SymbolDecCont(SymbolType v1, SymbolVar v2, SymbolOper v3) {
-        super("Cont_Declaration", 0);
-        this.type = v1;
-        this.variable = v2;
-        this.operation = v3;
-    }
-
-    public SymbolDecCont(SymbolType v1, SymbolVar v2, SymbolOper v3) {
+    public SymbolDecCont(SymbolType v1, SymbolVar v2) {
         super("Cont_Declaration", 0);
         this.type = v1;
         this.variable = v2;
     }
-
-    
 }

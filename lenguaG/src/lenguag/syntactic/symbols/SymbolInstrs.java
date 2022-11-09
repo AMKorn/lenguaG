@@ -13,7 +13,7 @@ package lenguag.syntactic.symbols;
     |
  */
 public class SymbolInstrs extends SymbolBase{
-    SymbolInstr instruction;
+    SymbolInstr instruction; // TODO - quizas ponerlo como directamente la instruccion que sea y ahorrarnos SymbolInstr
     SymbolInstrs instructions;
 
     public SymbolInstrs(SymbolInstr v1, SymbolInstrs v2) {

@@ -12,8 +12,27 @@ package lenguag.syntactic.symbols;
  */
 public class SymbolVar extends SymbolBase {
 
-    public SymbolVar() {
-        
+    private String idName;
+    private boolean isArray;
+    private SymbolArrSuff arraySuffix;
+
+    public SymbolVar(String idName, SymbolArrSuff arraySuffix) {
+        super("Variable", 0);
+        // TODO check if variable es constante?
+        this.idName = idName;
+        this.arraySuffix = arraySuffix;
+        isArray = arraySuffix.isEmpty()? false : true;
     }
     
+    public String getName(){
+        return idName;
+    }
+
+    public SymbolArrSuff getArrSuff() {
+        return arraySuffix;
+    }
+
+    public boolean isArray(){
+        return isArray;
+    }
 }

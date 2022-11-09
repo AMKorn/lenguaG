@@ -14,32 +14,21 @@ package lenguag.syntactic.symbols;
     | NOT EXPRESSION:v1  
  */
 public class SymbolExpr extends SymbolBase {
-    private boolean isExpr;
-    SymbolValue value;
-    SymbolExpr expression;
-    SymbolOper operation;
 
-    public SymbolExpr(SymbolValue value, boolean isExpr) {
-        super("Value", 0);
-        this.value = value;
-        this.isExpr = isExpr;
-    }
+    private boolean isNegated;
+    private SymbolBase expression;
 
-    public SymbolExpr(SymbolExpr expression, boolean isExpr) {
-        super("Value", 0);
+    public SymbolExpr(SymbolBase expression){
+        super("Expression", 0);
         this.expression = expression;
-        this.isExpr = isExpr;
+        isNegated = false;
     }
 
-    public SymbolExpr(SymbolOper operation, boolean isExpr) {
-        super("Value", 0);
-        this.operation = operation;
-        this.isExpr = isExpr;
-    }
-
-    public SymbolExpr(SymbolExpr expression) {
-        super("Value", 0);
+    public SymbolExpr(SymbolBase expression, boolean isNegated){
+        super("Expression", 0);
         this.expression = expression;
-        this.isExpr = false;
+        this.isNegated = isNegated;
     }
+    
+    // TODO getters
 }

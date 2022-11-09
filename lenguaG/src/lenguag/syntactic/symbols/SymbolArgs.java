@@ -12,8 +12,8 @@ package lenguag.syntactic.symbols;
     | 
  */
 public class SymbolArgs extends SymbolBase {
-    SymbolArg argument;
-    SymbolArgs arguments;
+    private SymbolArg argument;
+    private SymbolArgs arguments;
 
     public SymbolArgs(SymbolArg v1, SymbolArgs v2) {
         super("Arguments", 0);
@@ -21,4 +21,11 @@ public class SymbolArgs extends SymbolBase {
         this.arguments = v2;
     }
     
+    public SymbolArg getArg(){
+        return argument;
+    }
+
+    public SymbolArgs getNext(){
+        return arguments;
+    }
 }

@@ -6,10 +6,6 @@
  * 	- Vilella Candia, Joan 
  */
 
-/*
- * REVISAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR!!!!!!!!!!!!!!!!!
- */
-
 package lenguag.syntactic.symbols;
 
 /*
@@ -24,56 +20,13 @@ package lenguag.syntactic.symbols;
     | IN:v ENDLINE                                                      
     | OUT:v ENDLINE                                                     
  */
-public class SymbolInstr extends Symbolbase {
-    SymbolDec declaration;
-    SymbolAssign assignation;
-    SymbolSwap swap;
-    SymbolFuncCall function_call;
-    SymbolReturn s_return;
-    SymbolIf s_if;
-    SymbolLoop loop;
-    SymbolFor s_for;
-    SymbolIn in;
-    SymbolOut out;
+public class SymbolInstr extends SymbolBase {
+    SymbolBase instruction;
 
-    public SymbolInstr(SymbolDec declaration) {
+    public SymbolInstr(SymbolBase instruction){
         super("Instruction", 0);
+        this.instruction = instruction;
     }
 
-    public SymbolInstr(SymbolAssign assignation) {
-        super("Instruction", 0);
-    }
-
-    public SymbolInstr(SymbolSwap swap) {
-        super("Instruction", 0);
-    }
-
-    public SymbolInstr(SymbolFuncCall function_call) {
-        super("Instruction", 0);
-    }
-
-    public SymbolInstr(SymbolReturn s_return) {
-        super("Instruction", 0);
-    }
-
-    public SymbolInstr(SymbolIf s_if) {
-        super("Instruction", 0);
-    }
-
-    public SymbolInstr(SymbolLoop loop) {
-        super("Instruction", 0);
-    }
-
-    public SymbolInstr(SymbolFor s_for) {
-        super("Instruction", 0);
-    }
-
-    public SymbolInstr(SymbolIn in) {
-        super("Instruction", 0);
-    }
-
-    public SymbolInstr(SymbolOut ou) {
-        super("Instruction", 0);
-    }
-
+    // TODO detectar qué tipo de instrucción es, aunque me veo venir que eso tendremos que hacerlo desde la funcion gestionar del semantico
 }

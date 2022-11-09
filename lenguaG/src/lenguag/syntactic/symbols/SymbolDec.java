@@ -13,7 +13,7 @@ package lenguag.syntactic.symbols;
  */
 public class SymbolDec extends SymbolBase {
     private boolean isConstant;
-    SymbolDecCont cont_declaration;
+    private SymbolDecCont cont_declaration;
     
     public SymbolDec(SymbolDecCont cont_declaration) {
         super("Declaration", 0);
@@ -31,5 +31,19 @@ public class SymbolDec extends SymbolBase {
 
     public boolean isConstant(){
         return isConstant;
+    }
+    
+    // TODO get SymbolDecCont - tengo que pensar como quiero hacerlo. Creo que voy a meter todos los metodos getter y setter de DecCont aqui
+    // por ahora lo dejo asi
+    SymbolType getType(){
+        return cont_declaration.type;
+    }
+
+    SymbolVar getVar(){
+        return cont_declaration.variable;
+    }
+
+    SymbolBase getValue(){
+        return cont_declaration.value;
     }
 }

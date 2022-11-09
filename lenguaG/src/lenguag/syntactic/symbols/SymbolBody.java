@@ -11,8 +11,8 @@ package lenguag.syntactic.symbols;
  * BODY -> DECLARATIONS MAIN.
  */
 public class SymbolBody extends SymbolBase {
-    SymbolDecs declarations;
-    SymbolMain main;
+    private SymbolDecs declarations;
+    private SymbolMain main;
 
     public SymbolBody(SymbolDecs declarations, SymbolMain main){
         super("Body", 0);
