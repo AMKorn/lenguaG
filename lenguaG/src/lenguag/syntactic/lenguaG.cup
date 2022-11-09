@@ -12,6 +12,7 @@
 package lenguag.syntactic;
 
 import lenguag.syntactic.symbols.*;
+import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 
@@ -84,7 +85,6 @@ terminal                        L_PAREN, R_PAREN, L_KEY, R_KEY, L_BRACKET, R_BRA
 terminal                        OP_SWAP, ADD, SUB, PROD, DIV, MOD, OR, AND, IS_EQUAL, BIGGER, BEQ, LESSER, LEQ, NEQ;
 terminal     String             IDENTIFIER;
 terminal     Integer            INTEGER;
-// terminal     Float              FLOAT;
 terminal     Character          CHARACTER;
 terminal     Boolean            BOOLEAN;
 terminal     String             STRING;
@@ -95,7 +95,6 @@ non terminal SymbolDecCont      CONT_DECLARATION;
 non terminal SymbolMain         MAIN;
 non terminal SymbolArgs         ARGS, MORE_ARGS;
 non terminal SymbolArg          ARG;
-// non terminal SymbolMoreArgs     MORE_ARGS;
 non terminal SymbolInstrs       INSTRUCTIONS;
 non terminal SymbolInstr        INSTRUCTION;
 non terminal SymbolFunc         FUNCTION;
@@ -111,22 +110,17 @@ non terminal SymbolOper         OPERATION;
 non terminal SymbolValue        VALUE;
 non terminal SymbolOp           OP;
 non terminal SymbolOpRel        OP_REL;
-// non terminal SymbolFixedVal     FIXED_VALUE;
 non terminal Object             FIXED_VALUE;
 non terminal SymbolArrSuff      ARRAY_SUFFIX;
 non terminal SymbolList         LIST, CONT_LIST;
-// non terminal SymbolContList     CONT_LIST;
 non terminal SymbolCond         CONDITION;
 non terminal SymbolIf           IF;
 non terminal SymbolElse         ELSE;
 non terminal SymbolLoop         LOOP;
 non terminal SymbolFor          FOR;
-// non terminal SymbolForHeader    FOR_HEADER;
 non terminal SymbolHeaderSeg    HEADER_SEGMENT;
 non terminal SymbolFuncCall     FUNCTION_CALL;
 non terminal SymbolParams       PARAMS, MORE_PARAMS;
-// non terminal SymbolParam        PARAM;
-// non terminal SymbolMoreParams   MORE_PARAMS;
 
 precedence left  PROD, DIV, MOD, ADD, SUB;
 precedence left  AND, OR;
@@ -200,7 +194,7 @@ SWAP ::= VARIABLE:v1 OP_SWAP VARIABLE:v2                                {: RESUL
 EXPRESSION ::= VALUE:v                                                  {: RESULT = new SymbolExpr(v); :}
              | L_PAREN EXPRESSION:v R_PAREN                             {: RESULT = new SymbolExpr(v); :}
              | L_PAREN OPERATION:v R_PAREN                              {: RESULT = new SymbolExpr(v); :}
-             | NOT EXPRESSION:v1                                        {: RESULT = new SymbolExpr(v1, false); :}
+             | NOT EXPRESSION:v1                                        {: RESULT = new SymbolExpr(v1, true); :}
              ;
 
 OPERATION ::= EXPRESSION:v1 OP:v2 EXPRESSION:v3                         {: RESULT = new SymbolOper(v1, v2, v3) :}
@@ -241,14 +235,12 @@ FIXED_VALUE ::= INTEGER:v                                               {: RESUL
               | LIST:v                                                  {: RESULT = v; /* Returns SymbolList */ :}
               | BOOLEAN:v                                               {: RESULT = v; /* Returns Integer */ :}
               ;
-            //   | FLOAT:v                                                 {: RESULT = v; /* Returns Float */ :}
 
 TYPE ::= TYPE_INTEGER ARRAY_SUFFIX:v                                    {: RESULT = new SymbolType(ParserSym.TYPE_INTEGER, v); :}
        | TYPE_CHARACTER ARRAY_SUFFIX:v                                  {: RESULT = new SymbolType(ParserSym.TYPE_CHARACTER, v); :}
        | TYPE_BOOLEAN ARRAY_SUFFIX:v                                    {: RESULT = new SymbolType(ParserSym.TYPE_BOOLEAN, v); :}
        | TYPE_VOID                                                      {: RESULT = new SymbolType(ParserSym.TYPE_VOID); :}
        ;
-    //    | TYPE_FLOAT ARRAY_SUFFIX:v                                      {: RESULT = new SymbolType(ParserSym.TYPE_FLOAT, v); :}
 
 LIST ::= L_BRACKET VALUE:v1 CONT_LIST:v2                                {: RESULT = new SymbolList(v1, v2); :}
        ;
@@ -290,12 +282,10 @@ HEADER_SEGMENT ::= DECLARATION:v                                        {: RESUL
 FUNCTION_CALL ::= VARIABLE:v1 L_PAREN PARAMS:v2 R_PAREN                 {: RESULT = new SymbolFuncCall(v1, v2); :}
                 ;
 
-// PARAMS ::= PARAM:v1 MORE_PARAMS:v2                                      {: RESULT = new SymbolParams(v1, v2); :}
 PARAMS ::= VALUE:v1 MORE_PARAMS:v2                                      {: RESULT = new SymbolParams(v1, v2); :}
          |                                                              {: RESULT = new SymbolParams(); :}
          ;
 
-// MORE_PARAMS ::= COMMA PARAM:v1 MORE_PARAMS:v2                           {: RESULT = new SymbolParams(v1, v2); :}
 MORE_PARAMS ::= COMMA VALUE:v1 MORE_PARAMS:v2                           {: RESULT = new SymbolParams(v1, v2); :}
               |                                                         {: RESULT = new SymbolParams(); :}
               ;
