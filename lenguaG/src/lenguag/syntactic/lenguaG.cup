@@ -211,7 +211,7 @@ OP ::= ADD                                                              {: RESUL
      ;
 
 OP_REL ::= IS_EQUAL                                                     {: RESULT = new SymbolOpRel(ParserSym.IS_EQUAL); :}
-         | BIGGER                                                       {: RESULT = new SymbolOpRel(ParserSym.IS_EQUAL); :}
+         | BIGGER                                                       {: RESULT = new SymbolOpRel(ParserSym.BIGGER); :}
          | BEQ                                                          {: RESULT = new SymbolOpRel(ParserSym.BEQ); :}
          | LESSER                                                       {: RESULT = new SymbolOpRel(ParserSym.LESSER); :}
          | LEQ                                                          {: RESULT = new SymbolOpRel(ParserSym.LEQ); :}
