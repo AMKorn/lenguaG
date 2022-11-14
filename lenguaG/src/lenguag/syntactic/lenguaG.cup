@@ -100,7 +100,7 @@ non terminal SymbolInstr        INSTRUCTION;
 non terminal SymbolFunc         FUNCTION;
 non terminal SymbolType         TYPE;
 non terminal SymbolVar          VARIABLE;
-non terminal SymbolExpr         EXPRESSION;
+// non terminal SymbolExpr         EXPRESSION;
 non terminal SymbolAssign       ASSIGNATION;
 non terminal SymbolSwap         SWAP;
 non terminal SymbolReturn       RETURN;
@@ -118,9 +118,10 @@ non terminal SymbolIf           IF;
 non terminal SymbolElse         ELSE;
 non terminal SymbolLoop         LOOP;
 non terminal SymbolFor          FOR;
-non terminal SymbolHeaderSeg    HEADER_SEGMENT;
 non terminal SymbolFuncCall     FUNCTION_CALL;
 non terminal SymbolParams       PARAMS, MORE_PARAMS;
+
+non terminal                    HEADER_SEGMENT;
 
 precedence left  PROD, DIV, MOD, ADD, SUB;
 precedence left  AND, OR;
@@ -189,14 +190,20 @@ ASSIGNATION ::= VARIABLE:v1 EQUAL OPERATION:v2                          {: RESUL
 SWAP ::= VARIABLE:v1 OP_SWAP VARIABLE:v2                                {: RESULT = new SymbolSwap(v1, v2); :}
        ;
 
-EXPRESSION ::= VALUE:v                                                  {: RESULT = new SymbolExpr(v); :}
-             | L_PAREN OPERATION:v R_PAREN                              {: RESULT = new SymbolExpr(v); :}
-             | NOT EXPRESSION:v1                                        {: RESULT = new SymbolExpr(v1, true); :}
-             ;
-
-OPERATION ::= EXPRESSION:v1 OP:v2 EXPRESSION:v3                         {: RESULT = new SymbolOper(v1, v2, v3); :}
-            | EXPRESSION:v1                                             {: RESULT = new SymbolOper(v1); :}
+OPERATION ::= VALUE:v1                                                  {: RESULT = new SymbolOper(v1); :}
+            | VALUE:v1 OP:v2 VALUE:v3                                   {: RESULT = new SymbolOper(v1, v2, v3); :}
+            | NOT OPERATION:v                                           {: RESULT = new SymbolOper(v1, ParserSym.NOT); :}
+            | L_PAREN OPERATION:v R_PAREN                               {: RESULT = v; :}
             ;
+
+// EXPRESSION ::= VALUE:v                                                  {: RESULT = new SymbolExpr(v); :}
+//              | L_PAREN OPERATION:v R_PAREN                              {: RESULT = new SymbolExpr(v); :}
+//              | NOT EXPRESSION:v                                         {: RESULT = new SymbolExpr(v, true); :}
+//              ;
+
+// OPERATION ::= EXPRESSION:v1 OP:v2 EXPRESSION:v3                         {: RESULT = new SymbolOper(v1, v2, v3); :}
+//             | EXPRESSION:v1                                             {: RESULT = new SymbolOper(v1); :}
+//             ;
 
 OP ::= ADD                                                              {: RESULT = new SymbolOp(ParserSym.ADD); :}
      | SUB                                                              {: RESULT = new SymbolOp(ParserSym.SUB); :}
@@ -259,7 +266,7 @@ IF ::= RES_IF L_PAREN OPERATION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY ELSE:v3
      ;
 
 ELSE ::= RES_ELSE IF:v                                                  {: RESULT = new SymbolElse(v); :}
-       | RES_ELSE L_KEY INSTRUCTIONS R_KEY                              {: RESULT = new SymbolElse(v); :}
+       | RES_ELSE L_KEY INSTRUCTIONS:v R_KEY                            {: RESULT = new SymbolElse(v); :}
        |                                                                {: RESULT = new SymbolElse(); :}
        ;
 
@@ -271,10 +278,10 @@ FOR ::= RES_FOR L_PAREN HEADER_SEGMENT:v1 ENDLINE OPERATION:v2 ENDLINE HEADER_SE
                                                                         {: RESULT = new SymbolFor(v1, v2, v3, v4); :}
       ;
 
-HEADER_SEGMENT ::= DECLARATION:v                                        {: RESULT = new SymbolHeaderSeg(v); :}
-                 | ASSIGNATION:v                                        {: RESULT = new SymbolHeaderSeg(v); :}
-                 | SWAP:v                                               {: RESULT = new SymbolHeaderSeg(v); :}
-                 | FUNCTION_CALL:v                                      {: RESULT = new SymbolHeaderSeg(v); :}
+HEADER_SEGMENT ::= DECLARATION:v                                        {: RESULT = v; :}
+                 | ASSIGNATION:v                                        {: RESULT = v; :}
+                 | SWAP:v                                               {: RESULT = v; :}
+                 | FUNCTION_CALL:v                                      {: RESULT = v; :}
                  ; 
                     // ^- Quitar FUNCTION_CALL si no implementamos pasar por referencia
 
