@@ -121,7 +121,7 @@ non terminal SymbolFor          FOR;
 non terminal SymbolFuncCall     FUNCTION_CALL;
 non terminal SymbolParams       PARAMS, MORE_PARAMS;
 
-non terminal                    HEADER_SEGMENT;
+non terminal SymbolBase         HEADER_SEGMENT;
 
 precedence left  PROD, DIV, MOD, ADD, SUB;
 precedence left  AND, OR;
@@ -254,14 +254,14 @@ TYPE ::= TYPE_INTEGER                                                   {: RESUL
        | TYPE_CHARACTER                                                 {: RESULT = new SymbolType(ParserSym.TYPE_CHARACTER); :}
        | TYPE_BOOLEAN                                                   {: RESULT = new SymbolType(ParserSym.TYPE_BOOLEAN); :}
        | TYPE_VOID                                                      {: RESULT = new SymbolType(ParserSym.TYPE_VOID); :}
-       | TYPE:v L_BRACKET R_BRACKET                                     {: RESULT = new SymbolType(ParserSym.TYPE_ARRAY, v) :}
+       | TYPE:v L_BRACKET R_BRACKET                                     {: RESULT = new SymbolType(ParserSym.TYPE_ARRAY, v); :}
        ;
 
 LIST ::= L_BRACKET OPERATION:v1 CONT_LIST:v2                            {: RESULT = new SymbolList(v1, v2); :}
        ;
 //       | STRING;     // TODO maybe
 
-CONT_LIST ::= COMMA VALUE:v1 CONT_LIST:v2                               {: RESULT = new SymbolList(v1, v2); :}
+CONT_LIST ::= COMMA OPERATION:v1 CONT_LIST:v2                           {: RESULT = new SymbolList(v1, v2); :}
             | R_BRACKET                                                 {: RESULT = new SymbolList(); :}
             ;
 //            | error R_BRACKET;

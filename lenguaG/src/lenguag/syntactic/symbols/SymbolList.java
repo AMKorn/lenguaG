@@ -9,6 +9,10 @@ package lenguag.syntactic.symbols;
 
 /*
  * LIST ::= L_BRACKET OPERATION:value CONT_LIST:contList
+ * 
+ * 
+CONT_LIST ::= COMMA VALUE:value CONT_LIST:contList
+            | R_BRACKET
  */
 public class SymbolList extends SymbolBase {
     private SymbolOperation value;
@@ -20,6 +24,11 @@ public class SymbolList extends SymbolBase {
         this.value = value;
         this.contList = contList;
         length = contList.getLength()+1;
+    }
+
+    public SymbolList(){
+        super("List", 0);
+        length = 0;
     }
 
     public SymbolOperation getValue(){
