@@ -9,49 +9,50 @@ package lenguag.syntactic;
 public class ParserSym {
   /* terminals */
   public static final int TYPE_BOOLEAN = 7;
-  public static final int L_KEY = 18;
-  public static final int RES_ELSE = 10;
-  public static final int L_PAREN = 16;
-  public static final int INTEGER = 40;
-  public static final int TYPE_VOID = 8;
-  public static final int R_PAREN = 17;
-  public static final int CHARACTER = 41;
+  public static final int TYPE_ARRAY = 8;
+  public static final int L_KEY = 19;
+  public static final int RES_ELSE = 11;
+  public static final int L_PAREN = 17;
+  public static final int INTEGER = 41;
+  public static final int TYPE_VOID = 9;
+  public static final int R_PAREN = 18;
+  public static final int CHARACTER = 42;
   public static final int NOT = 4;
-  public static final int AND = 32;
-  public static final int RES_OUT = 15;
-  public static final int RES_FOR = 12;
-  public static final int RES_WHILE = 11;
-  public static final int OR = 31;
-  public static final int COMMA = 23;
-  public static final int ENDLINE = 24;
-  public static final int DIV = 29;
-  public static final int R_KEY = 19;
-  public static final int OP_SWAP = 25;
-  public static final int LESSER = 36;
-  public static final int IS_EQUAL = 33;
-  public static final int R_BRACKET = 21;
-  public static final int BOOLEAN = 42;
+  public static final int AND = 33;
+  public static final int RES_OUT = 16;
+  public static final int RES_FOR = 13;
+  public static final int RES_WHILE = 12;
+  public static final int OR = 32;
+  public static final int COMMA = 24;
+  public static final int ENDLINE = 25;
+  public static final int DIV = 30;
+  public static final int R_KEY = 20;
+  public static final int OP_SWAP = 26;
+  public static final int LESSER = 37;
+  public static final int IS_EQUAL = 34;
+  public static final int R_BRACKET = 22;
+  public static final int BOOLEAN = 43;
   public static final int EOF = 0;
-  public static final int EQUAL = 22;
+  public static final int EQUAL = 23;
   public static final int error = 1;
-  public static final int ADD = 26;
-  public static final int MOD = 30;
-  public static final int NEQ = 38;
+  public static final int ADD = 27;
+  public static final int MOD = 31;
+  public static final int NEQ = 39;
+  public static final int BIGGER = 35;
   public static final int CONSTANT = 3;
-  public static final int BIGGER = 34;
-  public static final int RES_RETURN = 13;
+  public static final int RES_RETURN = 14;
   public static final int TYPE_INTEGER = 5;
-  public static final int LEQ = 37;
-  public static final int PROD = 28;
-  public static final int STRING = 43;
-  public static final int RES_IN = 14;
+  public static final int LEQ = 38;
+  public static final int PROD = 29;
+  public static final int STRING = 44;
+  public static final int RES_IN = 15;
   public static final int RES_MAIN = 2;
   public static final int TYPE_CHARACTER = 6;
-  public static final int L_BRACKET = 20;
-  public static final int RES_IF = 9;
-  public static final int SUB = 27;
-  public static final int BEQ = 35;
-  public static final int IDENTIFIER = 39;
+  public static final int L_BRACKET = 21;
+  public static final int RES_IF = 10;
+  public static final int SUB = 28;
+  public static final int BEQ = 36;
+  public static final int IDENTIFIER = 40;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -61,6 +62,7 @@ public class ParserSym {
   "TYPE_INTEGER",
   "TYPE_CHARACTER",
   "TYPE_BOOLEAN",
+  "TYPE_ARRAY",
   "TYPE_VOID",
   "RES_IF",
   "RES_ELSE",
