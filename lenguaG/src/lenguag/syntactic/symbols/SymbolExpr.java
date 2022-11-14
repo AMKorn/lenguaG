@@ -16,15 +16,15 @@ package lenguag.syntactic.symbols;
 public class SymbolExpr extends SymbolBase {
 
     private boolean isNegated;
-    private SymbolBase expression;
+    private SymbolExpr expression;
 
-    public SymbolExpr(SymbolBase expression){
+    public SymbolExpr(SymbolExpr expression){
         super("Expression", 0);
         this.expression = expression;
         isNegated = false;
     }
 
-    public SymbolExpr(SymbolBase expression, boolean isNegated){
+    public SymbolExpr(SymbolExpr expression, boolean isNegated){
         super("Expression", 0);
         this.expression = expression;
         this.isNegated = isNegated;
