@@ -9,23 +9,27 @@ package lenguag.syntactic.symbols;
 
 /*
  * ASSIGNATION ::= VARIABLE:variable EQUAL OPERATION:rSide
-              | VARIABLE:variable EQUAL EXPRESSION:rSide
-              ;
  */
 
 public class SymbolAssign extends SymbolBase {
 
     private SymbolVar variable;
-    private Object rSide;
+    private SymbolOper rSide;
 
     //private SymbolExpr expression;
     //private SymbolOper operation;
 
-    public SymbolAssign(SymbolVar variable, Object rSide) {
+    public SymbolAssign(SymbolVar variable, SymbolOper rSide) {
         super("Assignation", 0);
         this.variable = variable;
         this.rSide = rSide;
     }
 
-    // TODO return right side
+    public SymbolVar getVariable(){
+        return variable;
+    }
+
+    public SymbolOper getRightSide(){
+        return rSide;
+    }
 }

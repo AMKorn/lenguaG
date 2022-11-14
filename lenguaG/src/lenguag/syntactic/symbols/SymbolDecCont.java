@@ -8,20 +8,18 @@
 package lenguag.syntactic.symbols;
 
 /**
- * CONT_DECLARATION ::= TYPE:v1 VARIABLE:v2 EQUAL EXPRESSION:v3
-    | TYPE:v1 VARIABLE:v2 EQUAL OPERATION:v3                            
-    | TYPE:v1 VARIABLE:v2   
+ * This is a support class of sort, used mostly by SymbolDec
+ * 
+ * CONT_DECLARATION ::= TYPE:v1 VARIABLE:v2 EQUAL OPERATION:v3
+ *                    | TYPE:v1 VARIABLE:v2
  */
 public class SymbolDecCont extends SymbolBase {
 
     private SymbolType type;
     private SymbolVar variable;
+    private SymbolOper value;
 
-    //SymbolExpr expression;
-    //SymbolOper operation; 
-    private SymbolBase value; // TODO value stuff
-
-    public SymbolDecCont(SymbolType v1, SymbolVar v2, SymbolBase v3) {
+    public SymbolDecCont(SymbolType v1, SymbolVar v2, SymbolOper v3) {
         super("Cont_Declaration", v3.value);
         this.type = v1;
         this.variable = v2;
@@ -34,15 +32,15 @@ public class SymbolDecCont extends SymbolBase {
         this.variable = v2;
     }
 
-    public int getType(){
-        return type.getType();
+    public SymbolType getType(){
+        return type;
     }
 
     public SymbolVar getVar(){
         return variable;
     }
 
-    public SymbolBase getValue(){
+    public SymbolOper getValue(){
         return value;
     }    
 }

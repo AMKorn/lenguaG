@@ -9,13 +9,13 @@
 package lenguag.syntactic.symbols;
 
 /*
- * FUNCTION ::= TYPE:v1 VARIABLE:v2 L_PAREN ARGS:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY 
+ * FUNCTION ::= TYPE:type VARIABLE:variable L_PAREN ARGS:args R_PAREN L_KEY INSTRUCTIONS:instructions R_KEY 
  */
 public class SymbolFunc extends SymbolBase {
-    SymbolType type;
-    SymbolVar variable;
-    SymbolArgs args;
-    SymbolInstrs instructions;
+    private SymbolType type;
+    private SymbolVar variable;
+    private SymbolArgs args;
+    private SymbolInstrs instructions;
 
     public SymbolFunc(SymbolType type, SymbolVar variable, SymbolArgs args, SymbolInstrs instructions) {
         super("Function", 0);
@@ -25,4 +25,23 @@ public class SymbolFunc extends SymbolBase {
         this.instructions = instructions;
     }
 
+    public SymbolType getType(){
+        return type;
+    }
+
+    public String getFunctionName(){
+        return variable.getName();
+    }
+
+    public int getNArgs(){
+        return args.getNArgs();
+    }
+
+    public SymbolArgs getArgs(){
+        return args;
+    }
+
+    public SymbolInstrs getInstructions(){
+        return instructions;
+    }
 }

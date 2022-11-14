@@ -8,7 +8,7 @@
 package lenguag.syntactic.symbols;
 
 /*
- * BODY -> DECLARATIONS MAIN.
+ * BODY ::= DECLARATIONS:declarations MAIN:main
  */
 public class SymbolBody extends SymbolBase {
     private SymbolDecs declarations;
@@ -18,5 +18,13 @@ public class SymbolBody extends SymbolBase {
         super("Body", 0);
         this.declarations = declarations;
         this.main = main;
+    }
+
+    public SymbolDecs getDeclarations(){
+        return declarations;
+    }
+
+    public SymbolMain getMain(){
+        return main;
     }
 }

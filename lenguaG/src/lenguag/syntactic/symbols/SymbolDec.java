@@ -8,23 +8,31 @@
 package lenguag.syntactic.symbols;
 
 /**
- * DECLARATION -> CONSTANT CONT_DECLARATION
-    | CONT_DECLARATION.
+ * DECLARATION ::= CONSTANT:isConstant CONT_DECLARATION:contDeclaration
+ *               | CONT_DECLARATION:contDeclaration
  */
 public class SymbolDec extends SymbolBase {
     private boolean isConstant;
-    private SymbolDecCont cont_declaration;
+
+    private SymbolType type;
+    private SymbolVar variable;
+    private SymbolOper value;
+    // private SymbolDecCont contDeclaration;
     
-    public SymbolDec(SymbolDecCont cont_declaration) {
+    public SymbolDec(SymbolDecCont contDeclaration) {
         super("Declaration", 0);
-        this.cont_declaration = cont_declaration;
+        type = contDeclaration.getType();
+        variable = contDeclaration.getVar();
+        value = contDeclaration.getValue();
         isConstant = false;
         // Add variable to tabla de variables
     }
     
-    public SymbolDec(SymbolDecCont cont_declaration, boolean isConstant){
+    public SymbolDec(SymbolDecCont contDeclaration, boolean isConstant){
         super("Declaration", 0);
-        this.cont_declaration = cont_declaration;
+        type = contDeclaration.getType();
+        variable = contDeclaration.getVar();
+        value = contDeclaration.getValue();
         this.isConstant = isConstant;
         // Add variable to tabla de variables
     }
@@ -33,17 +41,15 @@ public class SymbolDec extends SymbolBase {
         return isConstant;
     }
     
-    // TODO get SymbolDecCont - tengo que pensar como quiero hacerlo. Creo que voy a meter todos los metodos getter y setter de DecCont aqui
-    // por ahora lo dejo asi
-    public int getType(){
-        return cont_declaration.getType();
+    public SymbolType getType(){
+        return type;
     }
 
-    SymbolVar getVar(){
-        return cont_declaration.getVar();
+    public SymbolVar getVar(){
+        return variable;
     }
 
-    SymbolBase getValue(){
-        return cont_declaration.getValue();
+    public SymbolOper getValue(){
+        return value;
     }
 }

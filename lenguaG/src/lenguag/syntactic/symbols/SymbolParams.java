@@ -26,4 +26,7 @@ public class SymbolParams extends SymbolBase {
         this.more_params = more_params;
     }
     
+    public int getNParams(){
+        return 1; // TODO
+    }
 }

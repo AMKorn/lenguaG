@@ -21,7 +21,7 @@ public class SymbolVar extends SymbolBase {
         // TODO check if variable es constante?
         this.idName = idName;
         this.arraySuffix = arraySuffix;
-        isArray = arraySuffix.isEmpty()? false : true;
+        isArray = !arraySuffix.isEmpty();
     }
     
     public String getName(){
