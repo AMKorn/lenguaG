@@ -44,7 +44,6 @@ public class ParserSym {
   public static final int TYPE_INTEGER = 5;
   public static final int LEQ = 38;
   public static final int PROD = 29;
-  public static final int STRING = 44;
   public static final int RES_IN = 15;
   public static final int RES_MAIN = 2;
   public static final int TYPE_CHARACTER = 6;
@@ -97,8 +96,7 @@ public class ParserSym {
   "IDENTIFIER",
   "INTEGER",
   "CHARACTER",
-  "BOOLEAN",
-  "STRING"
+  "BOOLEAN"
   };
 }
 

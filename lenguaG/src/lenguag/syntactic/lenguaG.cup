@@ -87,7 +87,7 @@ terminal     String             IDENTIFIER;
 terminal     Integer            INTEGER;
 terminal     Character          CHARACTER;
 terminal     Boolean            BOOLEAN;
-terminal     String             STRING;
+// terminal     String             STRING;
 non terminal SymbolBody         BODY;
 non terminal SymbolDecs         DECLARATIONS;
 non terminal SymbolDec          DECLARATION;
@@ -113,7 +113,7 @@ non terminal SymbolOpRel        OP_REL;
 non terminal Object             FIXED_VALUE;
 non terminal SymbolArrSuff      ARRAY_SUFFIX;
 non terminal SymbolList         LIST, CONT_LIST;
-non terminal SymbolCond         CONDITION;
+// non terminal SymbolCond         CONDITION;
 non terminal SymbolIf           IF;
 non terminal SymbolElse         ELSE;
 non terminal SymbolLoop         LOOP;
@@ -146,8 +146,7 @@ DECLARATION ::= CONSTANT CONT_DECLARATION:v                             {: RESUL
               | CONT_DECLARATION:v                                      {: RESULT = new SymbolDec(v); :}
               ;
 
-CONT_DECLARATION ::= TYPE:v1 VARIABLE:v2 EQUAL EXPRESSION:v3            {: RESULT = new SymbolDecCont(v1, v2, v3); :}
-                   | TYPE:v1 VARIABLE:v2 EQUAL OPERATION:v3             {: RESULT = new SymbolDecCont(v1, v2, v3); :}
+CONT_DECLARATION ::= TYPE:v1 VARIABLE:v2 EQUAL OPERATION:v3             {: RESULT = new SymbolDecCont(v1, v2, v3); :}
                    | TYPE:v1 VARIABLE:v2                                {: RESULT = new SymbolDecCont(v1, v2); :}
                    ;
 
@@ -185,19 +184,18 @@ INSTRUCTION ::= DECLARATION:v ENDLINE                                   {: RESUL
 //              | error R_KEY                                                       {: RESULT = null /*Error treatment*/ :};
 
 ASSIGNATION ::= VARIABLE:v1 EQUAL OPERATION:v2                          {: RESULT = new SymbolAssign(v1, v2); :} 
-              | VARIABLE:v1 EQUAL EXPRESSION:v2                         {: RESULT = new SymbolAssign(v1, v2); :}
               ;
 
 SWAP ::= VARIABLE:v1 OP_SWAP VARIABLE:v2                                {: RESULT = new SymbolSwap(v1, v2); :}
        ;
 
 EXPRESSION ::= VALUE:v                                                  {: RESULT = new SymbolExpr(v); :}
-             | L_PAREN EXPRESSION:v R_PAREN                             {: RESULT = new SymbolExpr(v); :}
              | L_PAREN OPERATION:v R_PAREN                              {: RESULT = new SymbolExpr(v); :}
              | NOT EXPRESSION:v1                                        {: RESULT = new SymbolExpr(v1, true); :}
              ;
 
 OPERATION ::= EXPRESSION:v1 OP:v2 EXPRESSION:v3                         {: RESULT = new SymbolOper(v1, v2, v3); :}
+            | EXPRESSION:v1                                             {: RESULT = new SymbolOper(v1); :}
             ;
 
 OP ::= ADD                                                              {: RESULT = new SymbolOp(ParserSym.ADD); :}
@@ -252,11 +250,11 @@ CONT_LIST ::= COMMA VALUE:v1 CONT_LIST:v2                               {: RESUL
             ;
 //            | error R_BRACKET;
 
-CONDITION ::= EXPRESSION:v                                              {: RESULT = new SymbolCond(v); :}
-            | OPERATION:v                                               {: RESULT = new SymbolCond(v); :}
-            ;
+// CONDITION ::= EXPRESSION:v                                              {: RESULT = new SymbolCond(v); :}
+//             | OPERATION:v                                               {: RESULT = new SymbolCond(v); :}
+//             ;
 
-IF ::= RES_IF L_PAREN CONDITION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY ELSE:v3 
+IF ::= RES_IF L_PAREN OPERATION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY ELSE:v3 
                                                                         {: RESULT = new SymbolIf(v1, v2, v3); :}
      ;
 
@@ -265,11 +263,11 @@ ELSE ::= RES_ELSE IF:v                                                  {: RESUL
        |                                                                {: RESULT = new SymbolElse(); :}
        ;
 
-LOOP ::= RES_WHILE L_PAREN CONDITION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY 
+LOOP ::= RES_WHILE L_PAREN OPERATION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY 
                                                                         {: RESULT = new SymbolLoop(v1, v2); :}
        ;
 
-FOR ::= RES_FOR L_PAREN HEADER_SEGMENT:v1 ENDLINE CONDITION:v2 ENDLINE HEADER_SEGMENT:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY
+FOR ::= RES_FOR L_PAREN HEADER_SEGMENT:v1 ENDLINE OPERATION:v2 ENDLINE HEADER_SEGMENT:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY
                                                                         {: RESULT = new SymbolFor(v1, v2, v3, v4); :}
       ;
 
@@ -291,8 +289,7 @@ MORE_PARAMS ::= COMMA VALUE:v1 MORE_PARAMS:v2                           {: RESUL
               |                                                         {: RESULT = new SymbolParams(); :}
               ;
 
-RETURN ::= RES_RETURN EXPRESSION:v                                      {: RESULT = new SymbolReturn(v); :}
-         | RES_RETURN OPERATION:v                                       {: RESULT = new SymbolReturn(v); :}
+RETURN ::= RES_RETURN OPERATION:v                                       {: RESULT = new SymbolReturn(v); :}
          | RES_RETURN                                                   {: RESULT = new SymbolReturn(); :}
          ;
 
