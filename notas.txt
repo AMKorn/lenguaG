@@ -1,0 +1,3 @@
+Generacion codigo 3 direcciones:
+- Para optimizar: mini tabla de variables con las variables que se van creando en la que apuntar las veces que se utiliza
+- lista enlazada con las instrucciones
