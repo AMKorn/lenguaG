@@ -18,7 +18,7 @@ package lenguag.syntactic.symbols;
      | OP_REL:v                                                         {: RESULT = new SymbolOp(v); :}
      ;
  */
-public class SymbolOp extends Symbolbase {
+public class SymbolOp extends SymbolBase {
     public SymbolOp() {
         super("Op", 0);
     }

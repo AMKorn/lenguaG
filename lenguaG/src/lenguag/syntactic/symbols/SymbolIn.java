@@ -11,7 +11,7 @@ package lenguag.syntactic.symbols;
  * IN ::= RES_IN L_PAREN VARIABLE:v R_PAREN                                {: RESULT = new SymbolIn(v); :}
      ;
  */
-public class SymbolIn extends Symbolbase {
+public class SymbolIn extends SymbolBase {
     private SymbolVar variable;
 
     public SymbolIn(SymbolVar variable) {

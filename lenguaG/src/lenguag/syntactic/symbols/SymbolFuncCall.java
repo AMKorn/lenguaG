@@ -15,7 +15,7 @@ public class SymbolFuncCall extends SymbolBase {
     private SymbolVar variable;
     private SymbolParams params;
 
-    public SymbolFunCall(SymbolVar variable, SymbolParams params) {
+    public SymbolFuncCall(SymbolVar variable, SymbolParams params) {
         super("Function call", 0);
         this.variable = variable;
         this.params = params;

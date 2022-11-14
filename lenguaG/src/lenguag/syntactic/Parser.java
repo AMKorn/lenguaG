@@ -427,19 +427,19 @@ public class Parser extends java_cup.runtime.lr_parser {
 
 
 
-    /**********************************************************************
-     * sobrecàrrega de mètodes per gestionar els errors que es localitzin *
-     **********************************************************************/
+    /**
+     * error treatment methods override 
+     **/
 
     @Override
     public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
-        report_error("Error sintàctic catastròfic", cur_token);
+        report_error("Catastrophical syntactical error", cur_token);
         done_parsing();        
     }
 
     @Override
     public void syntax_error(Symbol cur_token) {
-        report_error("de sintaxis", cur_token);
+        report_error("Syntactical error", cur_token);
     }
 
     @Override
@@ -464,7 +464,7 @@ public class Parser extends java_cup.runtime.lr_parser {
 
     @Override
     public void report_fatal_error(String message, Object info) throws Exception {
-        report_error("Error catastròfic ("+message+")", info);
+        report_error("Catastrophical error ("+message+")", info);
         done_parsing();
     }
 
@@ -986,7 +986,7 @@ class CUP$Parser$actions {
 		int v3left = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int v3right = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		SymbolExpr v3 = (SymbolExpr)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new SymbolOper(v1, v2, v3) 
+		 RESULT = new SymbolOper(v1, v2, v3); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("OPERATION",19, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

@@ -11,7 +11,7 @@ package lenguag.syntactic.symbols;
  * SWAP ::= VARIABLE:v1 OP_SWAP VARIABLE:v2                                {: RESULT = new SymbolSwap(v1, v2); :}
        ;
  */
-public class SymbolSwap extends Symbolbase {
+public class SymbolSwap extends SymbolBase {
     private SymbolVar variable1;
     private SymbolVar variable2;
 
