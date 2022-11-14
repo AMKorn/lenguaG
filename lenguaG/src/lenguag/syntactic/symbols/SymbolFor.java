@@ -10,15 +10,15 @@ package lenguag.syntactic.symbols;
 /**
  * FOR ::= RES_FOR ( HEADER_SEGMENT:initialization ; OPERATION:condition ; HEADER_SEGMENT:finalStatement ) { INSTRUCTIONS:instructions }
  */
-public class SymbolFor extends SymbolBase {
+public class SymbolFor extends SymbolInstr {
     private SymbolBase initialization;
-    private SymbolOper condition;
+    private SymbolOperation condition;
     private SymbolBase finalStatement;
     private SymbolInstrs instructions;
 
-    public SymbolFor(SymbolBase initialization, SymbolOper condition, SymbolBase finalStatement,
+    public SymbolFor(SymbolBase initialization, SymbolOperation condition, SymbolBase finalStatement,
             SymbolInstrs instructions) {
-        super("For", 0);
+        super("For", 0, instructionType.instFor);
         this.initialization = initialization;
         this.condition = condition;
         this.finalStatement = finalStatement;
@@ -33,7 +33,7 @@ public class SymbolFor extends SymbolBase {
         return initialization;
     }
 
-    public SymbolOper getCondition(){
+    public SymbolOperation getCondition(){
         return condition;
     }
 

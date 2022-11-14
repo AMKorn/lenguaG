@@ -11,30 +11,29 @@ package lenguag.syntactic.symbols;
  * DECLARATION ::= CONSTANT:isConstant CONT_DECLARATION:contDeclaration
  *               | CONT_DECLARATION:contDeclaration
  */
-public class SymbolDec extends SymbolBase {
+public class SymbolDec extends SymbolInstr {
     private boolean isConstant;
 
     private SymbolType type;
     private SymbolVar variable;
-    private SymbolOper value;
+    private SymbolOperation value;
     // private SymbolDecCont contDeclaration;
     
     public SymbolDec(SymbolDecCont contDeclaration) {
-        super("Declaration", 0);
+        super("Declaration", 0, instructionType.instDeclaration);
+
         type = contDeclaration.getType();
         variable = contDeclaration.getVar();
         value = contDeclaration.getValue();
         isConstant = false;
-        // Add variable to tabla de variables
     }
     
     public SymbolDec(SymbolDecCont contDeclaration, boolean isConstant){
-        super("Declaration", 0);
+        super("Declaration", 0, instructionType.instDeclaration);
         type = contDeclaration.getType();
         variable = contDeclaration.getVar();
         value = contDeclaration.getValue();
         this.isConstant = isConstant;
-        // Add variable to tabla de variables
     }
 
     public boolean isConstant(){
@@ -49,7 +48,7 @@ public class SymbolDec extends SymbolBase {
         return variable;
     }
 
-    public SymbolOper getValue(){
+    public SymbolOperation getValue(){
         return value;
     }
 }

@@ -8,16 +8,29 @@
 package lenguag.syntactic.symbols;
 
 /*
- * LIST ::= L_BRACKET VALUE:v1 CONT_LIST:v2                                {: RESULT = new SymbolList(v1, v2); :}
-       ;
+ * LIST ::= L_BRACKET OPERATION:value CONT_LIST:contList
  */
 public class SymbolList extends SymbolBase {
-    private SymbolValue value;
-    private SymbolList cont_list;
+    private SymbolOperation value;
+    private int length;
+    private SymbolList contList;
 
-    public SymbolList(SymbolValue value, SymbolList cont_list) {
+    public SymbolList(SymbolOperation value, SymbolList contList) {
         super("List", 0);
         this.value = value;
-        this.cont_list = cont_list;
+        this.contList = contList;
+        length = contList.getLength()+1;
+    }
+
+    public SymbolOperation getValue(){
+        return value;
+    }
+
+    public int getLength(){
+        return length;
+    }
+
+    public SymbolList getNext(){
+        return contList;
     }
 }

@@ -8,28 +8,41 @@
 package lenguag.syntactic.symbols;
 
 /*
- * VALUE ::= VARIABLE:v                                                    {: RESULT = new SymbolValue(v); :}
-        | FIXED_VALUE:v                                                 {: RESULT = new SymbolValue(v); :}
-        | FUNCTION_CALL:v                                               {: RESULT = new SymbolValue(v); :}
-        ;
+ * VALUE ::= VARIABLE:v
+        | FIXED_VALUE:fixedValue
+        | FUNCTION_CALL:functionCall
  */
 public class SymbolValue extends SymbolBase {
-    private SymbolVar variable;
-    private Object fixed_value;
-    private SymbolFuncCall function_call;
+    
+    private boolean isLiteral;
+    private Object value;
 
     public SymbolValue(SymbolVar variable){
         super("value", 0);
-        this.variable = variable;
+        this.value = variable;
+        isLiteral = false;
     }
 
-    public SymbolValue(Object fixed_value){
-        super("value", 0);
-        this.fixed_value = fixed_value;
+    public SymbolValue(Object fixedValue){
+        super("value", fixedValue);
+        this.value = fixedValue;
+        isLiteral = true;
     }
 
-    public SymbolValue(SymbolFuncCall function_call){
+    public SymbolValue(SymbolFuncCall functionCall){
         super("value", 0);
-        this.function_call = function_call;
+        this.value = functionCall;
+        isLiteral = false;
+    }
+
+    public boolean isLiteral(){
+        return isLiteral;
+    }
+
+    /**
+     * @return SymbolVar, SymbolFuncCall or any of the wrapped primitives that we have implemented.
+     */
+    public Object getValue(){
+        return value;
     }
 }

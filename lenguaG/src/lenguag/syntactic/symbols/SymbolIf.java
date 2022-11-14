@@ -8,18 +8,29 @@
 package lenguag.syntactic.symbols;
 
 /*
- * IF ::= RES_IF L_PAREN OPERATION:condition R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY ELSE:v3 
+ * IF ::= RES_IF L_PAREN OPERATION:condition R_PAREN L_KEY INSTRUCTIONS:instructions R_KEY ELSE:sElse 
  */
-public class SymbolIf extends SymbolBase {
-    private SymbolOper condition;
+public class SymbolIf extends SymbolInstr {
+    private SymbolOperation condition;
     private SymbolInstrs instructions;
-    private SymbolElse s_else;
+    private SymbolElse sElse;
 
-    public SymbolIf(SymbolCond condition, SymbolInstrs instructions, SymbolElse s_else) {
-        super("Condition", 0);
+    public SymbolIf(SymbolOperation condition, SymbolInstrs instructions, SymbolElse sElse) {
+        super("Condition", 0, instructionType.instIf);
         this.condition = condition;
         this.instructions = instructions;
-        this.s_else = s_else;
+        this.sElse = sElse;
     }
     
+    public SymbolOperation getCondition(){
+        return condition;
+    }
+
+    public SymbolInstrs getInstructions(){
+        return instructions;
+    }
+
+    public SymbolElse getElse(){
+        return sElse;
+    }
 }

@@ -1,3 +1,10 @@
+/**
+ * Asignatura: 21780 - Compiladores
+ * Miembros:
+ * 	- Román Colom, Marc
+ * 	- Korn, Andreas Manuel
+ * 	- Vilella Candia, Joan 
+ */
 package lenguag.syntactic.symbols;
 
 /**
@@ -20,10 +27,6 @@ public class SymbolArrSuff extends SymbolBase {
     public SymbolArrSuff(){
         super("Array Suffix", 0);
         nDims = 0;
-    }
-
-    public boolean isEmpty(){
-        return nDims == 0;
     }
 
     public int getDimensions(){

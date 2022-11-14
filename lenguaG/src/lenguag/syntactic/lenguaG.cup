@@ -106,10 +106,10 @@ non terminal SymbolSwap         SWAP;
 non terminal SymbolReturn       RETURN;
 non terminal SymbolIn           IN;
 non terminal SymbolOut          OUT;
-non terminal SymbolOper         OPERATION;
+non terminal SymbolOperation    OPERATION;
+non terminal SymbolOperand      OPERAND;
 non terminal SymbolValue        VALUE;
-non terminal SymbolOp           OP;
-non terminal SymbolOpRel        OP_REL;
+non terminal SymbolOp           OP, OP_REL;
 non terminal Object             FIXED_VALUE;
 non terminal SymbolArrSuff      ARRAY_SUFFIX;
 non terminal SymbolList         LIST, CONT_LIST;
@@ -170,16 +170,16 @@ INSTRUCTIONS ::= INSTRUCTION:v1 INSTRUCTIONS:v2                         {: RESUL
                |                                                        {: RESULT = new SymbolInstrs(); :}
                ;
 
-INSTRUCTION ::= DECLARATION:v ENDLINE                                   {: RESULT = new SymbolInstr(v); :}
-              | ASSIGNATION:v ENDLINE                                   {: RESULT = new SymbolInstr(v); :}
-              | SWAP:v ENDLINE                                          {: RESULT = new SymbolInstr(v); :}
-              | FUNCTION_CALL:v ENDLINE                                 {: RESULT = new SymbolInstr(v); :}
-              | RETURN:v ENDLINE                                        {: RESULT = new SymbolInstr(v); :}
-              | IF:v                                                    {: RESULT = new SymbolInstr(v); :}
-              | LOOP:v                                                  {: RESULT = new SymbolInstr(v); :}
-              | FOR:v                                                   {: RESULT = new SymbolInstr(v); :}
-              | IN:v ENDLINE                                            {: RESULT = new SymbolInstr(v); :}
-              | OUT:v ENDLINE                                           {: RESULT = new SymbolInstr(v); :}
+INSTRUCTION ::= DECLARATION:v ENDLINE                                   {: RESULT = v; :}
+              | ASSIGNATION:v ENDLINE                                   {: RESULT = v; :}
+              | SWAP:v ENDLINE                                          {: RESULT = v; :}
+              | FUNCTION_CALL:v ENDLINE                                 {: RESULT = v; :}
+              | RETURN:v ENDLINE                                        {: RESULT = v; :}
+              | IF:v                                                    {: RESULT = v; :}
+              | LOOP:v                                                  {: RESULT = v; :}
+              | FOR:v                                                   {: RESULT = v; :}
+              | IN:v ENDLINE                                            {: RESULT = v; :}
+              | OUT:v ENDLINE                                           {: RESULT = v; :}
               ;
 //              | error ENDLINE                                                     {: RESULT = null /*Error treatment*/ :}
 //              | error R_KEY                                                       {: RESULT = null /*Error treatment*/ :};
@@ -190,11 +190,20 @@ ASSIGNATION ::= VARIABLE:v1 EQUAL OPERATION:v2                          {: RESUL
 SWAP ::= VARIABLE:v1 OP_SWAP VARIABLE:v2                                {: RESULT = new SymbolSwap(v1, v2); :}
        ;
 
-OPERATION ::= VALUE:v1                                                  {: RESULT = new SymbolOper(v1); :}
-            | VALUE:v1 OP:v2 VALUE:v3                                   {: RESULT = new SymbolOper(v1, v2, v3); :}
-            | NOT OPERATION:v                                           {: RESULT = new SymbolOper(v1, ParserSym.NOT); :}
-            | L_PAREN OPERATION:v R_PAREN                               {: RESULT = v; :}
+OPERATION ::= OPERAND:v1 OP:v2 OPERAND:v3                               {: RESULT = new SymbolOperation(v1, v2, v3); :}
+            | OPERAND:v1                                                {: RESULT = new SymbolOperation(v1); :}
             ;
+
+OPERAND ::= VALUE:v                                                     {: RESULT = new SymbolOperand(v); :}
+          | L_PAREN OPERATION:v R_PAREN                                 {: RESULT = new SymbolOperand(v); :}
+          | NOT OPERAND:v                                               {: v.negate(); RESULT = v; :}
+          ;
+
+// OPERATION ::= VALUE:v1                                                  {: RESULT = new SymbolOper(v1); :}
+//             | VALUE:v1 OP:v2 VALUE:v3                                   {: RESULT = new SymbolOper(v1, v2, v3); :}
+//             | NOT OPERATION:v                                           {: RESULT = new SymbolOper(v1, ParserSym.NOT); :}
+//             | L_PAREN OPERATION:v R_PAREN                               {: RESULT = v; :}
+//             ;
 
 // EXPRESSION ::= VALUE:v                                                  {: RESULT = new SymbolExpr(v); :}
 //              | L_PAREN OPERATION:v R_PAREN                              {: RESULT = new SymbolExpr(v); :}
@@ -212,15 +221,15 @@ OP ::= ADD                                                              {: RESUL
      | MOD                                                              {: RESULT = new SymbolOp(ParserSym.MOD); :}
      | OR                                                               {: RESULT = new SymbolOp(ParserSym.OR); :}
      | AND                                                              {: RESULT = new SymbolOp(ParserSym.AND); :}
-     | OP_REL:v                                                         {: RESULT = new SymbolOp(v); :}
+     | OP_REL:v                                                         {: RESULT = v; :}
      ;
 
-OP_REL ::= IS_EQUAL                                                     {: RESULT = new SymbolOpRel(ParserSym.IS_EQUAL); :}
-         | BIGGER                                                       {: RESULT = new SymbolOpRel(ParserSym.BIGGER); :}
-         | BEQ                                                          {: RESULT = new SymbolOpRel(ParserSym.BEQ); :}
-         | LESSER                                                       {: RESULT = new SymbolOpRel(ParserSym.LESSER); :}
-         | LEQ                                                          {: RESULT = new SymbolOpRel(ParserSym.LEQ); :}
-         | NEQ                                                          {: RESULT = new SymbolOpRel(ParserSym.NEQ); :}
+OP_REL ::= IS_EQUAL                                                     {: RESULT = new SymbolOp(ParserSym.IS_EQUAL, true); :}
+         | BIGGER                                                       {: RESULT = new SymbolOp(ParserSym.BIGGER, true); :}
+         | BEQ                                                          {: RESULT = new SymbolOp(ParserSym.BEQ, true); :}
+         | LESSER                                                       {: RESULT = new SymbolOp(ParserSym.LESSER, true); :}
+         | LEQ                                                          {: RESULT = new SymbolOp(ParserSym.LEQ, true); :}
+         | NEQ                                                          {: RESULT = new SymbolOp(ParserSym.NEQ, true); :}
          ;
 
 VALUE ::= VARIABLE:v                                                    {: RESULT = new SymbolValue(v); :}
@@ -248,7 +257,7 @@ TYPE ::= TYPE_INTEGER                                                   {: RESUL
        | TYPE:v L_BRACKET R_BRACKET                                     {: RESULT = new SymbolType(ParserSym.TYPE_ARRAY, v) :}
        ;
 
-LIST ::= L_BRACKET VALUE:v1 CONT_LIST:v2                                {: RESULT = new SymbolList(v1, v2); :}
+LIST ::= L_BRACKET OPERATION:v1 CONT_LIST:v2                            {: RESULT = new SymbolList(v1, v2); :}
        ;
 //       | STRING;     // TODO maybe
 
@@ -303,7 +312,7 @@ RETURN ::= RES_RETURN OPERATION:v                                       {: RESUL
 IN ::= RES_IN L_PAREN VARIABLE:v R_PAREN                                {: RESULT = new SymbolIn(v); :}
      ;
 
-OUT ::= RES_OUT L_PAREN VALUE:v R_PAREN                                 {: RESULT = new SymbolOut(v); :}
+OUT ::= RES_OUT L_PAREN OPERATION:v R_PAREN                             {: RESULT = new SymbolOut(v); :}
       ;
 
 /************************************************************************************************************************************

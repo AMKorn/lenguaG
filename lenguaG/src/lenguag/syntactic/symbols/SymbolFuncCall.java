@@ -11,12 +11,12 @@ package lenguag.syntactic.symbols;
  * FUNCTION_CALL ::= VARIABLE:functionName L_PAREN PARAMS:params R_PAREN
                 ;
  */
-public class SymbolFuncCall extends SymbolBase {
+public class SymbolFuncCall extends SymbolInstr {
     private SymbolVar functionName;
     private SymbolParams params;
 
     public SymbolFuncCall(SymbolVar functionName, SymbolParams params) {
-        super("Function call", 0);
+        super("Function call", 0, instructionType.instFunctionCall);
         this.functionName = functionName;
         this.params = params;
     }

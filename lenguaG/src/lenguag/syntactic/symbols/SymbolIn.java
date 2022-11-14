@@ -8,15 +8,18 @@
 package lenguag.syntactic.symbols;
 
 /*
- * IN ::= RES_IN L_PAREN VARIABLE:v R_PAREN                                {: RESULT = new SymbolIn(v); :}
+ * IN ::= RES_IN L_PAREN VARIABLE:variable R_PAREN
      ;
  */
-public class SymbolIn extends SymbolBase {
+public class SymbolIn extends SymbolInstr {
     private SymbolVar variable;
 
     public SymbolIn(SymbolVar variable) {
-        super("In", 0);
+        super("In", 0, instructionType.instIn);
         this.variable = variable;
     }
     
+    public SymbolVar getVar(){
+        return variable;
+    }
 }

@@ -17,9 +17,9 @@ public class SymbolDecCont extends SymbolBase {
 
     private SymbolType type;
     private SymbolVar variable;
-    private SymbolOper value;
+    private SymbolOperation value;
 
-    public SymbolDecCont(SymbolType v1, SymbolVar v2, SymbolOper v3) {
+    public SymbolDecCont(SymbolType v1, SymbolVar v2, SymbolOperation v3) {
         super("Cont_Declaration", v3.value);
         this.type = v1;
         this.variable = v2;
@@ -40,7 +40,7 @@ public class SymbolDecCont extends SymbolBase {
         return variable;
     }
 
-    public SymbolOper getValue(){
+    public SymbolOperation getValue(){
         return value;
     }    
 }

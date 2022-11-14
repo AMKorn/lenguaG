@@ -10,6 +10,9 @@ package lenguag.syntactic.symbols;
 /**
  * ARGS ::= ARG:argument MORE_ARGS:contArgs
  *        | 
+ * 
+ * MORE_ARGS ::= COMMA ARG:argument MORE_ARGS:contArgs
+            |
  */
 public class SymbolArgs extends SymbolBase {
 

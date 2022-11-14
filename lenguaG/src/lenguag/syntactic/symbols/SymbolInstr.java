@@ -9,24 +9,42 @@
 package lenguag.syntactic.symbols;
 
 /*
- * INSTRUCTION ::= DECLARATION:v ENDLINE                                   
-    | ASSIGNATION:v ENDLINE                                             
-    | SWAP:v ENDLINE                                                    
-    | FUNCTION_CALL:v ENDLINE                                           
-    | RETURN:v ENDLINE                                                  
-    | IF:v                                                              
-    | LOOP:v                                                            
-    | FOR:v                                                             
-    | IN:v ENDLINE                                                      
-    | OUT:v ENDLINE                                                     
+ * This is a class which the next classes extend to more easily control instructions. 
+ * 
+ * INSTRUCTION ::= DECLARATION:v ENDLINE
+    | ASSIGNATION:v ENDLINE
+    | SWAP:v ENDLINE
+    | FUNCTION_CALL:v ENDLINE
+    | RETURN:v ENDLINE
+    | IF:v
+    | LOOP:v
+    | FOR:v
+    | IN:v ENDLINE
+    | OUT:v ENDLINE
  */
 public class SymbolInstr extends SymbolBase {
-    SymbolBase instruction;
+    public static enum instructionType {
+        instDeclaration,
+        instAssignation,
+        instSwap,
+        instFunctionCall,
+        instReturn,
+        instIf,
+        instLoop,
+        instFor,
+        instIn,
+        instOut
+    }
+    private instructionType instructionType;
+    // SymbolBase instruction;
 
-    public SymbolInstr(SymbolBase instruction){
-        super("Instruction", 0);
-        this.instruction = instruction;
+    public SymbolInstr(String variable, int value, instructionType instructionType){
+        super(variable, value);
+        this.instructionType = instructionType;
     }
 
-    // TODO detectar qué tipo de instrucción es, aunque me veo venir que eso tendremos que hacerlo desde la funcion gestionar del semantico
+    public instructionType getInstructionType(){
+        return instructionType;
+    }
+    
 }

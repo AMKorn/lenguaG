@@ -8,18 +8,30 @@
 package lenguag.syntactic.symbols;
 
 /**
- * MAIN -> main L_PAREN ARGS R_PAREN L_KEY INSTRUCTIONS R_KEY.
+ * MAIN ::= RES_MAIN L_PAREN ARGS:args R_PAREN L_KEY INSTRUCTIONS:instructions R_KEY
  */
 
 public class SymbolMain extends SymbolBase {
-    SymbolArgs args;
-    SymbolInstrs instructions;
+    private SymbolArgs args;
+    private int nArgs;
+    private SymbolInstrs instructions;
     
     public SymbolMain(SymbolArgs args, SymbolInstrs instructions) {
-        super("Main", 1);
+        super("Main", 0);
         this.args = args;
+        nArgs = args.getNArgs();
         this.instructions = instructions;
     }
     
-    
+    public SymbolArgs getArgs(){
+        return args;
+    }
+
+    public int getNArgs(){
+        return nArgs;
+    }
+
+    public SymbolInstrs getInstructions(){
+        return instructions;
+    }
 }

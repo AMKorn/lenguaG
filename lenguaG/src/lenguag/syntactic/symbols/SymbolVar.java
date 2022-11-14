@@ -8,7 +8,7 @@
 package lenguag.syntactic.symbols;
 
 /*
- * VARIABLE ::= IDENTIFIER:v1 ARRAY_SUFFIX:v2
+ * VARIABLE ::= IDENTIFIER:idName ARRAY_SUFFIX:arraySuffix
  */
 public class SymbolVar extends SymbolBase {
 
@@ -18,10 +18,9 @@ public class SymbolVar extends SymbolBase {
 
     public SymbolVar(String idName, SymbolArrSuff arraySuffix) {
         super("Variable", 0);
-        // TODO check if variable es constante?
         this.idName = idName;
         this.arraySuffix = arraySuffix;
-        isArray = !arraySuffix.isEmpty();
+        isArray = arraySuffix.getDimensions() > 0;
     }
     
     public String getName(){

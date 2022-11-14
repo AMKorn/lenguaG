@@ -9,20 +9,28 @@
 package lenguag.syntactic.symbols;
 
 /*
- * INSTRUCTIONS ::= INSTRUCTION:v1 INSTRUCTIONS:v2
+ * INSTRUCTIONS ::= INSTRUCTION:instruction INSTRUCTIONS:contInstruction
     |
  */
 public class SymbolInstrs extends SymbolBase{
-    SymbolInstr instruction; // TODO - quizas ponerlo como directamente la instruccion que sea y ahorrarnos SymbolInstr
-    SymbolInstrs instructions;
+    private SymbolInstr instruction;
+    private SymbolInstrs contInstruction;
 
-    public SymbolInstrs(SymbolInstr v1, SymbolInstrs v2) {
+    public SymbolInstrs(SymbolInstr v1, SymbolInstrs contInstruction) {
         super("Instructions", 0);
         this.instruction = v1;
-        this.instructions = v2;
+        this.contInstruction = contInstruction;
     }
 
     public SymbolInstrs() {
         super("Instructions", 0);
+    }
+
+    public SymbolInstr getInstruction(){
+        return instruction;
+    }
+
+    public SymbolInstrs getNext(){
+        return contInstruction;
     }
 }

@@ -8,25 +8,39 @@
 package lenguag.syntactic.symbols;
 
 /*
- * PARAMS ::= VALUE:v1 MORE_PARAMS:v2                                      {: RESULT = new SymbolParams(v1, v2); :}
-         |                                                              {: RESULT = new SymbolParams(); :}
-         ;
+ * PARAMS ::= VALUE:value MORE_PARAMS:contParams
+         |
 
-    MORE_PARAMS ::= COMMA VALUE:v1 MORE_PARAMS:v2                           {: RESULT = new SymbolParams(v1, v2); :}
-              |                                                         {: RESULT = new SymbolParams(); :}
-              ;
+MORE_PARAMS ::= COMMA VALUE:value MORE_PARAMS:contParams
+              |
  */
 public class SymbolParams extends SymbolBase {
+    
     private SymbolValue value;
-    private SymbolParams more_params;
+    private SymbolParams contParams;
+    private int nParams;
 
-    public SymbolParams(SymbolValue value, SymbolParams more_params) {
+    public SymbolParams(SymbolValue value, SymbolParams contParams) {
         super("Params", 0);
         this.value = value;
-        this.more_params = more_params;
+        this.contParams = contParams;
+        nParams = contParams.getNParams()+1;
     }
-    
+
+    public SymbolParams(){
+        super("Params", 0);
+        nParams = 0;
+    }
+
+    public SymbolValue getValue(){
+        return value;
+    }
+
+    public SymbolParams getNext(){
+        return contParams;
+    }
+
     public int getNParams(){
-        return 1; // TODO
+        return nParams;
     }
 }

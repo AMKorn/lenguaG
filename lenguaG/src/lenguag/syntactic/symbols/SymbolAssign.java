@@ -11,16 +11,16 @@ package lenguag.syntactic.symbols;
  * ASSIGNATION ::= VARIABLE:variable EQUAL OPERATION:rSide
  */
 
-public class SymbolAssign extends SymbolBase {
+public class SymbolAssign extends SymbolInstr {
 
     private SymbolVar variable;
-    private SymbolOper rSide;
+    private SymbolOperation rSide;
 
     //private SymbolExpr expression;
     //private SymbolOper operation;
 
-    public SymbolAssign(SymbolVar variable, SymbolOper rSide) {
-        super("Assignation", 0);
+    public SymbolAssign(SymbolVar variable, SymbolOperation rSide) {
+        super("Assignation", 0, instructionType.instAssignation);
         this.variable = variable;
         this.rSide = rSide;
     }
@@ -29,7 +29,7 @@ public class SymbolAssign extends SymbolBase {
         return variable;
     }
 
-    public SymbolOper getRightSide(){
+    public SymbolOperation getRightSide(){
         return rSide;
     }
 }

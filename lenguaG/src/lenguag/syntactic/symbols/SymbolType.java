@@ -9,11 +9,11 @@
 package lenguag.syntactic.symbols;
 
 /*
-TYPE ::= TYPE_INTEGER                                                   {: RESULT = new SymbolType(ParserSym.TYPE_INTEGER); :}
-       | TYPE_CHARACTER                                                 {: RESULT = new SymbolType(ParserSym.TYPE_CHARACTER); :}
-       | TYPE_BOOLEAN                                                   {: RESULT = new SymbolType(ParserSym.TYPE_BOOLEAN); :}
-       | TYPE_VOID                                                      {: RESULT = new SymbolType(ParserSym.TYPE_VOID); :}
-       | TYPE:v L_BRACKET R_BRACKET                                     {: RESULT = new SymbolType(ParserSym.TYPE_ARRAY, v) :}
+TYPE ::= TYPE_INTEGER
+       | TYPE_CHARACTER
+       | TYPE_BOOLEAN
+       | TYPE_VOID
+       | TYPE:v L_BRACKET R_BRACKET
        ;
  */
 public class SymbolType extends SymbolBase {

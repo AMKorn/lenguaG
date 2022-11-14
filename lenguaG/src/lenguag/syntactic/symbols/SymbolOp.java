@@ -8,18 +8,44 @@
 package lenguag.syntactic.symbols;
 
 /*
- * OP ::= ADD                                                              {: RESULT = new SymbolOp(ParserSym.ADD); :}
-     | SUB                                                              {: RESULT = new SymbolOp(ParserSym.SUB); :}
-     | PROD                                                             {: RESULT = new SymbolOp(ParserSym.PROD); :}
-     | DIV                                                              {: RESULT = new SymbolOp(ParserSym.DIV); :}
-     | MOD                                                              {: RESULT = new SymbolOp(ParserSym.MOD); :}
-     | OR                                                               {: RESULT = new SymbolOp(ParserSym.OR); :}
-     | AND                                                              {: RESULT = new SymbolOp(ParserSym.AND); :}
-     | OP_REL:v                                                         {: RESULT = new SymbolOp(v); :}
-     ;
+OP ::= ADD
+     | SUB
+     | PROD
+     | DIV
+     | MOD
+     | OR
+     | AND
+     | OP_REL
+
+OP_REL ::= IS_EQUAL
+         | BIGGER
+         | BEQ
+         | LESSER
+         | LEQ 
+         | NEQ
  */
 public class SymbolOp extends SymbolBase {
-    public SymbolOp() {
+
+    private boolean isRelational;
+    private int operation;
+
+    public SymbolOp(int operation) {
         super("Op", 0);
+        this.operation = operation;
+        isRelational = false;
+    }
+
+    public SymbolOp(int operation, boolean isRelational){
+        super("Op", 0);
+        this.operation = operation;
+        isRelational = true;
+    }
+
+    public int getOperation(){
+        return operation;
+    }
+
+    public boolean isRelational(){
+        return isRelational;
     }
 }

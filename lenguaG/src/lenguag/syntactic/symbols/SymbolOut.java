@@ -8,14 +8,18 @@
 package lenguag.syntactic.symbols;
 
 /*
- * OUT ::= RES_OUT L_PAREN VALUE:v R_PAREN                                 {: RESULT = new SymbolOut(v); :}
+ * OUT ::= RES_OUT L_PAREN OPERATION:value R_PAREN
       ;
  */
-public class SymbolOut extends SymbolBase{
-    private SymbolValue value;
+public class SymbolOut extends SymbolInstr {
+    private SymbolOperation value;
 
-    public SymbolOut(SymbolValue value) {
-        super("Out", 0);
+    public SymbolOut(SymbolOperation value) {
+        super("Out", 0, instructionType.instOut);
         this.value = value;
+    }
+
+    public SymbolOperation getValue(){
+        return value;
     }
 }

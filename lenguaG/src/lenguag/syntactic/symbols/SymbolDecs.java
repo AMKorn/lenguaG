@@ -16,12 +16,12 @@ package lenguag.syntactic.symbols;
 public class SymbolDecs extends SymbolBase {
 
     private SymbolBase declaration;
-    private SymbolDecs declarations;
+    private SymbolDecs contDeclarations;
     
-    public SymbolDecs(SymbolBase declaration, SymbolDecs declarations){
+    public SymbolDecs(SymbolBase declaration, SymbolDecs contDeclarations){
         super("Declarations", declaration.value);
         this.declaration = declaration;
-        this.declarations = declarations;
+        this.contDeclarations = contDeclarations;
     }
     
     public SymbolDecs() {
@@ -36,6 +36,6 @@ public class SymbolDecs extends SymbolBase {
     }
 
     public SymbolDecs getNext(){
-        return declarations;
+        return contDeclarations;
     }
 }
