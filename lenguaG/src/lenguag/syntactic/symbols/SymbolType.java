@@ -8,39 +8,36 @@
 
 package lenguag.syntactic.symbols;
 
-import lenguag.syntactic.ParserSym;
-
 /*
- * TYPE ::= TYPE_INTEGER ARRAY_SUFFIX:v                                    {: RESULT = new SymbolType(ParserSym.TYPE_INTEGER, v); :}
-    | TYPE_FLOAT ARRAY_SUFFIX:v                                         {: RESULT = new SymbolType(ParserSym.TYPE_FLOAT, v); :}
-    | TYPE_CHARACTER ARRAY_SUFFIX:v                                     {: RESULT = new SymbolType(ParserSym.TYPE_CHARACTER, v); :}
-    | TYPE_BOOLEAN ARRAY_SUFFIX:v                                       {: RESULT = new SymbolType(ParserSym.TYPE_BOOLEAN, v); :}
-    | TYPE_VOID  
+TYPE ::= TYPE_INTEGER                                                   {: RESULT = new SymbolType(ParserSym.TYPE_INTEGER); :}
+       | TYPE_CHARACTER                                                 {: RESULT = new SymbolType(ParserSym.TYPE_CHARACTER); :}
+       | TYPE_BOOLEAN                                                   {: RESULT = new SymbolType(ParserSym.TYPE_BOOLEAN); :}
+       | TYPE_VOID                                                      {: RESULT = new SymbolType(ParserSym.TYPE_VOID); :}
+       | TYPE:v L_BRACKET R_BRACKET                                     {: RESULT = new SymbolType(ParserSym.TYPE_ARRAY, v) :}
+       ;
  */
 public class SymbolType extends SymbolBase {
 
     private int type; // Possible values are from ParserSym
-    private SymbolArrSuff arraySuffix;
+    private int baseType;
     
-    public SymbolType(int type, SymbolArrSuff arraySuffix){
+    public SymbolType(int type, SymbolType baseType){
         super("Type", 0);
         this.type = type;
-        // TODO check whether the arraySuffix is empty or not
-        this.arraySuffix = arraySuffix;
+        this.baseType = baseType.getType();
     }
 
-    public SymbolType() {
+    public SymbolType(int type){
         super("Type", 0);
-        type = ParserSym.TYPE_VOID;
+        this.type = type;
+        this.baseType = type;
     }
 
     public int getType(){
-        // TODO return type_array if it's an array
         return type;
     }
 
-    public SymbolArrSuff getArraySuff(){
-        // TODO return empty if empty
-        return arraySuffix;
+    public int getBaseType(){
+        return baseType;
     }
 }

@@ -8,25 +8,24 @@
 package lenguag.syntactic.symbols;
 
 /*
- * ASSIGNATION ::= VARIABLE:v1 EQUAL OPERATION:v2                          {: RESULT = new SymbolAssign(v1, v2); :} 
-              | VARIABLE:v1 EQUAL EXPRESSION:v2                         {: RESULT = new SymbolAssign(v1, v2); :}
+ * ASSIGNATION ::= VARIABLE:variable EQUAL OPERATION:rSide
+              | VARIABLE:variable EQUAL EXPRESSION:rSide
               ;
  */
 
 public class SymbolAssign extends SymbolBase {
+
     private SymbolVar variable;
-    private SymbolExpr expression;
-    private SymbolOper operation;
+    private Object rSide;
 
-    public SymbolAssign(SymbolVar variable, SymbolOper operation) {
+    //private SymbolExpr expression;
+    //private SymbolOper operation;
+
+    public SymbolAssign(SymbolVar variable, Object rSide) {
         super("Assignation", 0);
         this.variable = variable;
-        this.operation = operation;
+        this.rSide = rSide;
     }
 
-    public SymbolAssign(SymbolVar variable, SymbolExpr expression) {
-        super("Assignation", 0);
-        this.variable = variable;
-        this.expression = expression;
-    }
+    // TODO return right side
 }

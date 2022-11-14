@@ -8,17 +8,25 @@
 package lenguag.syntactic.symbols;
 
 /**
- * ARGS ::= ARG:v1 MORE_ARGS:v2
-    | 
+ * ARGS ::= ARG:argument MORE_ARGS:contArgs
+ *        | 
  */
 public class SymbolArgs extends SymbolBase {
-    private SymbolArg argument;
-    private SymbolArgs arguments;
 
-    public SymbolArgs(SymbolArg v1, SymbolArgs v2) {
+    private int nArgs;
+    private SymbolArg argument;
+    private SymbolArgs contArgs;
+
+    public SymbolArgs(SymbolArg argument, SymbolArgs contArgs) {
         super("Arguments", 0);
-        this.argument = v1;
-        this.arguments = v2;
+        this.argument = argument;
+        this.contArgs = contArgs;
+        nArgs = contArgs.getNArgs()+1;
+    }
+
+    public SymbolArgs(){
+        super("Arguments", 0);
+        nArgs = 0;
     }
     
     public SymbolArg getArg(){
@@ -26,6 +34,10 @@ public class SymbolArgs extends SymbolBase {
     }
 
     public SymbolArgs getNext(){
-        return arguments;
+        return contArgs;
+    }
+
+    public int getNArgs(){
+        return nArgs;
     }
 }
