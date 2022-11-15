@@ -11,6 +11,7 @@ import java.io.*;
 import java_cup.runtime.*;
 import lenguag.lexic.*;
 import lenguag.syntactic.*;
+import lenguag.syntactic.symbols.*;
 
 /**
  *
@@ -18,7 +19,7 @@ import lenguag.syntactic.*;
  */
 public class LenguaG {
 
-    public static final boolean DEBUGGING = false;
+    public static final boolean DEBUGGING = true;
     public static final String OUTPUT_PATH = "../output/";
 
     public static String outputFile = OUTPUT_PATH;
@@ -28,22 +29,26 @@ public class LenguaG {
      */
     public static void main(String[] args) {
         // Args management
-        if(args.length < 1){
+        if (args.length < 1) {
             // User error. No file given as input.
             System.err.println("Input file is required.");
             return;
         }
         // Input file is given on the first arg
         String file = args[0];
-        // Output file is either given on the second arg, or defaulted to out.
-        outputFile += (args.length > 1) ? args[1] : "out";
+        // Output file is either given on the second arg, or defaulted to the name of
+        // the output.
+        if (args.length > 1)
+            outputFile += getOutputPath(args[1]);
+        else
+            outputFile += getOutputPath(file);
 
         // Compilation
-        if(DEBUGGING) {
+        if (DEBUGGING) {
             System.out.println("Proceeding to read " + file);
             System.out.println("Will write to " + outputFile);
         }
-        try { 
+        try {
             // DO NOT DELETE YET! To be used later
             // // In case the output folder does not exist, we create it.
             // File outf = new File(OUTPUT_PATH);
@@ -57,17 +62,22 @@ public class LenguaG {
             Lexic la = new Lexic(in);
             SymbolFactory sf = new ComplexSymbolFactory();
             Parser parser = new Parser(la, sf);
-            parser.parse();
+            Object resultSyn = parser.parse().value;
 
-            if(la.getError()){
-                System.err.println("Lexic analysis failed due to: " 
-                                + la.writeErrors()
-                                + "Ending compilation process.");
+            if (!(resultSyn instanceof SymbolBody)) {
+                if (la.thereIsError()) {
+                    System.err.println("Lexic analysis failed due to: \n"
+                            + la.writeErrors()
+                            + "Ending compilation process.");
+                    return;
+                }
+                System.err.println("Syntactical analyis failed.");
                 return;
             }
+            SymbolBody body = (SymbolBody) resultSyn;
 
             // la.printTokens();
-        } catch(FileNotFoundException fnf) {
+        } catch (FileNotFoundException fnf) {
             // User error
             System.err.println("Input file " + file + " does not exist.");
             return;
@@ -78,5 +88,11 @@ public class LenguaG {
             // !!! COMPILER ERROR !!!
             e.printStackTrace();
         }
+    }
+
+    static private String getOutputPath(String file) {
+        String[] fileSplitSlash = file.split("/");
+
+        return fileSplitSlash[fileSplitSlash.length - 1] + "/";
     }
 }

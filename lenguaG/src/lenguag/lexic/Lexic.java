@@ -320,7 +320,7 @@ public class Lexic implements java_cup.runtime.Scanner {
 	private ArrayList<String> errors = new ArrayList<>();
 
 	private void addTokens(String token){
-		if (LenguaG.DEBUGGING) System.out.println("Detected token: " + token + " at position [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]");
+		//if (LenguaG.DEBUGGING) System.out.println("Detected token: " + token + " at position [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]");
 		tokens.add(token);
 	}
 
@@ -350,7 +350,7 @@ public class Lexic implements java_cup.runtime.Scanner {
 		return errorsList;
 	}
 
-	public boolean getError(){
+	public boolean thereIsError(){
 		return !errors.isEmpty();
 	}
 

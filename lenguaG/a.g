@@ -34,6 +34,7 @@ main {
 	begin = -1;
 	end = -0xF;
 	quickSort(intArray, begin, end);
-    char[] hi = "Esto es un string";
-    out(hi);
+    our("El array ordenado es: ");
+    out(intArray);
+    out("\n");
 }

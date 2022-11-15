@@ -15,7 +15,7 @@ public class SymbolDec extends SymbolInstr {
     private boolean isConstant;
 
     private SymbolType type;
-    private SymbolVar variable;
+    private String variable;
     private SymbolOperation value;
     // private SymbolDecCont contDeclaration;
     
@@ -44,7 +44,7 @@ public class SymbolDec extends SymbolInstr {
         return type;
     }
 
-    public SymbolVar getVar(){
+    public String getVar(){
         return variable;
     }
 

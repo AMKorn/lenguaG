@@ -28,6 +28,8 @@ parser code {:
 **/
 parser code {:
 
+    public boolean thereIsError = false;
+
     /**
      * error treatment methods override 
      **/
@@ -45,22 +47,23 @@ parser code {:
 
     @Override
     public void report_error(String message, Object info) {
+        thereIsError = true;
         StringBuilder msg = new StringBuilder("ERROR");
         if (info instanceof Symbol) {
             ComplexSymbol token = (ComplexSymbol)info;
             Location l = token.getLeft();
             
             if (l != null) {
-                msg.append(" (fila: ")
+                msg.append(" (row: ")
                    .append(l.getLine())
-                   .append(", columna: ")
+                   .append(", column: ")
                    .append(l.getColumn())
                    .append(")");
             }
         }
         msg.append(": ").append(message);
         
-        System.err.println("\u001B[31m" + msg + "\u001B[0m");
+        System.err.println(msg);
     }
 
     @Override
@@ -136,17 +139,15 @@ MAIN ::= RES_MAIN L_KEY INSTRUCTIONS:v R_KEY                            {: RESUL
 DECLARATIONS ::= DECLARATION:v1 ENDLINE DECLARATIONS:v2                 {: RESULT = new SymbolDecs(v1, v2); :}
                | FUNCTION:v1 DECLARATIONS:v2                            {: RESULT = new SymbolDecs(v1, v2); :}
                |                                                        {: RESULT = new SymbolDecs(); :}
-               | error ENDLINE {: System.out.println("OWO"); :}
+               | error DECLARATIONS:v                                   {: RESULT = new SymbolDecs(null, v); /* If there's an error in a declaration, we go to the next one. */ :}
                ;
-//               | error ENDLINE                                            {: RESULT = null /*Error treatment*/ :}
-//               | error R_KEY                                              {: RESULT = null /*Error treatment*/ :}
 
 DECLARATION ::= CONSTANT CONT_DECLARATION:v                             {: RESULT = new SymbolDec(v, true); :}
               | CONT_DECLARATION:v                                      {: RESULT = new SymbolDec(v); :}
               ;
 
-CONT_DECLARATION ::= TYPE:v1 VARIABLE:v2 EQUAL OPERATION:v3             {: RESULT = new SymbolDecCont(v1, v2, v3); :}
-                   | TYPE:v1 VARIABLE:v2                                {: RESULT = new SymbolDecCont(v1, v2); :}
+CONT_DECLARATION ::= TYPE:v1 IDENTIFIER:v2 EQUAL OPERATION:v3           {: RESULT = new SymbolDecCont(v1, v2, v3); :}
+                   | TYPE:v1 IDENTIFIER:v2                              {: RESULT = new SymbolDecCont(v1, v2); :}
                    ;
 
 FUNCTION ::= TYPE:v1 VARIABLE:v2 L_PAREN ARGS:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY 

@@ -19,7 +19,7 @@ public class SymbolDecs extends SymbolBase {
     private SymbolDecs contDeclarations;
     
     public SymbolDecs(SymbolBase declaration, SymbolDecs contDeclarations){
-        super("Declarations", declaration.value);
+        super("Declarations", 0);
         this.declaration = declaration;
         this.contDeclarations = contDeclarations;
     }

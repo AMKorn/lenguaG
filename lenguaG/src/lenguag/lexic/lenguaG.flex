@@ -115,7 +115,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 	private ArrayList<String> errors = new ArrayList<>();
 
 	private void addTokens(String token){
-		if (LenguaG.DEBUGGING) System.out.println("Detected token: " + token + " at position [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]");
+		//if (LenguaG.DEBUGGING) System.out.println("Detected token: " + token + " at position [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]");
 		tokens.add(token);
 	}
 
@@ -145,7 +145,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 		return errorsList;
 	}
 
-	public boolean getError(){
+	public boolean thereIsError(){
 		return !errors.isEmpty();
 	}
 
