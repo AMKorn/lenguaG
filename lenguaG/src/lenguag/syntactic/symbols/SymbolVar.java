@@ -13,14 +13,12 @@ package lenguag.syntactic.symbols;
 public class SymbolVar extends SymbolBase {
 
     private String idName;
-    private boolean isArray;
     private SymbolArrSuff arraySuffix;
 
     public SymbolVar(String idName, SymbolArrSuff arraySuffix) {
         super("Variable", 0);
         this.idName = idName;
         this.arraySuffix = arraySuffix;
-        isArray = arraySuffix.getDimensions() > 0;
     }
     
     public String getName(){
@@ -32,6 +30,6 @@ public class SymbolVar extends SymbolBase {
     }
 
     public boolean isArray(){
-        return isArray;
+        return arraySuffix != null;
     }
 }

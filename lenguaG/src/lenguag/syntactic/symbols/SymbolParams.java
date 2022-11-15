@@ -8,23 +8,24 @@
 package lenguag.syntactic.symbols;
 
 /*
- * PARAMS ::= VALUE:value MORE_PARAMS:contParams
+ * PARAMS ::= OPERATION:operation MORE_PARAMS:contParams
          |
 
-MORE_PARAMS ::= COMMA VALUE:value MORE_PARAMS:contParams
+MORE_PARAMS ::= COMMA OPERATION:operation MORE_PARAMS:contParams
               |
  */
 public class SymbolParams extends SymbolBase {
     
-    private SymbolValue value;
+    private SymbolOperation operation;
     private SymbolParams contParams;
     private int nParams;
 
-    public SymbolParams(SymbolValue value, SymbolParams contParams) {
+    public SymbolParams(SymbolOperation operation, SymbolParams contParams) {
         super("Params", 0);
-        this.value = value;
+        this.operation = operation;
         this.contParams = contParams;
-        nParams = contParams.getNParams()+1;
+        if(contParams == null) nParams = 1;
+        else nParams = contParams.getNParams()+1;
     }
 
     public SymbolParams(){
@@ -32,8 +33,8 @@ public class SymbolParams extends SymbolBase {
         nParams = 0;
     }
 
-    public SymbolValue getValue(){
-        return value;
+    public SymbolOperation getValue(){
+        return operation;
     }
 
     public SymbolParams getNext(){

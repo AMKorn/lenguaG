@@ -13,16 +13,19 @@ package lenguag.lexic;
 // Other libraries
 //import java.io.*;
 import java.util.*;
-import java_cup.runtime.*;
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+import java_cup.runtime.ComplexSymbolFactory.Location;
 
 // Our project imports
+import lenguag.*;
 import lenguag.syntactic.ParserSym;
 
 %%
 %public             // Per indicar que la classe és pública
 %class Lexic        // El nom de la classe
 
-%int                // Type of identified tokens
+//%int                // Type of identified tokens
+%type java_cup.runtime.Symbol
 
 %line				// So that jflex keeps track of the line
 %column				// and the column
@@ -38,7 +41,8 @@ import lenguag.syntactic.ParserSym;
 // Identifyiers
 identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 
-integer 		= 0|\-?[1-9][0-9]*
+integer 		= 0|[1-9][0-9]*
+//integer 		= 0|\-?[1-9][0-9]*
 //float			= {integer}?\.[0-9]+(e{integer})?
 // Take the following three lines out if it's difficult to implement later down the line
 binary			= \-?0b[01]+
@@ -111,8 +115,12 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 // En nuestro caso lo que tenemos que poner es aquello a lo que llamaremos desde el main para hacer el analisis lexico
 %{
 	private ArrayList<String> tokens = new ArrayList<>();
-
 	private ArrayList<String> errors = new ArrayList<>();
+
+	private void addTokens(String token){
+		if (LenguaG.DEBUGGING) System.out.println("Detected token: " + token + " at position [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]");
+		tokens.add(token);
+	}
 
 	public void printTokens(){
 		for(String s: tokens){
@@ -145,12 +153,12 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 	}
 
 	private String errorMessage(){
-		return " * Elemento no reconocido " + yytext() + " en la posicion [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]";
+		return " * Not recognized token " + yytext() + " at position [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]";
 	}
 	
 	private int parseNum(String s) throws NumberFormatException {
 		// We check if it's a negative number.
-		if(s.charAt(0) == '-') return -(parseNum(s.substring(0)));
+		//if(s.charAt(0) == '-') return -(parseNum(s.substring(1)));
 		// We check whether the first number is a 0, if so there might be a prefix specifying base, unless it's just a 0 by itself.
 		if(s.charAt(0) != '0' || s.length() == 1) return Integer.parseInt(s);
 		// If 
@@ -169,12 +177,17 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 	}
 
 	// Functions to streamline CUP symbol returns.
-    private Symbol symbol(int type) {
-        return new Symbol(type, yyline+1, yycolumn+1);
+    private ComplexSymbol symbol(int type) {
+        Location l = new Location(yyline+1, yycolumn+1);
+        Location r = new Location(yyline+1, yycolumn+yylength());
+        return new ComplexSymbol(ParserSym.terminalNames[type], type, l, r);
+        //return new ComplexSymbol(type, yyline+1, yycolumn+1);
     }
     
-    private Symbol symbol(int type, Object value) {
-        return new Symbol(type, yyline+1, yycolumn+1, value);
+    private ComplexSymbol symbol(int type, Object value) {
+        Location l = new Location(yyline+1, yycolumn+1);
+        Location r = new Location(yyline+1, yycolumn+yylength());
+        return new ComplexSymbol(ParserSym.terminalNames[type], type, l, r, value);
     }
 %}
 
@@ -186,54 +199,54 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {comment}			{ /* We fully ignore comments */ }
 
 // Reserved words
-{resMain}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_MAIN); }
-{constant}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.CONSTANT); }
-{not}				{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.NOT); }
-{resOr}				{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.OR); }
-{resAnd}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.AND); }
-{resIf}				{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_IF); }
-{resElse}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_ELSE); }
-{resWhile}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_WHILE); }
-{resFor}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_FOR); }
-{resReturn}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_RETURN); }
-{resIn} 			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_IN); }
-{resOut} 			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_OUT); }
+{resMain}			{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_MAIN); }
+{constant}			{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.CONSTANT); }
+{not}				{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.NOT); }
+{resOr}				{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.OR); }
+{resAnd}			{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.AND); }
+{resIf}				{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_IF); }
+{resElse}			{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_ELSE); }
+{resWhile}			{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_WHILE); }
+{resFor}			{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_FOR); }
+{resReturn}			{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_RETURN); }
+{resIn} 			{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_IN); }
+{resOut} 			{ addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_OUT); }
 // Types
-{typeInt}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_INTEGER); }
-//{typeFloat}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_FLOAT); }
-{typeChar}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_CHARACTER); }
-{typeBool}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_BOOLEAN); }
-{typeVoid}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_VOID); }
+{typeInt}			{ addTokens("Type: " + yytext()); return symbol(ParserSym.TYPE_INTEGER); }
+//{typeFloat}			{ addTokens("Type: " + yytext()); return symbol(ParserSym.TYPE_FLOAT); }
+{typeChar}			{ addTokens("Type: " + yytext()); return symbol(ParserSym.TYPE_CHARACTER); }
+{typeBool}			{ addTokens("Type: " + yytext()); return symbol(ParserSym.TYPE_BOOLEAN); }
+{typeVoid}			{ addTokens("Type: " + yytext()); return symbol(ParserSym.TYPE_VOID); }
 
 // Special characters
-{lParen}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.L_PAREN); }
-{rParen}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.R_PAREN); }
-{lKey}				{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.L_KEY); }
-{rKey} 				{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.R_KEY); }
-{lBracket}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.L_BRACKET); }
-{rBracket}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.R_BRACKET); }
-{endline}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.ENDLINE); }
-{comma}				{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.COMMA); }
+{lParen}			{ addTokens("Symbol : " + yytext()); return symbol(ParserSym.L_PAREN); }
+{rParen}			{ addTokens("Symbol : " + yytext()); return symbol(ParserSym.R_PAREN); }
+{lKey}				{ addTokens("Symbol : " + yytext()); return symbol(ParserSym.L_KEY); }
+{rKey} 				{ addTokens("Symbol : " + yytext()); return symbol(ParserSym.R_KEY); }
+{lBracket}			{ addTokens("Symbol : " + yytext()); return symbol(ParserSym.L_BRACKET); }
+{rBracket}			{ addTokens("Symbol : " + yytext()); return symbol(ParserSym.R_BRACKET); }
+{endline}			{ addTokens("Symbol : " + yytext()); return symbol(ParserSym.ENDLINE); }
+{comma}				{ addTokens("Symbol : " + yytext()); return symbol(ParserSym.COMMA); }
 
-{addSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.ADD); }
-{subSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.SUB); }
-{prodSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.PROD); }
-{divSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.DIV); }
-{modSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.MOD); }
-{eqSym}				{ tokens.add("Op: " + yytext()); return symbol(ParserSym.IS_EQUAL); }
-{beqSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.BEQ); }
-{btSym}				{ tokens.add("Op: " + yytext()); return symbol(ParserSym.BIGGER); }
-{leqSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.LEQ); }
-{ltSym}				{ tokens.add("Op: " + yytext()); return symbol(ParserSym.LESSER); }
-{neqSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.NEQ); }
+{addSym}			{ addTokens("Op: " + yytext()); return symbol(ParserSym.ADD); }
+{subSym}			{ addTokens("Op: " + yytext()); return symbol(ParserSym.SUB); }
+{prodSym}			{ addTokens("Op: " + yytext()); return symbol(ParserSym.PROD); }
+{divSym}			{ addTokens("Op: " + yytext()); return symbol(ParserSym.DIV); }
+{modSym}			{ addTokens("Op: " + yytext()); return symbol(ParserSym.MOD); }
+{eqSym}				{ addTokens("Op: " + yytext()); return symbol(ParserSym.IS_EQUAL); }
+{beqSym}			{ addTokens("Op: " + yytext()); return symbol(ParserSym.BEQ); }
+{btSym}				{ addTokens("Op: " + yytext()); return symbol(ParserSym.BIGGER); }
+{leqSym}			{ addTokens("Op: " + yytext()); return symbol(ParserSym.LEQ); }
+{ltSym}				{ addTokens("Op: " + yytext()); return symbol(ParserSym.LESSER); }
+{neqSym}			{ addTokens("Op: " + yytext()); return symbol(ParserSym.NEQ); }
 
-{assign}			{ tokens.add("AssignOp: " + yytext()); return symbol(ParserSym.EQUAL); }
-{swapSym} 			{ tokens.add("AssignOp: " + yytext()); return symbol(ParserSym.OP_SWAP); }
+{assign}			{ addTokens("AssignOp: " + yytext()); return symbol(ParserSym.EQUAL); }
+{swapSym} 			{ addTokens("AssignOp: " + yytext()); return symbol(ParserSym.OP_SWAP); }
 
 // Non-reserved words
-{character}			{ tokens.add("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext().charAt(0)); }
-//{float}				{ tokens.add("Float: " + yytext()); return symbol(ParserSym.FLOAT, Float.parseFloat(yytext())); }
-{int_number}		{ tokens.add("Number: " + yytext()); 
+{character}			{ addTokens("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext().charAt(0)); }
+//{float}				{ addTokens("Float: " + yytext()); return symbol(ParserSym.FLOAT, Float.parseFloat(yytext())); }
+{int_number}		{ addTokens("Number: " + yytext()); 
 						try {Integer value = parseNum(yytext());
 							return symbol(ParserSym.INTEGER, value); 
 						} catch(NumberFormatException nf) {
@@ -241,10 +254,10 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 							return symbol(ParserSym.error);
 						}
 					}
-{boolean}			{ tokens.add("Boolean: " + yytext()); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext())); }
-//{string}			{ tokens.add("string: " + yytext()); return symbol(ParserSym.STRING, yytext());} // TODO if string is implemented
+{boolean}			{ addTokens("Boolean: " + yytext()); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext())); }
+//{string}			{ addTokens("string: " + yytext()); return symbol(ParserSym.STRING, yytext());} // TODO if string is implemented
 
-{identifier}		{ tokens.add("Identifier: " + yytext()); return symbol(ParserSym.IDENTIFIER, yytext()); }
+{identifier}		{ addTokens("Identifier: " + yytext()); return symbol(ParserSym.IDENTIFIER, yytext()); }
 
 {ws}				{ /* Do nothing */ }
 [^]					{ errors.add(errorMessage()); 

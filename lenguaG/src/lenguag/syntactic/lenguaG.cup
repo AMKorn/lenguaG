@@ -61,7 +61,7 @@ parser code {:
         }
         msg.append(": ").append(message);
         
-        System.err.println(msg);
+        System.err.println("\u001B[31m" + msg + "\u001B[0m");
     }
 
     @Override
@@ -100,7 +100,6 @@ non terminal SymbolInstr        INSTRUCTION;
 non terminal SymbolFunc         FUNCTION;
 non terminal SymbolType         TYPE;
 non terminal SymbolVar          VARIABLE;
-// non terminal SymbolExpr         EXPRESSION;
 non terminal SymbolAssign       ASSIGNATION;
 non terminal SymbolSwap         SWAP;
 non terminal SymbolReturn       RETURN;
@@ -113,7 +112,6 @@ non terminal SymbolOp           OP, OP_REL;
 non terminal Object             FIXED_VALUE;
 non terminal SymbolArrSuff      ARRAY_SUFFIX;
 non terminal SymbolList         LIST, CONT_LIST;
-// non terminal SymbolCond         CONDITION;
 non terminal SymbolIf           IF;
 non terminal SymbolElse         ELSE;
 non terminal SymbolLoop         LOOP;
@@ -133,12 +131,13 @@ start with BODY;
 BODY ::= DECLARATIONS:v1 MAIN:v2                                        {: RESULT = new SymbolBody(v1, v2); :}
        ;
 
-MAIN ::= RES_MAIN L_PAREN ARGS:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY   {: RESULT = new SymbolMain(v1, v2); :}
+MAIN ::= RES_MAIN L_KEY INSTRUCTIONS:v R_KEY                            {: RESULT = new SymbolMain(v); :}
        ;
 
 DECLARATIONS ::= DECLARATION:v1 ENDLINE DECLARATIONS:v2                 {: RESULT = new SymbolDecs(v1, v2); :}
                | FUNCTION:v1 DECLARATIONS:v2                            {: RESULT = new SymbolDecs(v1, v2); :}
                |                                                        {: RESULT = new SymbolDecs(); :}
+               | error ENDLINE {: System.out.println("OWO"); :}
                ;
 //               | error ENDLINE                                            {: RESULT = null /*Error treatment*/ :}
 //               | error R_KEY                                              {: RESULT = null /*Error treatment*/ :}
@@ -199,21 +198,6 @@ OPERAND ::= VALUE:v                                                     {: RESUL
           | NOT OPERAND:v                                               {: v.negate(); RESULT = v; :}
           ;
 
-// OPERATION ::= VALUE:v1                                                  {: RESULT = new SymbolOper(v1); :}
-//             | VALUE:v1 OP:v2 VALUE:v3                                   {: RESULT = new SymbolOper(v1, v2, v3); :}
-//             | NOT OPERATION:v                                           {: RESULT = new SymbolOper(v1, ParserSym.NOT); :}
-//             | L_PAREN OPERATION:v R_PAREN                               {: RESULT = v; :}
-//             ;
-
-// EXPRESSION ::= VALUE:v                                                  {: RESULT = new SymbolExpr(v); :}
-//              | L_PAREN OPERATION:v R_PAREN                              {: RESULT = new SymbolExpr(v); :}
-//              | NOT EXPRESSION:v                                         {: RESULT = new SymbolExpr(v, true); :}
-//              ;
-
-// OPERATION ::= EXPRESSION:v1 OP:v2 EXPRESSION:v3                         {: RESULT = new SymbolOper(v1, v2, v3); :}
-//             | EXPRESSION:v1                                             {: RESULT = new SymbolOper(v1); :}
-//             ;
-
 OP ::= ADD                                                              {: RESULT = new SymbolOp(ParserSym.ADD); :}
      | SUB                                                              {: RESULT = new SymbolOp(ParserSym.SUB); :}
      | PROD                                                             {: RESULT = new SymbolOp(ParserSym.PROD); :}
@@ -240,7 +224,7 @@ VALUE ::= VARIABLE:v                                                    {: RESUL
 VARIABLE ::= IDENTIFIER:v1 ARRAY_SUFFIX:v2                              {: RESULT = new SymbolVar(v1, v2); :}
            ;
 
-ARRAY_SUFFIX ::= L_BRACKET VARIABLE:v1 R_BRACKET ARRAY_SUFFIX:v2        {: RESULT = new SymbolArrSuff(v1, v2); :}
+ARRAY_SUFFIX ::= L_BRACKET OPERATION:v1 R_BRACKET ARRAY_SUFFIX:v2       {: RESULT = new SymbolArrSuff(v1, v2); :}
                |                                                        {: RESULT = new SymbolArrSuff(); :}
                ;
 
@@ -265,10 +249,6 @@ CONT_LIST ::= COMMA OPERATION:v1 CONT_LIST:v2                           {: RESUL
             | R_BRACKET                                                 {: RESULT = new SymbolList(); :}
             ;
 //            | error R_BRACKET;
-
-// CONDITION ::= EXPRESSION:v                                              {: RESULT = new SymbolCond(v); :}
-//             | OPERATION:v                                               {: RESULT = new SymbolCond(v); :}
-//             ;
 
 IF ::= RES_IF L_PAREN OPERATION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY ELSE:v3 
                                                                         {: RESULT = new SymbolIf(v1, v2, v3); :}
@@ -297,11 +277,11 @@ HEADER_SEGMENT ::= DECLARATION:v                                        {: RESUL
 FUNCTION_CALL ::= VARIABLE:v1 L_PAREN PARAMS:v2 R_PAREN                 {: RESULT = new SymbolFuncCall(v1, v2); :}
                 ;
 
-PARAMS ::= VALUE:v1 MORE_PARAMS:v2                                      {: RESULT = new SymbolParams(v1, v2); :}
+PARAMS ::= OPERATION:v1 MORE_PARAMS:v2                                  {: RESULT = new SymbolParams(v1, v2); :}
          |                                                              {: RESULT = new SymbolParams(); :}
          ;
 
-MORE_PARAMS ::= COMMA VALUE:v1 MORE_PARAMS:v2                           {: RESULT = new SymbolParams(v1, v2); :}
+MORE_PARAMS ::= COMMA OPERATION:v1 MORE_PARAMS:v2                       {: RESULT = new SymbolParams(v1, v2); :}
               |                                                         {: RESULT = new SymbolParams(); :}
               ;
 
@@ -314,26 +294,3 @@ IN ::= RES_IN L_PAREN VARIABLE:v R_PAREN                                {: RESUL
 
 OUT ::= RES_OUT L_PAREN OPERATION:v R_PAREN                             {: RESULT = new SymbolOut(v); :}
       ;
-
-/************************************************************************************************************************************
-E ::=  T:v1 Ep:v2       {: RESULT = new SymbolE((Integer)v1.value, v2);  :}
-     ;
-
-Ep ::= ADD T:v1 Ep:v2   {: RESULT = new SymbolEp(ParserSym.ADD, (Integer)v1.value, v2); :}
-     | SUB T:v1 Ep:v2   {: RESULT = new SymbolEp(ParserSym.SUB, (Integer)v1.value, v2); :} 
-     |                  {: RESULT = new SymbolEp(); :}
-     ;
-
-
-T ::=  F:v1 Tp:v2       {: RESULT = new SymbolT((Integer)v1.value, v2);     :}
-     ;
-
-Tp ::= MUL F:v1 Tp:v2   {: RESULT = new SymbolTp(ParserSym.MUL, (Integer)v1.value, v2); :}
-     | DIV F:v1 Tp:v2   {: RESULT = new SymbolTp(ParserSym.DIV, (Integer)v1.value, v2); :}
-     | MOD F:v1 Tp:v2   {: RESULT = new SymbolTp(ParserSym.MOD, (Integer)v1.value, v2); :}
-     |                  {: RESULT = new SymbolTp(); :}
-     ;
-
-F ::= LPAREN E:v RPAREN {: RESULT = new SymbolF((Integer)v.value);     :}
-     | valor:v          {: RESULT = new SymbolF(Integer.parseInt(v));  :}
-     ;*/

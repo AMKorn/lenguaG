@@ -16,9 +16,9 @@ int partition(int[] array, int begin, int end) {
     int pivot = array[end];
     int i = (begin-1);
 
-    for (int j = begin; j < end; j++) {
+    for (int j = begin; j < end; j=j+1) {
         if (array[j] <= pivot) {
-            i++;
+            i=i+1;
 
             array[i] <<>> array[j];
         }

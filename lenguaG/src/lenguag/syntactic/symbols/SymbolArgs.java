@@ -24,7 +24,8 @@ public class SymbolArgs extends SymbolBase {
         super("Arguments", 0);
         this.argument = argument;
         this.contArgs = contArgs;
-        nArgs = contArgs.getNArgs()+1;
+        if(contArgs == null) nArgs = 1;
+        else nArgs = contArgs.getNArgs()+1;
     }
 
     public SymbolArgs(){

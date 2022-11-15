@@ -18,7 +18,7 @@ import lenguag.syntactic.*;
  */
 public class LenguaG {
 
-    public static final boolean DEBUGGING = true;
+    public static final boolean DEBUGGING = false;
     public static final String OUTPUT_PATH = "../output/";
 
     public static String outputFile = OUTPUT_PATH;
@@ -66,7 +66,7 @@ public class LenguaG {
                 return;
             }
 
-            la.printTokens();
+            // la.printTokens();
         } catch(FileNotFoundException fnf) {
             // User error
             System.err.println("Input file " + file + " does not exist.");
