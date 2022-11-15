@@ -42,15 +42,12 @@ import lenguag.syntactic.ParserSym;
 identifier		= [a-zA-Z_][a-zA-Z0-9_]*
 
 integer 		= 0|[1-9][0-9]*
-//integer 		= 0|\-?[1-9][0-9]*
-//float			= {integer}?\.[0-9]+(e{integer})?
-// Take the following three lines out if it's difficult to implement later down the line
-binary			= \-?0b[01]+
-octal			= \-?0o[0-7]+
-hexadecimal		= \-?0x[0-9a-fA-F]+
+binary			= 0b[01]+
+octal			= 0o[0-7]+
+hexadecimal		= 0x[0-9a-fA-F]+
 
 int_number		= {integer}
-				|{binary}|{octal}|{hexadecimal} // Just take this line out if it's difficult to implement later down the line
+				|{binary}|{octal}|{hexadecimal}
 character		= {quote}\\?.{quote}	// any character, which could be escaped
 boolean			= {resTrue}|{resFalse}	// either true or false
 string 			= {doubleQuotes}[^]*{doubleQuotes}
@@ -163,14 +160,15 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 		if(s.charAt(0) != '0' || s.length() == 1) return Integer.parseInt(s);
 		// If 
 		char base = s.charAt(1);
-		String[] sParts = s.split(""+base);
+		String num = s.substring(2);
+		//String[] sParts = s.split(""+base);
 		switch(base){
 			case 'b':
-				return Integer.parseInt(sParts[1], 2);
+				return Integer.parseInt(num, 2);
 			case 'o':
-				return Integer.parseInt(sParts[1], 8);
+				return Integer.parseInt(num, 8);
 			case 'x':
-				return Integer.parseInt(sParts[1], 16);
+				return Integer.parseInt(num, 16);
 			default:
 				throw new NumberFormatException(errorMessage());
 		}
@@ -247,7 +245,8 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {character}			{ addTokens("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext().charAt(0)); }
 //{float}				{ addTokens("Float: " + yytext()); return symbol(ParserSym.FLOAT, Float.parseFloat(yytext())); }
 {int_number}		{ addTokens("Number: " + yytext()); 
-						try {Integer value = parseNum(yytext());
+						try {
+							Integer value = parseNum(yytext());
 							return symbol(ParserSym.INTEGER, value); 
 						} catch(NumberFormatException nf) {
 							errors.add(errorMessage()); 

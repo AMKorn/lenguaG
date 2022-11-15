@@ -10,7 +10,8 @@ package lenguag.syntactic.symbols;
 /*
  * OPERAND ::= VALUE:value                                                     {: RESULT = new SymbolOperand(v); :}
           | L_PAREN OPERATION:v R_PAREN                                 {: RESULT = new SymbolOperand(v); :}
-          | NOT OPERAND:v                                               {: RESULT = new SymbolOperand(v, false); :}
+          | NOT OPERAND:v                                               {: v.negate(); RESULT = v; :}
+          | SUB OPERAND:v                                               {: v.negate(); RESULT = v; :}
           ;
  */
 public class SymbolOperand extends SymbolBase {
@@ -19,7 +20,7 @@ public class SymbolOperand extends SymbolBase {
     // private SymbolOperation operation;
 
     private SymbolBase value;
-    private boolean isNegated;
+    private boolean isNegated; // this boolean is used both for boolean values and for integers
     
     public SymbolOperand(SymbolValue value){
         super("Operand", 0);
@@ -37,8 +38,7 @@ public class SymbolOperand extends SymbolBase {
      * @returns whether the given operand is a leaf of the tree formed by the operations. 
      */
     public boolean isLeaf(){
-        if(value instanceof SymbolOperation) return false;
-        return true;
+        return !(value instanceof SymbolOperation);
     }
 
     /**

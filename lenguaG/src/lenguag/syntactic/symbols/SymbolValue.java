@@ -17,23 +17,28 @@ public class SymbolValue extends SymbolBase {
     private boolean isLiteral;
     private Object value;
 
-    public SymbolValue(SymbolVar variable){
-        super("value", 0);
-        this.value = variable;
-        isLiteral = false;
+    public SymbolValue(Object value){
+        super("Value", 0);
+        isLiteral = !(value instanceof SymbolBase);
     }
 
-    public SymbolValue(Object fixedValue){
-        super("value", fixedValue);
-        this.value = fixedValue;
-        isLiteral = true;
-    }
+    // public SymbolValue(SymbolVar variable){
+    //     super("value", 0);
+    //     this.value = variable;
+    //     isLiteral = false;
+    // }
 
-    public SymbolValue(SymbolFuncCall functionCall){
-        super("value", 0);
-        this.value = functionCall;
-        isLiteral = false;
-    }
+    // public SymbolValue(Object fixedValue){
+    //     super("value", fixedValue);
+    //     this.value = fixedValue;
+    //     isLiteral = true;
+    // }
+
+    // public SymbolValue(SymbolFuncCall functionCall){
+    //     super("value", 0);
+    //     this.value = functionCall;
+    //     isLiteral = false;
+    // }
 
     public boolean isLiteral(){
         return isLiteral;

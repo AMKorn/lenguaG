@@ -53,7 +53,7 @@ then
     **** Running CUP ****
     "
     cd lenguag/syntactic/
-    java -jar java-cup-11b.jar lenguaG.cup
+    java -jar java-cup-11b.jar -locations lenguaG.cup
     cd ../..
 fi
 if [[ $java == 1 ]]

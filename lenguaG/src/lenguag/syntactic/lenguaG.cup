@@ -14,7 +14,6 @@ package lenguag.syntactic;
 import lenguag.syntactic.symbols.*;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
-import java_cup.runtime.ComplexSymbolFactory.Location;
 
 class Parser;
 
@@ -196,6 +195,7 @@ OPERATION ::= OPERAND:v1 OP:v2 OPERAND:v3                               {: RESUL
 OPERAND ::= VALUE:v                                                     {: RESULT = new SymbolOperand(v); :}
           | L_PAREN OPERATION:v R_PAREN                                 {: RESULT = new SymbolOperand(v); :}
           | NOT OPERAND:v                                               {: v.negate(); RESULT = v; :}
+          | SUB OPERAND:v                                               {: v.negate(); RESULT = v; :}
           ;
 
 OP ::= ADD                                                              {: RESULT = new SymbolOp(ParserSym.ADD); :}
