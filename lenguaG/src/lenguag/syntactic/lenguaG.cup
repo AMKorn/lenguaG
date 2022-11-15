@@ -86,7 +86,7 @@ terminal     String             IDENTIFIER;
 terminal     Integer            INTEGER;
 terminal     Character          CHARACTER;
 terminal     Boolean            BOOLEAN;
-// terminal     String             STRING;
+terminal     String             STRING;
 non terminal SymbolBody         BODY;
 non terminal SymbolDecs         DECLARATIONS;
 non terminal SymbolDec          DECLARATION;
@@ -242,8 +242,8 @@ TYPE ::= TYPE_INTEGER                                                   {: RESUL
        ;
 
 LIST ::= L_BRACKET OPERATION:v1 CONT_LIST:v2                            {: RESULT = new SymbolList(v1, v2); :}
+       | STRING:v                                                       {: RESULT = new SymbolList(v); :}
        ;
-//       | STRING;     // TODO maybe
 
 CONT_LIST ::= COMMA OPERATION:v1 CONT_LIST:v2                           {: RESULT = new SymbolList(v1, v2); :}
             | R_BRACKET                                                 {: RESULT = new SymbolList(); :}

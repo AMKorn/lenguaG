@@ -254,7 +254,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 						}
 					}
 {boolean}			{ addTokens("Boolean: " + yytext()); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext())); }
-//{string}			{ addTokens("string: " + yytext()); return symbol(ParserSym.STRING, yytext());} // TODO if string is implemented
+{string}			{ addTokens("string: " + yytext()); return symbol(ParserSym.STRING, yytext());} // TODO if string is implemented
 
 {identifier}		{ addTokens("Identifier: " + yytext()); return symbol(ParserSym.IDENTIFIER, yytext()); }
 

@@ -19,6 +19,7 @@ public class SymbolValue extends SymbolBase {
 
     public SymbolValue(Object value){
         super("Value", 0);
+        this.value = value;
         isLiteral = !(value instanceof SymbolBase);
     }
 

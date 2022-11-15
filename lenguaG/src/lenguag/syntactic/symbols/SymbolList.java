@@ -26,6 +26,21 @@ public class SymbolList extends SymbolBase {
         length = contList.getLength()+1;
     }
 
+    public SymbolList(String s){
+        super("String", 0);
+        Character c = s.charAt(0);
+        SymbolValue val = new SymbolValue(c);
+        SymbolOperand operand = new SymbolOperand(val);
+        this.value = new SymbolOperation(operand);
+        if(s.length()>1){
+            String unprocessedString = s.substring(1);
+            this.contList = new SymbolList(unprocessedString);
+            length = contList.getLength()+1;
+        } else {
+            length = 1;
+        }
+    }
+
     public SymbolList(){
         super("List", 0);
         length = 0;
@@ -41,5 +56,20 @@ public class SymbolList extends SymbolBase {
 
     public SymbolList getNext(){
         return contList;
+    }
+
+    @Override
+    public String toString(){
+        String s = "";
+        SymbolList l = this;
+        while(l!=null){
+            SymbolOperation lo = l.getValue();
+            SymbolOperand loo = lo.getLValue();
+            SymbolValue loov = (SymbolValue) loo.getValue();
+            Character loovc = (Character) loov.getValue();
+            s += loovc;
+            l = l.getNext();
+        }
+        return s;
     }
 }
