@@ -13,6 +13,7 @@ import lenguag.lexic.*;
 import lenguag.syntactic.*;
 import lenguag.syntactic.symbols.*;
 import lenguag.semantic.*;
+import lenguag.LenguaGException.*;
 
 /**
  *
@@ -59,12 +60,12 @@ public class LenguaG {
 
             // Error checking
             if(la.thereIsError()) 
-                throw new LenguaGException.LexicException("Lexic analysis failed. Ending compilation process.");
+                throw new LexicException("Lexic analysis failed. Ending compilation process.");
             // If the lexic analysis was correct, we print the tokens to outputPath/tokens.txt
             writeFile(outputPath, "tokens.txt", la.writeTokens());
             
-            if(!(resultSyn instanceof SymbolBody)) 
-                throw new LenguaGException.SyntacticException("Syntactic analysis failed. Ending compilation process.");
+            if(parser.thereIsError || !(resultSyn instanceof SymbolBody)) 
+                throw new SyntacticException("Syntactic analysis failed. Ending compilation process.");
 
             // Semantic analysis
             Semantic sem = new Semantic();
@@ -74,13 +75,15 @@ public class LenguaG {
             // User error
             System.err.println("Input file " + file + " does not exist.");
             return;
-        } catch(LenguaGException.LexicException le){
-            // Compilation process error
+        } catch(LexicException le){
+            // User error
             System.err.println(le.getMessage());
-        } catch(LenguaGException.SyntacticException se){
-            // Compilation process error
+        } catch(SyntacticException se){
+            // User error 
             System.err.println(se.getMessage());
-        } catch (IOException e) {
+        } 
+        
+        catch (IOException e) {
             // !!! COMPILER ERROR !!!
             e.printStackTrace();
         } catch (Exception e) {

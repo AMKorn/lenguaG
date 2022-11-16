@@ -18,4 +18,10 @@ public class LenguaGException extends Exception {
             super(errorMessage);
         }
     }
+
+    public static class SemanticException extends LenguaGException {
+        public SemanticException(String errorMessage){
+            super(errorMessage);
+        }
+    }
 }

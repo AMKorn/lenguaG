@@ -12,18 +12,17 @@ package lenguag.syntactic.symbols;
  *               | CONT_DECLARATION:contDeclaration
  */
 public class SymbolDec extends SymbolInstr {
-    private boolean isConstant;
+    public final boolean isConstant;
+    public final String variableName;
 
     private SymbolType type;
-    private String variable;
     private SymbolOperation value;
-    // private SymbolDecCont contDeclaration;
     
     public SymbolDec(SymbolDecCont contDeclaration) {
         super("Declaration", 0, instructionType.instDeclaration);
 
         type = contDeclaration.getType();
-        variable = contDeclaration.getVar();
+        variableName = contDeclaration.getVar();
         value = contDeclaration.getValue();
         isConstant = false;
     }
@@ -31,21 +30,13 @@ public class SymbolDec extends SymbolInstr {
     public SymbolDec(SymbolDecCont contDeclaration, boolean isConstant){
         super("Declaration", 0, instructionType.instDeclaration);
         type = contDeclaration.getType();
-        variable = contDeclaration.getVar();
+        variableName = contDeclaration.getVar();
         value = contDeclaration.getValue();
         this.isConstant = isConstant;
-    }
-
-    public boolean isConstant(){
-        return isConstant;
     }
     
     public SymbolType getType(){
         return type;
-    }
-
-    public String getVar(){
-        return variable;
     }
 
     public SymbolOperation getValue(){

@@ -7,6 +7,8 @@
  */
 package lenguag.syntactic.symbols;
 
+import lenguag.syntactic.ParserSym;
+
 /* 
 OPERATION ::= OPERAND:lValue OP:operation OPERAND:rValue
             | OPERAND:lValue
@@ -16,6 +18,10 @@ public class SymbolOperation extends SymbolBase {
     private SymbolOperand lValue;
     private SymbolOp operation;
     private SymbolOperand rValue;
+
+    // Variables for semantic control
+    public int type = ParserSym.TYPE_VOID;  // Set as void until known
+    public boolean isConstant = true;       // Set as true by default so that as soon as we find a variable component we will know that this is not constant.
 
     public SymbolOperation(SymbolOperand lValue, SymbolOp operation, SymbolOperand rValue){
         super("Operation", 0);

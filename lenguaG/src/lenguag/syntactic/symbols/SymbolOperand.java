@@ -7,6 +7,8 @@
  */
 package lenguag.syntactic.symbols;
 
+import lenguag.syntactic.ParserSym;
+
 /*
  * OPERAND ::= VALUE:value                                                     {: RESULT = new SymbolOperand(v); :}
           | L_PAREN OPERATION:v R_PAREN                                 {: RESULT = new SymbolOperand(v); :}
@@ -16,11 +18,12 @@ package lenguag.syntactic.symbols;
  */
 public class SymbolOperand extends SymbolBase {
 
-    // private SymbolValue value;
-    // private SymbolOperation operation;
-
     private SymbolBase value;
     private boolean isNegated; // this boolean is used both for boolean values and for integers
+
+    // Variables for semantic control
+    public int type = ParserSym.TYPE_VOID;  // Set as void until known
+    public boolean isConstant = true;       // Set as true by default so that as soon as we find a variable component we will know that this is not constant.
     
     public SymbolOperand(SymbolValue value){
         super("Operand", 0);

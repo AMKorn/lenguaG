@@ -20,17 +20,24 @@ public class SymbolType extends SymbolBase {
 
     private int type; // Possible values are from ParserSym
     private int baseType;
+    private int arrayDimensions;
     
     public SymbolType(int type, SymbolType baseType){
         super("Type", 0);
         this.type = type;
-        this.baseType = baseType.getType();
+        this.baseType = baseType.getBaseType();
+        arrayDimensions = baseType.getArrayDimensions()+1;
     }
 
     public SymbolType(int type){
         super("Type", 0);
         this.type = type;
         this.baseType = type;
+        arrayDimensions = 0;
+    }
+
+    public int getArrayDimensions(){
+        return arrayDimensions;
     }
 
     public int getType(){

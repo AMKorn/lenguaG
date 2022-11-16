@@ -19,6 +19,10 @@ public class SymbolTable {
         return symbolTable.get(variable);
     }
 
+    public boolean contains(String variable){
+        return symbolTable.containsKey(variable);
+    }
+
     public void empty(){
         symbolTable.clear();
     }
