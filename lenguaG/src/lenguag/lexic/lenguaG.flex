@@ -234,7 +234,6 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 
 // Non-reserved words
 {character}			{ tokens.add("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext().charAt(0)); }
-//{float}				{ tokens.add("Float: " + yytext()); return symbol(ParserSym.FLOAT, Float.parseFloat(yytext())); }
 {int_number}		{ tokens.add("Number: " + yytext()); 
 						try {
 							Integer value = parseNum(yytext());

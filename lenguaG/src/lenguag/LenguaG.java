@@ -12,6 +12,7 @@ import java_cup.runtime.*;
 import lenguag.lexic.*;
 import lenguag.syntactic.*;
 import lenguag.syntactic.symbols.*;
+import lenguag.semantic.*;
 
 /**
  *
@@ -23,7 +24,6 @@ public class LenguaG {
     public static final String OUTPUT_PATH = "../output/";
 
     public static String outputPath = OUTPUT_PATH;
-    private static boolean continueCompilation = true;
 
     /**
      * @param args the command line arguments
@@ -50,15 +50,6 @@ public class LenguaG {
             System.out.println("Will write to " + outputPath);
         }
         try {
-            // DO NOT DELETE YET! To be used later
-            // // In case the output folder does not exist, we create it.
-            // File outf = new File(OUTPUT_PATH);
-            // outf.mkdirs();
-            // // We write the file
-            // FileWriter out = new FileWriter(outputPath);
-            // out.write("Hola");
-            // out.close();
-
             // Input and compilation start
             FileReader in = new FileReader(file);
             Lexic la = new Lexic(in);
@@ -66,23 +57,29 @@ public class LenguaG {
             Parser parser = new Parser(la, sf);
             Object resultSyn = parser.parse().value;
 
-            if(la.thereIsError() || !(resultSyn instanceof SymbolBody)){
-                System.err.println("Lexic-syntactical analysis failed. Ending compilation process.");
-                continueCompilation = false;
-            }
+            // Error checking
+            if(la.thereIsError()) 
+                throw new LenguaGException.LexicException("Lexic analysis failed. Ending compilation process.");
+            // If the lexic analysis was correct, we print the tokens to outputPath/tokens.txt
+            writeFile(outputPath, "tokens.txt", la.writeTokens());
             
-            // Output
-            // In case the output folder does not exist, we create it.
-            File outf = new File(outputPath);
-            outf.mkdirs();
-            // We write the file
-            FileWriter lexicOut = new FileWriter(outputPath + "tokens.txt");
-            lexicOut.write(la.writeTokens());
-            lexicOut.close();
+            if(!(resultSyn instanceof SymbolBody)) 
+                throw new LenguaGException.SyntacticException("Syntactic analysis failed. Ending compilation process.");
+
+            // Semantic analysis
+            Semantic sem = new Semantic();
+            sem.manage((SymbolBody) resultSyn);
+            
         } catch (FileNotFoundException fnf) {
             // User error
             System.err.println("Input file " + file + " does not exist.");
             return;
+        } catch(LenguaGException.LexicException le){
+            // Compilation process error
+            System.err.println(le.getMessage());
+        } catch(LenguaGException.SyntacticException se){
+            // Compilation process error
+            System.err.println(se.getMessage());
         } catch (IOException e) {
             // !!! COMPILER ERROR !!!
             e.printStackTrace();
@@ -90,6 +87,24 @@ public class LenguaG {
             // !!! COMPILER ERROR !!!
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Method that writes the text to the given file on the given path, creating it if necessary.
+     * File will be created in path/file, so file cannot be a path.
+     * @param path
+     * @param file
+     * @param text 
+     */
+    static public void writeFile(String path, String file, String text) throws IOException {
+        // In case the output folder does not exist, we create it.
+        File outf = new File(path);
+        outf.mkdirs();
+        // We write the file with the tokens
+        FileWriter lexicOut = new FileWriter(path + file);
+        lexicOut.write(text);
+        lexicOut.close();
+
     }
 
     static private String getOutputPath(String file) {
