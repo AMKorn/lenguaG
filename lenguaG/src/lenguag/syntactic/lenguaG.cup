@@ -48,20 +48,25 @@ parser code {:
     @Override
     public void report_error(String message, Object info) {
         thereIsError = true;
-        StringBuilder msg = new StringBuilder("ERROR");
+
+        String msg = " !! ";
+        msg += message;
         if (info instanceof Symbol) {
             ComplexSymbol token = (ComplexSymbol)info;
-            Location l = token.getLeft();
+            String tokenName = token.getName();
+            // If the name of the token equals the parser symbol for error, the error was lexical and should not be reported.
+            if(tokenName == ParserSym.terminalNames[ParserSym.error]) return;
+            msg += ": Unexpected " + tokenName;
             
+            Location l = token.getLeft();
+            if(token.value != null){
+                msg += ": " + token.value;
+            }
+
             if (l != null) {
-                msg.append(" (row: ")
-                   .append(l.getLine())
-                   .append(", column: ")
-                   .append(l.getColumn())
-                   .append(")");
+                msg += " at position [line: " + l.getLine() + ", column: " + l.getColumn() + "]";
             }
         }
-        msg.append(": ").append(message);
         
         System.err.println(msg);
     }
@@ -179,9 +184,9 @@ INSTRUCTION ::= DECLARATION:v ENDLINE                                   {: RESUL
               | FOR:v                                                   {: RESULT = v; :}
               | IN:v ENDLINE                                            {: RESULT = v; :}
               | OUT:v ENDLINE                                           {: RESULT = v; :}
+              | error ENDLINE                                           {: RESULT = new SymbolInstr("Error", 0, SymbolInstr.instructionType.error); /*Error treatment*/ :}
+              | error R_KEY                                             {: RESULT = new SymbolInstr("Error", 0, SymbolInstr.instructionType.error); /*Error treatment*/ :}
               ;
-//              | error ENDLINE                                                     {: RESULT = null /*Error treatment*/ :}
-//              | error R_KEY                                                       {: RESULT = null /*Error treatment*/ :};
 
 ASSIGNATION ::= VARIABLE:v1 EQUAL OPERATION:v2                          {: RESULT = new SymbolAssign(v1, v2); :} 
               ;

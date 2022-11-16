@@ -319,16 +319,9 @@ public class Lexic implements java_cup.runtime.Scanner {
 	private ArrayList<String> tokens = new ArrayList<>();
 	private ArrayList<String> errors = new ArrayList<>();
 
-	private void addTokens(String token){
-		//if (LenguaG.DEBUGGING) System.out.println("Detected token: " + token + " at position [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]");
+	/* private void addTokens(String token){
 		tokens.add(token);
-	}
-
-	public void printTokens(){
-		for(String s: tokens){
-			System.out.println(s);
-		}
-	}
+	} */
 
 	public String writeTokens(){
 		String tokenList = "";
@@ -355,12 +348,10 @@ public class Lexic implements java_cup.runtime.Scanner {
 	}
 
 	private String errorMessage(){
-		return " * Not recognized token " + yytext() + " at position [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]";
+		return " !! Lexical error: Not recognized token " + yytext() + " at position [line: " + (yyline+1) + ", column: " + (yycolumn+1) + "]";
 	}
 	
 	private int parseNum(String s) throws NumberFormatException {
-		// We check if it's a negative number.
-		//if(s.charAt(0) == '-') return -(parseNum(s.substring(1)));
 		// We check whether the first number is a 0, if so there might be a prefix specifying base, unless it's just a 0 by itself.
 		if(s.charAt(0) != '0' || s.length() == 1) return Integer.parseInt(s);
 		// If 
@@ -779,23 +770,23 @@ public class Lexic implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { errors.add(errorMessage()); 
+            { errors.add(errorMessage()); System.err.println(errorMessage());
 						return symbol(ParserSym.error);
             } 
             // fall through
           case 46: break;
           case 2: 
-            { addTokens("Identifier: " + yytext()); return symbol(ParserSym.IDENTIFIER, yytext());
+            { tokens.add("Identifier: " + yytext()); return symbol(ParserSym.IDENTIFIER, yytext());
             } 
             // fall through
           case 47: break;
           case 3: 
-            { addTokens("Number: " + yytext()); 
+            { tokens.add("Number: " + yytext()); 
 						try {
 							Integer value = parseNum(yytext());
 							return symbol(ParserSym.INTEGER, value); 
 						} catch(NumberFormatException nf) {
-							errors.add(errorMessage()); 
+							errors.add(errorMessage()); System.err.println(errorMessage());
 							return symbol(ParserSym.error);
 						}
             } 
@@ -807,82 +798,82 @@ public class Lexic implements java_cup.runtime.Scanner {
             // fall through
           case 49: break;
           case 5: 
-            { addTokens("Symbol : " + yytext()); return symbol(ParserSym.L_PAREN);
+            { tokens.add("Symbol : " + yytext()); return symbol(ParserSym.L_PAREN);
             } 
             // fall through
           case 50: break;
           case 6: 
-            { addTokens("Symbol : " + yytext()); return symbol(ParserSym.R_PAREN);
+            { tokens.add("Symbol : " + yytext()); return symbol(ParserSym.R_PAREN);
             } 
             // fall through
           case 51: break;
           case 7: 
-            { addTokens("Symbol : " + yytext()); return symbol(ParserSym.L_KEY);
+            { tokens.add("Symbol : " + yytext()); return symbol(ParserSym.L_KEY);
             } 
             // fall through
           case 52: break;
           case 8: 
-            { addTokens("Symbol : " + yytext()); return symbol(ParserSym.R_KEY);
+            { tokens.add("Symbol : " + yytext()); return symbol(ParserSym.R_KEY);
             } 
             // fall through
           case 53: break;
           case 9: 
-            { addTokens("Symbol : " + yytext()); return symbol(ParserSym.L_BRACKET);
+            { tokens.add("Symbol : " + yytext()); return symbol(ParserSym.L_BRACKET);
             } 
             // fall through
           case 54: break;
           case 10: 
-            { addTokens("Symbol : " + yytext()); return symbol(ParserSym.R_BRACKET);
+            { tokens.add("Symbol : " + yytext()); return symbol(ParserSym.R_BRACKET);
             } 
             // fall through
           case 55: break;
           case 11: 
-            { addTokens("Symbol : " + yytext()); return symbol(ParserSym.ENDLINE);
+            { tokens.add("Symbol : " + yytext()); return symbol(ParserSym.ENDLINE);
             } 
             // fall through
           case 56: break;
           case 12: 
-            { addTokens("Symbol : " + yytext()); return symbol(ParserSym.COMMA);
+            { tokens.add("Symbol : " + yytext()); return symbol(ParserSym.COMMA);
             } 
             // fall through
           case 57: break;
           case 13: 
-            { addTokens("AssignOp: " + yytext()); return symbol(ParserSym.EQUAL);
+            { tokens.add("AssignOp: " + yytext()); return symbol(ParserSym.EQUAL);
             } 
             // fall through
           case 58: break;
           case 14: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.LESSER);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.LESSER);
             } 
             // fall through
           case 59: break;
           case 15: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.BIGGER);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.BIGGER);
             } 
             // fall through
           case 60: break;
           case 16: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.ADD);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.ADD);
             } 
             // fall through
           case 61: break;
           case 17: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.SUB);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.SUB);
             } 
             // fall through
           case 62: break;
           case 18: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.PROD);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.PROD);
             } 
             // fall through
           case 63: break;
           case 19: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.DIV);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.DIV);
             } 
             // fall through
           case 64: break;
           case 20: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.MOD);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.MOD);
             } 
             // fall through
           case 65: break;
@@ -892,122 +883,122 @@ public class Lexic implements java_cup.runtime.Scanner {
             // fall through
           case 66: break;
           case 22: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.OR);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.OR);
             } 
             // fall through
           case 67: break;
           case 23: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_IN);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_IN);
             } 
             // fall through
           case 68: break;
           case 24: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_IF);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_IF);
             } 
             // fall through
           case 69: break;
           case 25: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.IS_EQUAL);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.IS_EQUAL);
             } 
             // fall through
           case 70: break;
           case 26: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.LEQ);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.LEQ);
             } 
             // fall through
           case 71: break;
           case 27: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.BEQ);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.BEQ);
             } 
             // fall through
           case 72: break;
           case 28: 
-            { addTokens("Op: " + yytext()); return symbol(ParserSym.NEQ);
+            { tokens.add("Op: " + yytext()); return symbol(ParserSym.NEQ);
             } 
             // fall through
           case 73: break;
           case 29: 
-            { addTokens("string: " + yytext()); return symbol(ParserSym.STRING, yytext());
+            { tokens.add("string: " + yytext()); return symbol(ParserSym.STRING, yytext());
             } 
             // fall through
           case 74: break;
           case 30: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_OUT);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_OUT);
             } 
             // fall through
           case 75: break;
           case 31: 
-            { addTokens("Type: " + yytext()); return symbol(ParserSym.TYPE_INTEGER);
+            { tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_INTEGER);
             } 
             // fall through
           case 76: break;
           case 32: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.NOT);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.NOT);
             } 
             // fall through
           case 77: break;
           case 33: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.AND);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.AND);
             } 
             // fall through
           case 78: break;
           case 34: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.CONSTANT);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.CONSTANT);
             } 
             // fall through
           case 79: break;
           case 35: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_FOR);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_FOR);
             } 
             // fall through
           case 80: break;
           case 36: 
-            { addTokens("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext().charAt(0));
+            { tokens.add("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext().charAt(0));
             } 
             // fall through
           case 81: break;
           case 37: 
-            { addTokens("Type: " + yytext()); return symbol(ParserSym.TYPE_BOOLEAN);
+            { tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_BOOLEAN);
             } 
             // fall through
           case 82: break;
           case 38: 
-            { addTokens("Boolean: " + yytext()); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext()));
+            { tokens.add("Boolean: " + yytext()); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext()));
             } 
             // fall through
           case 83: break;
           case 39: 
-            { addTokens("Type: " + yytext()); return symbol(ParserSym.TYPE_CHARACTER);
+            { tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_CHARACTER);
             } 
             // fall through
           case 84: break;
           case 40: 
-            { addTokens("Type: " + yytext()); return symbol(ParserSym.TYPE_VOID);
+            { tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_VOID);
             } 
             // fall through
           case 85: break;
           case 41: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_MAIN);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_MAIN);
             } 
             // fall through
           case 86: break;
           case 42: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_ELSE);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_ELSE);
             } 
             // fall through
           case 87: break;
           case 43: 
-            { addTokens("AssignOp: " + yytext()); return symbol(ParserSym.OP_SWAP);
+            { tokens.add("AssignOp: " + yytext()); return symbol(ParserSym.OP_SWAP);
             } 
             // fall through
           case 88: break;
           case 44: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_WHILE);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_WHILE);
             } 
             // fall through
           case 89: break;
           case 45: 
-            { addTokens("Terminal : " + yytext()); return symbol(ParserSym.RES_RETURN);
+            { tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_RETURN);
             } 
             // fall through
           case 90: break;

@@ -466,20 +466,25 @@ public class Parser extends java_cup.runtime.lr_parser {
     @Override
     public void report_error(String message, Object info) {
         thereIsError = true;
-        StringBuilder msg = new StringBuilder("ERROR");
+
+        String msg = " !! ";
+        msg += message;
         if (info instanceof Symbol) {
             ComplexSymbol token = (ComplexSymbol)info;
-            Location l = token.getLeft();
+            String tokenName = token.getName();
+            // If the name of the token equals the parser symbol for error, the error was lexical and should not be reported.
+            if(tokenName == ParserSym.terminalNames[ParserSym.error]) return;
+            msg += ": Unexpected " + tokenName;
             
+            Location l = token.getLeft();
+            if(token.value != null){
+                msg += ": " + token.value;
+            }
+
             if (l != null) {
-                msg.append(" (row: ")
-                   .append(l.getLine())
-                   .append(", column: ")
-                   .append(l.getColumn())
-                   .append(")");
+                msg += " at position [line: " + l.getLine() + ", column: " + l.getColumn() + "]";
             }
         }
-        msg.append(": ").append(message);
         
         System.err.println(msg);
     }
@@ -897,7 +902,7 @@ class CUP$Parser$actions {
           case 29: // INSTRUCTION ::= error ENDLINE 
             {
               SymbolInstr RESULT =null;
-		 RESULT = new SymbolInstr("Error",0, SymbolInstr.instructionType.error); /*Error treatment*/ 
+		 RESULT = new SymbolInstr("Error", 0, SymbolInstr.instructionType.error); /*Error treatment*/ 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("INSTRUCTION",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -906,7 +911,7 @@ class CUP$Parser$actions {
           case 30: // INSTRUCTION ::= error R_KEY 
             {
               SymbolInstr RESULT =null;
-		 RESULT = new SymbolInstr("Error",0, SymbolInstr.instructionType.error); /*Error treatment*/ 
+		 RESULT = new SymbolInstr("Error", 0, SymbolInstr.instructionType.error); /*Error treatment*/ 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("INSTRUCTION",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

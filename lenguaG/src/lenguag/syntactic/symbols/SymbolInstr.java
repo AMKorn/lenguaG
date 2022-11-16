@@ -33,7 +33,8 @@ public class SymbolInstr extends SymbolBase {
         instLoop,
         instFor,
         instIn,
-        instOut
+        instOut,
+        error
     }
     private instructionType instructionType;
     // SymbolBase instruction;
