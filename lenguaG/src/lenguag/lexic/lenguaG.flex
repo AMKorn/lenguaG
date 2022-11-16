@@ -50,7 +50,7 @@ int_number		= {integer}
 				|{binary}|{octal}|{hexadecimal}
 character		= {quote}\\?.{quote}	// any character, which could be escaped
 boolean			= {resTrue}|{resFalse}	// either true or false
-string 			= {doubleQuotes}[^]*{doubleQuotes}
+string 			= {doubleQuotes}.*{doubleQuotes}
 
 // Reserved words
 typeInt			= "int"

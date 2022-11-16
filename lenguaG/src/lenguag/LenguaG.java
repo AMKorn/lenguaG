@@ -22,7 +22,8 @@ public class LenguaG {
     public static final boolean DEBUGGING = true;
     public static final String OUTPUT_PATH = "../output/";
 
-    public static String outputFile = OUTPUT_PATH;
+    public static String outputPath = OUTPUT_PATH;
+    private static boolean continueCompilation = true;
 
     /**
      * @param args the command line arguments
@@ -39,14 +40,14 @@ public class LenguaG {
         // Output file is either given on the second arg, or defaulted to the name of
         // the output.
         if (args.length > 1)
-            outputFile += getOutputPath(args[1]);
+            outputPath += getOutputPath(args[1]);
         else
-            outputFile += getOutputPath(file);
+            outputPath += getOutputPath(file);
 
         // Compilation
         if (DEBUGGING) {
             System.out.println("Proceeding to read " + file);
-            System.out.println("Will write to " + outputFile);
+            System.out.println("Will write to " + outputPath);
         }
         try {
             // DO NOT DELETE YET! To be used later
@@ -54,29 +55,30 @@ public class LenguaG {
             // File outf = new File(OUTPUT_PATH);
             // outf.mkdirs();
             // // We write the file
-            // FileWriter out = new FileWriter(outputFile);
+            // FileWriter out = new FileWriter(outputPath);
             // out.write("Hola");
             // out.close();
 
+            // Input and compilation start
             FileReader in = new FileReader(file);
             Lexic la = new Lexic(in);
             SymbolFactory sf = new ComplexSymbolFactory();
             Parser parser = new Parser(la, sf);
             Object resultSyn = parser.parse().value;
 
-            if (!(resultSyn instanceof SymbolBody)) {
-                if (la.thereIsError()) {
-                    System.err.println("Lexic analysis failed due to: \n"
-                            + la.writeErrors()
-                            + "Ending compilation process.");
-                    return;
-                }
-                System.err.println("Syntactical analyis failed.");
-                return;
+            if(la.thereIsError() || !(resultSyn instanceof SymbolBody)){
+                System.err.println("Lexic-syntactical analysis failed. Ending compilation process.");
+                continueCompilation = false;
             }
-            SymbolBody body = (SymbolBody) resultSyn;
-
-            // la.printTokens();
+            
+            // Output
+            // In case the output folder does not exist, we create it.
+            File outf = new File(outputPath);
+            outf.mkdirs();
+            // We write the file
+            FileWriter lexicOut = new FileWriter(outputPath + "tokens.txt");
+            lexicOut.write(la.writeTokens());
+            lexicOut.close();
         } catch (FileNotFoundException fnf) {
             // User error
             System.err.println("Input file " + file + " does not exist.");
