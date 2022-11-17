@@ -13,6 +13,7 @@ public class SymbolDescription {
     private int type;
     private int nBytes;
     private Object value;
+    private int declaredLevel;
     public boolean isConstant;
 
     // Array information
@@ -48,6 +49,14 @@ public class SymbolDescription {
                 baseType = type.getBaseType();
                 dimensions = type.getArrayDimensions();
         }
+    }
+
+    void setLevel(int level){
+        declaredLevel = level;
+    }
+
+    int getLevel(){
+        return declaredLevel;
     }
 
     public void changeValue(Object value){
