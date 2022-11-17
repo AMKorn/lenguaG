@@ -136,6 +136,11 @@ precedence left  AND, OR;
 start with BODY;
 
 BODY ::= DECLARATIONS:v1 MAIN:v2                                        {: RESULT = new SymbolBody(v1, v2); :}
+       | DECLARATIONS                                                
+            {: 
+                // Error case
+                report_error("No main found", null); 
+            :}
        ;
 
 MAIN ::= RES_MAIN L_KEY INSTRUCTIONS:v R_KEY                            {: RESULT = new SymbolMain(v); :}

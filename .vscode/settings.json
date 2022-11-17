@@ -2,5 +2,6 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "lenguaG/src/lenguag/syntactic/java-cup-11b.jar"
-    ]
+    ],
+    "C_Cpp.errorSquiggles": "Disabled"
 }
