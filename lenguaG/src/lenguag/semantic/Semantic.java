@@ -38,8 +38,17 @@ public class Semantic {
         // TODO
     }
 
+    /**
+     * Args: getArg(), getNext()
+     * @param args
+     */
     private void manage(SymbolArgs args){
-        // TODO
+        /* Possible errors:
+         * - None? 
+         */
+        manage(args.getArg());
+        SymbolArgs next = args.getNext();
+        if(next != null) manage(next);
     }
 
     private void manage(SymbolArrSuff arrSuff){
@@ -157,7 +166,7 @@ public class Semantic {
         currentFunction.changeType(Constants.TYPE_FUNCTION);
         // We manage the return type of the function.
         SymbolType type = func.getType();
-        manage(type);
+        // manage(type); No need to do anything
         currentFunction.setReturnType(type); // and set it in the description.
 
         // Arguments treatment. Inside here, currentFunction should receive the different arguments of the function.
