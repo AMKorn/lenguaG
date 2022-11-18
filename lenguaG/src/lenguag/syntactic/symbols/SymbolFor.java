@@ -17,8 +17,8 @@ public class SymbolFor extends SymbolInstr {
     private SymbolInstrs instructions;
 
     public SymbolFor(SymbolBase initialization, SymbolOperation condition, SymbolBase finalStatement,
-            SymbolInstrs instructions) {
-        super("For", 0, instructionType.instFor);
+            SymbolInstrs instructions, int line, int column) {
+        super("For", 0, instructionType.instFor, line, column);
         this.initialization = initialization;
         this.condition = condition;
         this.finalStatement = finalStatement;

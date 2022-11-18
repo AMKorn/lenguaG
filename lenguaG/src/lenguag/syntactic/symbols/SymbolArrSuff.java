@@ -17,8 +17,8 @@ public class SymbolArrSuff extends SymbolBase {
     private SymbolArrSuff contSuff;
     private int nDims;
 
-    public SymbolArrSuff(SymbolOperation index, SymbolArrSuff contSuff){
-        super("Array Suffix", 0);
+    public SymbolArrSuff(SymbolOperation index, SymbolArrSuff contSuff, int line, int column){
+        super("Array Suffix", 0, line, column);
         this.index = index;
         this.contSuff = contSuff;
         if(contSuff == null) nDims = 1;

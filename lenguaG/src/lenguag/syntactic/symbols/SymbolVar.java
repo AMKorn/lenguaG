@@ -15,8 +15,8 @@ public class SymbolVar extends SymbolBase {
     private String idName;
     private SymbolArrSuff arraySuffix;
 
-    public SymbolVar(String idName, SymbolArrSuff arraySuffix) {
-        super("Variable", 0);
+    public SymbolVar(String idName, SymbolArrSuff arraySuffix, int line, int column) {
+        super("Variable", 0, line, column);
         this.idName = idName;
         this.arraySuffix = arraySuffix;
     }

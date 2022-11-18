@@ -15,8 +15,8 @@ public class SymbolIf extends SymbolInstr {
     private SymbolInstrs instructions;
     private SymbolElse sElse;
 
-    public SymbolIf(SymbolOperation condition, SymbolInstrs instructions, SymbolElse sElse) {
-        super("Condition", 0, instructionType.instIf);
+    public SymbolIf(SymbolOperation condition, SymbolInstrs instructions, SymbolElse sElse, int line, int column) {
+        super("Condition", 0, instructionType.instIf, line, column);
         this.condition = condition;
         this.instructions = instructions;
         this.sElse = sElse;

@@ -19,8 +19,8 @@ public class SymbolAssign extends SymbolInstr {
     //private SymbolExpr expression;
     //private SymbolOper operation;
 
-    public SymbolAssign(SymbolVar variable, SymbolOperation rSide) {
-        super("Assignation", 0, instructionType.instAssignation);
+    public SymbolAssign(SymbolVar variable, SymbolOperation rSide, int line, int column) {
+        super("Assignation", 0, instructionType.instAssignation, line, column);
         this.variable = variable;
         this.rSide = rSide;
     }

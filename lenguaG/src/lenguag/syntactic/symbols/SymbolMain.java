@@ -14,8 +14,8 @@ package lenguag.syntactic.symbols;
 public class SymbolMain extends SymbolBase {
     private SymbolInstrs instructions;
     
-    public SymbolMain(SymbolInstrs instructions) {
-        super("Main", 0);
+    public SymbolMain(SymbolInstrs instructions, int line, int column) {
+        super("Main", 0, line, column);
         this.instructions = instructions;
     }
 

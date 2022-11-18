@@ -25,14 +25,14 @@ public class SymbolOperand extends SymbolBase {
     public int type = ParserSym.TYPE_VOID;  // Set as void until known
     public boolean isConstant = true;       // Set as true by default so that as soon as we find a variable component we will know that this is not constant.
     
-    public SymbolOperand(SymbolValue value){
-        super("Operand", 0);
+    public SymbolOperand(SymbolValue value, int line, int column){
+        super("Operand", 0, line, column);
         this.value = value;
         isNegated = false;
     }
 
-    public SymbolOperand(SymbolOperation operation){
-        super("Operand", 0);
+    public SymbolOperand(SymbolOperation operation, int line, int column){
+        super("Operand", 0, line, column);
         this.value = operation;
         isNegated = false;
     }

@@ -14,8 +14,8 @@ public class SymbolLoop extends SymbolInstr {
     private SymbolOperation condition;
     private SymbolInstrs instructions;
     
-    public SymbolLoop(SymbolOperation condition, SymbolInstrs instructions) {
-        super("Loop", 0, instructionType.instLoop);
+    public SymbolLoop(SymbolOperation condition, SymbolInstrs instructions, int line, int column) {
+        super("Loop", 0, instructionType.instLoop, line, column);
         this.condition = condition;
         this.instructions = instructions;
     }

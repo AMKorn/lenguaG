@@ -15,13 +15,13 @@ public class SymbolReturn extends SymbolInstr {
     
     private SymbolOperation value;
 
-    public SymbolReturn(SymbolOperation value) {
-        super("Return", 0, instructionType.instReturn);
+    public SymbolReturn(SymbolOperation value, int line, int column) {
+        super("Return", 0, instructionType.instReturn, line, column);
         this.value = value;
     }
 
-    public SymbolReturn() {
-        super("Return", 0, instructionType.instReturn);
+    public SymbolReturn(int line, int column) {
+        super("Return", 0, instructionType.instReturn, line, column);
     }
 
     public SymbolOperation getValue(){

@@ -15,8 +15,8 @@ public class SymbolFuncCall extends SymbolInstr {
     private SymbolVar functionName;
     private SymbolParams params;
 
-    public SymbolFuncCall(SymbolVar functionName, SymbolParams params) {
-        super("Function call", 0, instructionType.instFunctionCall);
+    public SymbolFuncCall(SymbolVar functionName, SymbolParams params, int line, int column) {
+        super("Function call", 0, instructionType.instFunctionCall, line, column);
         this.functionName = functionName;
         this.params = params;
     }

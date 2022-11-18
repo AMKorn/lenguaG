@@ -65,17 +65,17 @@ public class Semantic {
             // Incompatible types
             if(type.getBaseType() != value.type) {
                 reportError("Type incongruency with " + dec.variableName + ": "
-                + Constants.getType(value.type) + " cannot be cast into " + Constants.getType(type.getType()));
+                + Constants.getType(value.type) + " cannot be cast into " + Constants.getType(type.getType()), dec.line, dec.column);
                 return;
             }
             // Constant declared, but value is variable.
             if(dec.isConstant && !value.isConstant){
-                reportError("Cannot assign variable value to constant " + dec.variableName);
+                reportError("Cannot assign variable value to constant " + dec.variableName, dec.line, dec.column);
                 return;
             }
         } else if(dec.isConstant){
             // Set as constant but no value given
-            reportError("Constant " + dec.variableName + " declared without value.");
+            reportError("Constant " + dec.variableName + " declared without value", dec.line, dec.column);
         }
 
         // Everything ok!
@@ -87,7 +87,7 @@ public class Semantic {
         try{ 
             symbolTable.insertVariable(dec.variableName, description);
         } catch(SemanticException se){
-            reportError(se.getMessage());
+            reportError(se.getMessage(), dec.line, dec.column);
         }
     }
 
@@ -190,9 +190,10 @@ public class Semantic {
         // TODO
     }
 
-    private void reportError(String errorMessage){
+    private void reportError(String errorMessage, int line, int column){
         thereIsError = true;
-        System.err.println(" !! Semantic error: " + errorMessage);
+        errorMessage = " !! Semantic error: " + errorMessage + " at position [line: " + line + ", column: " + column + "]";
+        System.err.println(errorMessage);
         errors.add(errorMessage);
     }
 

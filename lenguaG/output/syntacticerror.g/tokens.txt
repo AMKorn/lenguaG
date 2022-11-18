@@ -1,5 +1,6 @@
 int : TYPE_INTEGER
 begin : IDENTIFIER
+= : EQUAL
 ; : ENDLINE
 int : TYPE_INTEGER
 end : IDENTIFIER

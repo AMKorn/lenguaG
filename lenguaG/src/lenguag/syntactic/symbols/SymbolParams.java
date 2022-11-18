@@ -20,8 +20,8 @@ public class SymbolParams extends SymbolBase {
     private SymbolParams contParams;
     private int nParams;
 
-    public SymbolParams(SymbolOperation operation, SymbolParams contParams) {
-        super("Params", 0);
+    public SymbolParams(SymbolOperation operation, SymbolParams contParams, int line, int column) {
+        super("Params", 0, line, column);
         this.operation = operation;
         this.contParams = contParams;
         if(contParams == null) nParams = 1;

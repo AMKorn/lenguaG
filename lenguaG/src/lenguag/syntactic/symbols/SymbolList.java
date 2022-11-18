@@ -19,22 +19,22 @@ public class SymbolList extends SymbolBase {
     private int length;
     private SymbolList contList;
 
-    public SymbolList(SymbolOperation value, SymbolList contList) {
-        super("List", 0);
+    public SymbolList(SymbolOperation value, SymbolList contList, int line, int column) {
+        super("List", 0, line, column);
         this.value = value;
         this.contList = contList;
         length = contList.getLength()+1;
     }
 
-    public SymbolList(String s){
+    public SymbolList(String s, int line, int column){
         super("String", 0);
         Character c = s.charAt(0);
-        SymbolValue val = new SymbolValue(c);
-        SymbolOperand operand = new SymbolOperand(val);
-        this.value = new SymbolOperation(operand);
+        SymbolValue val = new SymbolValue(c, line, column);
+        SymbolOperand operand = new SymbolOperand(val, line, column);
+        this.value = new SymbolOperation(operand, line, column);
         if(s.length()>1){
             String unprocessedString = s.substring(1);
-            this.contList = new SymbolList(unprocessedString);
+            this.contList = new SymbolList(unprocessedString, line, column);
             length = contList.getLength()+1;
         } else {
             length = 1;

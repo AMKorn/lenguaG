@@ -18,8 +18,8 @@ public class SymbolDec extends SymbolInstr {
     private SymbolType type;
     private SymbolOperation value;
     
-    public SymbolDec(SymbolDecCont contDeclaration) {
-        super("Declaration", 0, instructionType.instDeclaration);
+    public SymbolDec(SymbolDecCont contDeclaration, int line, int column) {
+        super("Declaration", 0, instructionType.instDeclaration, line, column);
 
         type = contDeclaration.getType();
         variableName = contDeclaration.getVar();
@@ -27,8 +27,8 @@ public class SymbolDec extends SymbolInstr {
         isConstant = false;
     }
     
-    public SymbolDec(SymbolDecCont contDeclaration, boolean isConstant){
-        super("Declaration", 0, instructionType.instDeclaration);
+    public SymbolDec(SymbolDecCont contDeclaration, boolean isConstant, int line, int column){
+        super("Declaration", 0, instructionType.instDeclaration, line, column);
         type = contDeclaration.getType();
         variableName = contDeclaration.getVar();
         value = contDeclaration.getValue();

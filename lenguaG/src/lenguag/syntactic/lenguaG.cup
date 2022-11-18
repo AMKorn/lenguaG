@@ -135,7 +135,7 @@ precedence left  AND, OR;
 
 start with BODY;
 
-BODY ::= DECLARATIONS:v1 MAIN:v2                                        {: RESULT = new SymbolBody(v1, v2); :}
+BODY ::= DECLARATIONS:v1 MAIN:v2                                        {: RESULT = new SymbolBody(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
        | DECLARATIONS                                                
             {: 
                 // Error case
@@ -143,17 +143,17 @@ BODY ::= DECLARATIONS:v1 MAIN:v2                                        {: RESUL
             :}
        ;
 
-MAIN ::= RES_MAIN L_KEY INSTRUCTIONS:v R_KEY                            {: RESULT = new SymbolMain(v); :}
+MAIN ::= RES_MAIN L_KEY INSTRUCTIONS:v R_KEY                            {: RESULT = new SymbolMain(v, vxleft.getLine(), vxleft.getColumn()); :}
        ;
 
-DECLARATIONS ::= DECLARATION:v1 ENDLINE DECLARATIONS:v2                 {: RESULT = new SymbolDecs(v1, v2); :}
-               | FUNCTION:v1 DECLARATIONS:v2                            {: RESULT = new SymbolDecs(v1, v2); :}
+DECLARATIONS ::= DECLARATION:v1 ENDLINE DECLARATIONS:v2                 {: RESULT = new SymbolDecs(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
+               | FUNCTION:v1 DECLARATIONS:v2                            {: RESULT = new SymbolDecs(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
                |                                                        {: RESULT = new SymbolDecs(); :}
-               | error DECLARATIONS:v                                   {: RESULT = new SymbolDecs(null, v); /* If there's an error in a declaration, we go to the next one. */ :}
+               | error DECLARATIONS:v                                   {: RESULT = new SymbolDecs(null, v, vxleft.getLine(), vxleft.getColumn()); /* If there's an error in a declaration, we go to the next one. */ :}
                ;
 
-DECLARATION ::= CONSTANT CONT_DECLARATION:v                             {: RESULT = new SymbolDec(v, true); :}
-              | CONT_DECLARATION:v                                      {: RESULT = new SymbolDec(v); :}
+DECLARATION ::= CONSTANT:c CONT_DECLARATION:v                           {: RESULT = new SymbolDec(v, true, cxleft.getLine(), cxleft.getColumn()); :}
+              | CONT_DECLARATION:v                                      {: RESULT = new SymbolDec(v, vxleft.getLine(), vxleft.getColumn()); :}
               ;
 
 CONT_DECLARATION ::= TYPE:v1 IDENTIFIER:v2 EQUAL OPERATION:v3           {: RESULT = new SymbolDecCont(v1, v2, v3); :}
@@ -161,21 +161,21 @@ CONT_DECLARATION ::= TYPE:v1 IDENTIFIER:v2 EQUAL OPERATION:v3           {: RESUL
                    ;
 
 FUNCTION ::= TYPE:v1 VARIABLE:v2 L_PAREN ARGS:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY 
-                                                                        {: RESULT = new SymbolFunc(v1, v2, v3, v4); :}
+                                                                        {: RESULT = new SymbolFunc(v1, v2, v3, v4, v1xleft.getLine(), v1xleft.getColumn()); :}
            ;
 
-ARGS ::= ARG:v1 MORE_ARGS:v2                                            {: RESULT = new SymbolArgs(v1, v2); :}
+ARGS ::= ARG:v1 MORE_ARGS:v2                                            {: RESULT = new SymbolArgs(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
        |                                                                {: RESULT = new SymbolArgs(); :}
        ;
 
-MORE_ARGS ::= COMMA ARG:v1 MORE_ARGS:v2                                 {: RESULT = new SymbolArgs(v1, v2); :}
+MORE_ARGS ::= COMMA ARG:v1 MORE_ARGS:v2                                 {: RESULT = new SymbolArgs(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
             |                                                           {: RESULT = new SymbolArgs(); :}
             ;
 
-ARG ::= TYPE:v1 VARIABLE:v2                                             {: RESULT = new SymbolArg(v1, v2); :}
+ARG ::= TYPE:v1 VARIABLE:v2                                             {: RESULT = new SymbolArg(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
       ;
 
-INSTRUCTIONS ::= INSTRUCTION:v1 INSTRUCTIONS:v2                         {: RESULT = new SymbolInstrs(v1, v2); :}
+INSTRUCTIONS ::= INSTRUCTION:v1 INSTRUCTIONS:v2                         {: RESULT = new SymbolInstrs(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
                |                                                        {: RESULT = new SymbolInstrs(); :}
                ;
 
@@ -189,24 +189,24 @@ INSTRUCTION ::= DECLARATION:v ENDLINE                                   {: RESUL
               | FOR:v                                                   {: RESULT = v; :}
               | IN:v ENDLINE                                            {: RESULT = v; :}
               | OUT:v ENDLINE                                           {: RESULT = v; :}
-              | error ENDLINE                                           {: RESULT = new SymbolInstr("Error", 0, SymbolInstr.instructionType.error); /*Error treatment*/ :}
-              | error R_KEY                                             {: RESULT = new SymbolInstr("Error", 0, SymbolInstr.instructionType.error); /*Error treatment*/ :}
+              | error:v ENDLINE                                         {: RESULT = new SymbolInstr("Error", 0, SymbolInstr.instructionType.error, vxleft.getLine(), vxleft.getColumn()); /*Error treatment*/ :}
+              | error:v R_KEY                                           {: RESULT = new SymbolInstr("Error", 0, SymbolInstr.instructionType.error, vxleft.getLine(), vxleft.getColumn()); /*Error treatment*/ :}
               ;
 
-ASSIGNATION ::= VARIABLE:v1 EQUAL OPERATION:v2                          {: RESULT = new SymbolAssign(v1, v2); :} 
+ASSIGNATION ::= VARIABLE:v1 EQUAL OPERATION:v2                          {: RESULT = new SymbolAssign(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :} 
               ;
 
-SWAP ::= VARIABLE:v1 OP_SWAP VARIABLE:v2                                {: RESULT = new SymbolSwap(v1, v2); :}
+SWAP ::= VARIABLE:v1 OP_SWAP VARIABLE:v2                                {: RESULT = new SymbolSwap(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
        ;
 
-OPERATION ::= OPERAND:v1 OP:v2 OPERAND:v3                               {: RESULT = new SymbolOperation(v1, v2, v3); :}
-            | OPERAND:v1                                                {: RESULT = new SymbolOperation(v1); :}
+OPERATION ::= OPERAND:v1 OP:v2 OPERAND:v3                               {: RESULT = new SymbolOperation(v1, v2, v3, v1xleft.getLine(), v1xleft.getColumn()); :}
+            | OPERAND:v1                                                {: RESULT = new SymbolOperation(v1, v1xleft.getLine(), v1xleft.getColumn()); :}
             ;
 
-OPERAND ::= VALUE:v                                                     {: RESULT = new SymbolOperand(v); :}
-          | L_PAREN OPERATION:v R_PAREN                                 {: RESULT = new SymbolOperand(v); :}
-          | NOT OPERAND:v                                               {: v.negate(); RESULT = v; :}
-          | SUB OPERAND:v                                               {: v.negate(); RESULT = v; :}
+OPERAND ::= VALUE:v                                                     {: RESULT = new SymbolOperand(v, vxleft.getLine(), vxleft.getColumn()); :}
+          | L_PAREN OPERATION:v R_PAREN                                 {: RESULT = new SymbolOperand(v, vxleft.getLine(), vxleft.getColumn()); :}
+          | NOT:n OPERAND:v                                             {: v.negate(); v.line = nxleft.getLine(); v.column = nxleft.getColumn(); RESULT = v; :}
+          | SUB:n OPERAND:v                                             {: v.negate(); v.line = nxleft.getLine(); v.column = nxleft.getColumn(); RESULT = v; :}
           ;
 
 OP ::= ADD                                                              {: RESULT = new SymbolOp(ParserSym.ADD); :}
@@ -227,15 +227,15 @@ OP_REL ::= IS_EQUAL                                                     {: RESUL
          | NEQ                                                          {: RESULT = new SymbolOp(ParserSym.NEQ, true); :}
          ;
 
-VALUE ::= VARIABLE:v                                                    {: RESULT = new SymbolValue(v); :}
-        | FIXED_VALUE:v                                                 {: RESULT = new SymbolValue(v); :}
-        | FUNCTION_CALL:v                                               {: RESULT = new SymbolValue(v); :}
+VALUE ::= VARIABLE:v                                                    {: RESULT = new SymbolValue(v, vxleft.getLine(), vxleft.getColumn()); :}
+        | FIXED_VALUE:v                                                 {: RESULT = new SymbolValue(v, vxleft.getLine(), vxleft.getColumn()); :}
+        | FUNCTION_CALL:v                                               {: RESULT = new SymbolValue(v, vxleft.getLine(), vxleft.getColumn()); :}
         ;
 
-VARIABLE ::= IDENTIFIER:v1 ARRAY_SUFFIX:v2                              {: RESULT = new SymbolVar(v1, v2); :}
+VARIABLE ::= IDENTIFIER:v1 ARRAY_SUFFIX:v2                              {: RESULT = new SymbolVar(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
            ;
 
-ARRAY_SUFFIX ::= L_BRACKET OPERATION:v1 R_BRACKET ARRAY_SUFFIX:v2       {: RESULT = new SymbolArrSuff(v1, v2); :}
+ARRAY_SUFFIX ::= L_BRACKET:b OPERATION:v1 R_BRACKET ARRAY_SUFFIX:v2     {: RESULT = new SymbolArrSuff(v1, v2, bxleft.getLine(), bxleft.getColumn()); :}
                |                                                        {: RESULT = new SymbolArrSuff(); :}
                ;
 
@@ -252,30 +252,30 @@ TYPE ::= TYPE_INTEGER                                                   {: RESUL
        | TYPE:v L_BRACKET R_BRACKET                                     {: RESULT = new SymbolType(ParserSym.TYPE_ARRAY, v); :}
        ;
 
-LIST ::= L_BRACKET OPERATION:v1 CONT_LIST:v2                            {: RESULT = new SymbolList(v1, v2); :}
-       | STRING:v                                                       {: RESULT = new SymbolList(v); :}
+LIST ::= L_BRACKET:b OPERATION:v1 CONT_LIST:v2                          {: RESULT = new SymbolList(v1, v2, bxleft.getLine(), bxleft.getColumn()); :}
+       | STRING:v                                                       {: RESULT = new SymbolList(v, vxleft.getLine(), vxleft.getColumn()); :}
        ;
 
-CONT_LIST ::= COMMA OPERATION:v1 CONT_LIST:v2                           {: RESULT = new SymbolList(v1, v2); :}
+CONT_LIST ::= COMMA OPERATION:v1 CONT_LIST:v2                           {: RESULT = new SymbolList(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
             | R_BRACKET                                                 {: RESULT = new SymbolList(); :}
             ;
 //            | error R_BRACKET;
 
-IF ::= RES_IF L_PAREN OPERATION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY ELSE:v3 
-                                                                        {: RESULT = new SymbolIf(v1, v2, v3); :}
+IF ::= RES_IF:i L_PAREN OPERATION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY ELSE:v3 
+                                                                        {: RESULT = new SymbolIf(v1, v2, v3, ixleft.getLine(), ixleft.getColumn()); :}
      ;
 
-ELSE ::= RES_ELSE IF:v                                                  {: RESULT = new SymbolElse(v); :}
-       | RES_ELSE L_KEY INSTRUCTIONS:v R_KEY                            {: RESULT = new SymbolElse(v); :}
+ELSE ::= RES_ELSE:e IF:v                                                {: RESULT = new SymbolElse(v, exleft.getLine(), exleft.getColumn()); :}
+       | RES_ELSE:e L_KEY INSTRUCTIONS:v R_KEY                          {: RESULT = new SymbolElse(v, exleft.getLine(), exleft.getColumn()); :}
        |                                                                {: RESULT = new SymbolElse(); :}
        ;
 
-LOOP ::= RES_WHILE L_PAREN OPERATION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY 
-                                                                        {: RESULT = new SymbolLoop(v1, v2); :}
+LOOP ::= RES_WHILE:w L_PAREN OPERATION:v1 R_PAREN L_KEY INSTRUCTIONS:v2 R_KEY 
+                                                                        {: RESULT = new SymbolLoop(v1, v2, wxleft.getLine(), wxleft.getColumn()); :}
        ;
 
-FOR ::= RES_FOR L_PAREN HEADER_SEGMENT:v1 ENDLINE OPERATION:v2 ENDLINE HEADER_SEGMENT:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY
-                                                                        {: RESULT = new SymbolFor(v1, v2, v3, v4); :}
+FOR ::= RES_FOR:f L_PAREN HEADER_SEGMENT:v1 ENDLINE OPERATION:v2 ENDLINE HEADER_SEGMENT:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY
+                                                                        {: RESULT = new SymbolFor(v1, v2, v3, v4, fxleft.getLine(), fxleft.getColumn()); :}
       ;
 
 HEADER_SEGMENT ::= DECLARATION:v                                        {: RESULT = v; :}
@@ -285,23 +285,23 @@ HEADER_SEGMENT ::= DECLARATION:v                                        {: RESUL
                  ; 
                     // ^- Quitar FUNCTION_CALL si no implementamos pasar por referencia
 
-FUNCTION_CALL ::= VARIABLE:v1 L_PAREN PARAMS:v2 R_PAREN                 {: RESULT = new SymbolFuncCall(v1, v2); :}
+FUNCTION_CALL ::= VARIABLE:v1 L_PAREN PARAMS:v2 R_PAREN                 {: RESULT = new SymbolFuncCall(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
                 ;
 
-PARAMS ::= OPERATION:v1 MORE_PARAMS:v2                                  {: RESULT = new SymbolParams(v1, v2); :}
+PARAMS ::= OPERATION:v1 MORE_PARAMS:v2                                  {: RESULT = new SymbolParams(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
          |                                                              {: RESULT = new SymbolParams(); :}
          ;
 
-MORE_PARAMS ::= COMMA OPERATION:v1 MORE_PARAMS:v2                       {: RESULT = new SymbolParams(v1, v2); :}
+MORE_PARAMS ::= COMMA OPERATION:v1 MORE_PARAMS:v2                       {: RESULT = new SymbolParams(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
               |                                                         {: RESULT = new SymbolParams(); :}
               ;
 
-RETURN ::= RES_RETURN OPERATION:v                                       {: RESULT = new SymbolReturn(v); :}
-         | RES_RETURN                                                   {: RESULT = new SymbolReturn(); :}
+RETURN ::= RES_RETURN:r OPERATION:v                                     {: RESULT = new SymbolReturn(v, rxleft.getLine(), rxleft.getColumn()); :}
+         | RES_RETURN:r                                                 {: RESULT = new SymbolReturn(rxleft.getLine(), rxleft.getColumn()); :}
          ;
 
-IN ::= RES_IN L_PAREN VARIABLE:v R_PAREN                                {: RESULT = new SymbolIn(v); :}
+IN ::= RES_IN:i L_PAREN VARIABLE:v R_PAREN                              {: RESULT = new SymbolIn(v, ixleft.getLine(), ixleft.getColumn()); :}
      ;
 
-OUT ::= RES_OUT L_PAREN OPERATION:v R_PAREN                             {: RESULT = new SymbolOut(v); :}
+OUT ::= RES_OUT:o L_PAREN OPERATION:v R_PAREN                           {: RESULT = new SymbolOut(v, oxleft.getLine(), oxleft.getColumn()); :}
       ;

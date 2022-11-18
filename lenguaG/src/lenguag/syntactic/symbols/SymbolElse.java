@@ -17,13 +17,13 @@ public class SymbolElse extends SymbolBase {
     private SymbolIf nextIf;
     private SymbolInstrs instructions;
 
-    public SymbolElse(SymbolIf nextIf){
-        super("else", 0);
+    public SymbolElse(SymbolIf nextIf, int line, int column){
+        super("else", 0, line, column);
         this.nextIf = nextIf;
     }
 
-    public SymbolElse(SymbolInstrs instructions){
-        super("else", 0);
+    public SymbolElse(SymbolInstrs instructions, int line, int column){
+        super("else", 0, line, column);
         this.instructions = instructions;
     }
 

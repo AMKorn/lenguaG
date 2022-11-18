@@ -14,8 +14,8 @@ package lenguag.syntactic.symbols;
 public class SymbolIn extends SymbolInstr {
     private SymbolVar variable;
 
-    public SymbolIn(SymbolVar variable) {
-        super("In", 0, instructionType.instIn);
+    public SymbolIn(SymbolVar variable, int line, int column) {
+        super("In", 0, instructionType.instIn, line, column);
         this.variable = variable;
     }
     

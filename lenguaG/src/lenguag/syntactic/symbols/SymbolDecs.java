@@ -18,8 +18,8 @@ public class SymbolDecs extends SymbolBase {
     private SymbolBase declaration;
     private SymbolDecs contDeclarations;
     
-    public SymbolDecs(SymbolBase declaration, SymbolDecs contDeclarations){
-        super("Declarations", 0);
+    public SymbolDecs(SymbolBase declaration, SymbolDecs contDeclarations, int line, int column){
+        super("Declarations", 0, line, column);
         this.declaration = declaration;
         this.contDeclarations = contDeclarations;
     }

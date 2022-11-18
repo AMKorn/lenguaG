@@ -20,8 +20,8 @@ public class SymbolArgs extends SymbolBase {
     private SymbolArg argument;
     private SymbolArgs contArgs;
 
-    public SymbolArgs(SymbolArg argument, SymbolArgs contArgs) {
-        super("Arguments", 0);
+    public SymbolArgs(SymbolArg argument, SymbolArgs contArgs, int line, int column) {
+        super("Arguments", 0, line, column);
         this.argument = argument;
         this.contArgs = contArgs;
         if(contArgs == null) nArgs = 1;

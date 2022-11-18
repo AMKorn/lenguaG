@@ -17,8 +17,8 @@ public class SymbolFunc extends SymbolBase {
     private SymbolArgs args;
     private SymbolInstrs instructions;
 
-    public SymbolFunc(SymbolType type, SymbolVar variable, SymbolArgs args, SymbolInstrs instructions) {
-        super("Function", 0);
+    public SymbolFunc(SymbolType type, SymbolVar variable, SymbolArgs args, SymbolInstrs instructions, int line, int column) {
+        super("Function", 0, line, column);
         this.type = type;
         this.variable = variable;
         this.args = args;

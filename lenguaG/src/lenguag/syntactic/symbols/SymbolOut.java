@@ -14,8 +14,8 @@ package lenguag.syntactic.symbols;
 public class SymbolOut extends SymbolInstr {
     private SymbolOperation value;
 
-    public SymbolOut(SymbolOperation value) {
-        super("Out", 0, instructionType.instOut);
+    public SymbolOut(SymbolOperation value, int line, int column) {
+        super("Out", 0, instructionType.instOut, line, column);
         this.value = value;
     }
 

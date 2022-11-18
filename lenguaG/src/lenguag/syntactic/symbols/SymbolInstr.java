@@ -39,8 +39,8 @@ public class SymbolInstr extends SymbolBase {
     private instructionType instructionType;
     // SymbolBase instruction;
 
-    public SymbolInstr(String variable, int value, instructionType instructionType){
-        super(variable, value);
+    public SymbolInstr(String variable, int value, instructionType instructionType, int line, int column){
+        super(variable, value, line, column);
         this.instructionType = instructionType;
     }
 
