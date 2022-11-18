@@ -1,0 +1,11 @@
+val : CONSTANT
+int : TYPE_INTEGER
+i : IDENTIFIER
+; : ENDLINE
+main : RES_MAIN
+{ : L_KEY
+i : IDENTIFIER
+= : EQUAL
+2 : INTEGER
+; : ENDLINE
+} : R_KEY

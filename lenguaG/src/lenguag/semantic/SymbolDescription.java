@@ -66,8 +66,8 @@ public class SymbolDescription {
 
     @Override
     public String toString(){
-        String sd = "[Type: " + type;
-        if(type == ParserSym.TYPE_ARRAY) sd += " (Basetype: " + baseType + ", Dimensions: " + dimensions + ") ";
+        String sd = "[Type: " + Constants.getType(type);
+        if(type == ParserSym.TYPE_ARRAY) sd += " (Basetype: " + Constants.getType(baseType) + ", Dimensions: " + dimensions + ") ";
         sd += ", Constant: " + isConstant;
         if(isConstant) sd += ", Value: " + value;
         sd += ", Declared level: " + declaredLevel + "]";

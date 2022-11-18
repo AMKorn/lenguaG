@@ -54,7 +54,6 @@ string 			= {doubleQuotes}.*{doubleQuotes}
 
 // Reserved words
 typeInt			= "int"
-//typeFloat 		= "float"
 typeChar		= "char"
 typeBool		= "bool"
 typeVoid		= "void"
@@ -188,65 +187,64 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {comment}			{ /* We fully ignore comments */ }
 
 // Reserved words
-{resMain}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_MAIN); }
-{constant}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.CONSTANT); }
-{not}				{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.NOT); }
-{resOr}				{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.OR); }
-{resAnd}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.AND); }
-{resIf}				{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_IF); }
-{resElse}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_ELSE); }
-{resWhile}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_WHILE); }
-{resFor}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_FOR); }
-{resReturn}			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_RETURN); }
-{resIn} 			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_IN); }
-{resOut} 			{ tokens.add("Terminal : " + yytext()); return symbol(ParserSym.RES_OUT); }
+{resMain}			{ tokens.add(yytext() + " : RES_MAIN"); return symbol(ParserSym.RES_MAIN); }
+{constant}			{ tokens.add(yytext() + " : CONSTANT"); return symbol(ParserSym.CONSTANT); }
+{not}				{ tokens.add(yytext() + " : NOT"); return symbol(ParserSym.NOT); }
+{resOr}				{ tokens.add(yytext() + " : OR"); return symbol(ParserSym.OR); }
+{resAnd}			{ tokens.add(yytext() + " : AND"); return symbol(ParserSym.AND); }
+{resIf}				{ tokens.add(yytext() + " : RES_IF"); return symbol(ParserSym.RES_IF); }
+{resElse}			{ tokens.add(yytext() + " : RES_ELSE"); return symbol(ParserSym.RES_ELSE); }
+{resWhile}			{ tokens.add(yytext() + " : RES_WHILE"); return symbol(ParserSym.RES_WHILE); }
+{resFor}			{ tokens.add(yytext() + " : RES_FOR"); return symbol(ParserSym.RES_FOR); }
+{resReturn}			{ tokens.add(yytext() + " : RES_RETURN"); return symbol(ParserSym.RES_RETURN); }
+{resIn} 			{ tokens.add(yytext() + " : RES_IN"); return symbol(ParserSym.RES_IN); }
+{resOut} 			{ tokens.add(yytext() + " : RES_OUT"); return symbol(ParserSym.RES_OUT); }
 // Types
-{typeInt}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_INTEGER); }
-//{typeFloat}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_FLOAT); }
-{typeChar}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_CHARACTER); }
-{typeBool}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_BOOLEAN); }
-{typeVoid}			{ tokens.add("Type: " + yytext()); return symbol(ParserSym.TYPE_VOID); }
+{typeInt}			{ tokens.add(yytext() + " : TYPE_INTEGER"); return symbol(ParserSym.TYPE_INTEGER); }
+{typeChar}			{ tokens.add(yytext() + " : TYPE_CHARACTER"); return symbol(ParserSym.TYPE_CHARACTER); }
+{typeBool}			{ tokens.add(yytext() + " : TYPE_BOOLEAN"); return symbol(ParserSym.TYPE_BOOLEAN); }
+{typeVoid}			{ tokens.add(yytext() + " : TYPE_VOID"); return symbol(ParserSym.TYPE_VOID); }
 
 // Special characters
-{lParen}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.L_PAREN); }
-{rParen}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.R_PAREN); }
-{lKey}				{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.L_KEY); }
-{rKey} 				{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.R_KEY); }
-{lBracket}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.L_BRACKET); }
-{rBracket}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.R_BRACKET); }
-{endline}			{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.ENDLINE); }
-{comma}				{ tokens.add("Symbol : " + yytext()); return symbol(ParserSym.COMMA); }
+{lParen}			{ tokens.add(yytext() + " : L_PAREN"); return symbol(ParserSym.L_PAREN); }
+{rParen}			{ tokens.add(yytext() + " : R_PAREN"); return symbol(ParserSym.R_PAREN); }
+{lKey}				{ tokens.add(yytext() + " : L_KEY"); return symbol(ParserSym.L_KEY); }
+{rKey} 				{ tokens.add(yytext() + " : R_KEY"); return symbol(ParserSym.R_KEY); }
+{lBracket}			{ tokens.add(yytext() + " : L_BRACKET"); return symbol(ParserSym.L_BRACKET); }
+{rBracket}			{ tokens.add(yytext() + " : R_BRACKET"); return symbol(ParserSym.R_BRACKET); }
+{endline}			{ tokens.add(yytext() + " : ENDLINE"); return symbol(ParserSym.ENDLINE); }
+{comma}				{ tokens.add(yytext() + " : COMMA"); return symbol(ParserSym.COMMA); }
 
-{addSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.ADD); }
-{subSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.SUB); }
-{prodSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.PROD); }
-{divSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.DIV); }
-{modSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.MOD); }
-{eqSym}				{ tokens.add("Op: " + yytext()); return symbol(ParserSym.IS_EQUAL); }
-{beqSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.BEQ); }
-{btSym}				{ tokens.add("Op: " + yytext()); return symbol(ParserSym.BIGGER); }
-{leqSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.LEQ); }
-{ltSym}				{ tokens.add("Op: " + yytext()); return symbol(ParserSym.LESSER); }
-{neqSym}			{ tokens.add("Op: " + yytext()); return symbol(ParserSym.NEQ); }
+{addSym}			{ tokens.add(yytext() + " : ADD"); return symbol(ParserSym.ADD); }
+{subSym}			{ tokens.add(yytext() + " : SUB"); return symbol(ParserSym.SUB); }
+{prodSym}			{ tokens.add(yytext() + " : PROD"); return symbol(ParserSym.PROD); }
+{divSym}			{ tokens.add(yytext() + " : DIV"); return symbol(ParserSym.DIV); }
+{modSym}			{ tokens.add(yytext() + " : MOD"); return symbol(ParserSym.MOD); }
+{eqSym}				{ tokens.add(yytext() + " : IS_EQUAL"); return symbol(ParserSym.IS_EQUAL); }
+{beqSym}			{ tokens.add(yytext() + " : BEQ"); return symbol(ParserSym.BEQ); }
+{btSym}				{ tokens.add(yytext() + " : BIGGER"); return symbol(ParserSym.BIGGER); }
+{leqSym}			{ tokens.add(yytext() + " : LEQ"); return symbol(ParserSym.LEQ); }
+{ltSym}				{ tokens.add(yytext() + " : LESSER"); return symbol(ParserSym.LESSER); }
+{neqSym}			{ tokens.add(yytext() + " : NEQ"); return symbol(ParserSym.NEQ); }
 
-{assign}			{ tokens.add("AssignOp: " + yytext()); return symbol(ParserSym.EQUAL); }
-{swapSym} 			{ tokens.add("AssignOp: " + yytext()); return symbol(ParserSym.OP_SWAP); }
+{assign}			{ tokens.add(yytext() + " : EQUAL"); return symbol(ParserSym.EQUAL); }
+{swapSym} 			{ tokens.add(yytext() + " : OP_SWAP"); return symbol(ParserSym.OP_SWAP); }
 
 // Non-reserved words
-{character}			{ tokens.add("Character: " + yytext()); return symbol(ParserSym.CHARACTER, yytext().charAt(0)); }
-{int_number}		{ tokens.add("Number: " + yytext()); 
-						try {
-							Integer value = parseNum(yytext());
+{character}			{ tokens.add(yytext() + " : CHARACTER"); return symbol(ParserSym.CHARACTER, yytext().charAt(0)); }
+{int_number}		{ 	try {
+							Integer value = parseNum(yytext()); 
+							tokens.add(yytext() + " : INTEGER"); 
 							return symbol(ParserSym.INTEGER, value); 
 						} catch(NumberFormatException nf) {
 							errors.add(errorMessage()); System.err.println(errorMessage());
 							return symbol(ParserSym.error);
 						}
 					}
-{boolean}			{ tokens.add("Boolean: " + yytext()); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext())); }
-{string}			{ tokens.add("string: " + yytext()); return symbol(ParserSym.STRING, yytext());}
+{boolean}			{ tokens.add(yytext() + " : BOOLEAN"); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext())); }
+{string}			{ tokens.add(yytext() + " : STRING"); return symbol(ParserSym.STRING, yytext());}
 
-{identifier}		{ tokens.add("Identifier: " + yytext()); return symbol(ParserSym.IDENTIFIER, yytext()); }
+{identifier}		{ tokens.add(yytext() + " : IDENTIFIER"); return symbol(ParserSym.IDENTIFIER, yytext()); }
 
 {ws}				{ /* Do nothing */ }
 [^]					{ errors.add(errorMessage()); System.err.println(errorMessage());
