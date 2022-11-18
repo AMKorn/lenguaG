@@ -2,12 +2,12 @@ package lenguag.semantic;
 
 import java.util.ArrayList;
 
+import lenguag.LenguaGException.SemanticException;
 import lenguag.syntactic.symbols.*;
 
 public class Semantic {
     
     public SymbolTable symbolTable;
-    // TODO different ambits
 
     private ArrayList<String> errors;
     public boolean thereIsError = false;
@@ -52,15 +52,10 @@ public class Semantic {
     private void manage(SymbolDec dec){
         /* Possible errors:
          * 1. Set as constant but has a variable value
-         * 2. variableName already present in symbolTable at this level.
-         * 3. type and the value's type are incompatible
+         * 2. type and the value's type are incompatible
+         * 3. variableName already present in symbolTable at this level.
+         *      This is detected INSIDE SymbolTable, but error must be caught here
          */
-        // Variable already present in symbolTable
-        if(symbolTable.contains(dec.variableName)){
-            writeError("Variable " + dec.variableName + " declared two times.");
-            return;
-            // TODO different ambits
-        }
         SymbolType type = dec.getType();
         manage(type);
         SymbolOperation value = dec.getValue();
@@ -83,7 +78,11 @@ public class Semantic {
         description.changeType(type);
         description.isConstant = dec.isConstant;
         // if(dec.isConstant) TODO add value to description if constant
-        symbolTable.insertVariable(dec.variableName, description);
+        try{ 
+            symbolTable.insertVariable(dec.variableName, description);
+        } catch(SemanticException se){
+            writeError(se.getMessage());
+        }
     }
 
     /**

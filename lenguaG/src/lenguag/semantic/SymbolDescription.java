@@ -13,7 +13,8 @@ public class SymbolDescription {
     private int type;
     private int nBytes;
     private Object value;
-    private int declaredLevel;
+
+    public int declaredLevel;
     public boolean isConstant;
 
     // Array information
@@ -51,14 +52,6 @@ public class SymbolDescription {
         }
     }
 
-    void setLevel(int level){
-        declaredLevel = level;
-    }
-
-    int getLevel(){
-        return declaredLevel;
-    }
-
     public void changeValue(Object value){
         this.value = value;
     }
@@ -71,4 +64,13 @@ public class SymbolDescription {
         return nBytes;
     }
 
+    @Override
+    public String toString(){
+        String sd = "Type: " + type + "\n";
+        if(type == ParserSym.TYPE_ARRAY) sd += "Basetype: " + baseType + ", Dimensions: " + dimensions + "\n";
+        sd += "Constant: " + isConstant + "\n";
+        if(isConstant) sd += "Value: " + value + "\n";
+        sd += "Declared level: " + declaredLevel + "\n";
+        return sd;
+    }
 }
