@@ -70,6 +70,7 @@ public class LenguaG {
             // Semantic analysis
             Semantic sem = new Semantic();
             sem.manage((SymbolBody) resultSyn);
+            System.out.println(sem.symbolTable);
             
         } catch (FileNotFoundException fnf) {
             // User error
