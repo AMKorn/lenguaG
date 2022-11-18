@@ -3,12 +3,16 @@ package lenguag.semantic;
 import java.util.ArrayList;
 
 import lenguag.*;
+import lenguag.LenguaGException.CompilerException;
 import lenguag.LenguaGException.SemanticException;
 import lenguag.syntactic.symbols.*;
 
 public class Semantic {
     
     public SymbolTable symbolTable;
+
+    // Variables that specify inside which function we are currently.
+    SymbolDescription currentFunction;
 
     private ArrayList<String> errors;
     public boolean thereIsError = false;
@@ -120,12 +124,57 @@ public class Semantic {
      */
     private void manage(SymbolFunc func){
         /* Possible errors:
-         * 1. Function name already present
+         * 1. Function already declared (checked inside of symbolTable)
          * 2. Function type and return type are not compatible.
          *      Complex solution. No direct connection between SymbolFunc and any instruction in the function.
          */
-        
-        // TODO
+        String name = func.getFunctionName();
+        // We check whether the function was already declared or not. 
+        try {
+            // We set current function to the current function's empty description so that we can fill it up further in the process.
+            currentFunction = new SymbolDescription(); 
+            symbolTable.insertVariable(name, currentFunction);
+        } catch(SemanticException se){
+            // If symbol table already found the name of the function, it's a compilation error. 
+            // This means that a variable and a function cannot share the same name. FIXME later if we have enough time to think of an easy solution,
+            // otherwise this is by design. Sort of.
+            reportError(se.getMessage(), func.line, func.column);
+            return;
+        }
+        /* The following logic would work if we had a way to insert different names in the symbol table. Delete this if we end up not implementing it.
+        // Fortunately, the number of arguments is calculated during syntactical analysis so it is trivial to check for polymorphism.
+        SymbolDescription funcPrima = symbolTable.getDescription(name);
+        if(funcPrima != null) {
+            if(funcPrima.getType() == Constants.TYPE_FUNCTION && funcPrima.getNArgs() == func.getNArgs()){
+                reportError("Function already declared", func.line, func.column);
+            }
+        } */
+
+        // Everything ok so far!
+        // We enter a new ambit on the symbol table
+        symbolTable.enterBlock();
+        // We change the type of the created symbol on the symbol table to TYPE_FUNCTION
+        currentFunction.changeType(Constants.TYPE_FUNCTION);
+        // We manage the return type of the function.
+        SymbolType type = func.getType();
+        manage(type);
+        currentFunction.setReturnType(type); // and set it in the description.
+
+        // Arguments treatment. Inside here, currentFunction should receive the different arguments of the function.
+        SymbolArgs args = func.getArgs();
+        manage(args);
+
+        // Instructions treatment. Inside here, we will deal with the return statement being of a compatible type with the function's return type
+        SymbolInstrs instrs = func.getInstructions();
+        manage(instrs);
+
+        // We return to the previous ambit
+        try{
+            symbolTable.exitBlock();
+        } catch(CompilerException ce){
+            // !!! Compiler error !!!
+            ce.printStackTrace();
+        }
     }
 
     private void manage(SymbolFuncCall functionCall){

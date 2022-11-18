@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import lenguag.LenguaGException.CompilerException;
 import lenguag.LenguaGException.SemanticException;
 
 public class SymbolTable {
@@ -39,7 +40,6 @@ public class SymbolTable {
             idxe++;
             ambitsTable.set(currentLevel, idxe); // ambitsTable[currentLevel] = idxe
             expansionTable.add(new tableEntry(variable, oldVarDesc)); // expansionTable[idxe] = description of the obscured variable
-            //expansionTable.set(idxe, new tableEntry(variable, oldVarDesc)); // expansionTable[idxe] = description of the obscured variable
         }
         desc.declaredLevel = currentLevel;
         symbolTable.put(variable, desc);
@@ -62,8 +62,8 @@ public class SymbolTable {
         ambitsTable.add(prevAmbit);
     }
 
-    public void exitBlock() throws IndexOutOfBoundsException {
-        if(currentLevel == 0) throw new IndexOutOfBoundsException(" !!! Compiler error !!! Tried to exit last block in symbol table.");
+    public void exitBlock() throws CompilerException {
+        if(currentLevel == 0) throw new CompilerException(" !!! Compiler error !!! Tried to exit last block in symbol table.");
         int to = ambitsTable.get(currentLevel); // Finishing index: indicates the last variable added to the expansion table.
         ambitsTable.remove(currentLevel);       // we decrement the current level
         currentLevel--;

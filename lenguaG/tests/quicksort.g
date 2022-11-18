@@ -31,8 +31,8 @@ int partition(int[] array, int begin, int end) {
 
 main {
 	intArray = [5, 9, 4, 6, 5, 3];
-	begin = -1;
-	end = -0xF;
+	begin = 0;
+	end = 5;
 	quickSort(intArray, begin, end);
     our("El array ordenado es: ");
     out(intArray);

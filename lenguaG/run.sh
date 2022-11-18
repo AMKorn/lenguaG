@@ -60,7 +60,9 @@ if [[ $java == 1 ]]
 then
     echo "
     **** Compiling java classes ****"
-    javac -cp .:lenguag/syntactic/java-cup-11b-runtime.jar **/*.java
+    javac -cp .:lenguag/syntactic/java-cup-11b-runtime.jar */*.java
+    javac -cp .:lenguag/syntactic/java-cup-11b-runtime.jar */*/*.java
+    javac -cp .:lenguag/syntactic/java-cup-11b-runtime.jar */*/*/*.java
     echo "
     Done!"
 fi

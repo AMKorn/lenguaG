@@ -32,6 +32,8 @@ public class Constants {
                 return "void";
             case TYPE_ARRAY:
                 return "list";
+            case TYPE_FUNCTION:
+                return "function";
             default:
                 return "unidentified type";
         }

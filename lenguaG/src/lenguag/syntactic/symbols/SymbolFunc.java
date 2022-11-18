@@ -33,10 +33,18 @@ public class SymbolFunc extends SymbolBase {
         return variable.getName();
     }
 
+    /**
+     * Returns the amount of arguments of the function.
+     * @return
+     */
     public int getNArgs(){
         return args.getNArgs();
     }
 
+    /**
+     * Function to get the symbol for the arguments.
+     * @return
+     */
     public SymbolArgs getArgs(){
         return args;
     }

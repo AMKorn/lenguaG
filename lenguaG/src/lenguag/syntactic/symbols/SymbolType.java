@@ -8,6 +8,8 @@
 
 package lenguag.syntactic.symbols;
 
+import lenguag.Constants;
+
 /*
 TYPE ::= TYPE_INTEGER
        | TYPE_CHARACTER
@@ -18,7 +20,7 @@ TYPE ::= TYPE_INTEGER
  */
 public class SymbolType extends SymbolBase {
 
-    private int type; // Possible values are from ParserSym
+    private int type; // Possible values are from Constants/ParserSym
     private int baseType;
     private int arrayDimensions;
     
@@ -46,5 +48,11 @@ public class SymbolType extends SymbolBase {
 
     public int getBaseType(){
         return baseType;
+    }
+
+    @Override
+    public String toString(){
+        if(type == Constants.TYPE_ARRAY) return Constants.getType(baseType)+"[" + arrayDimensions + "]";
+        return Constants.getType(type);
     }
 }
