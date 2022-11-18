@@ -24,4 +24,10 @@ public class LenguaGException extends Exception {
             super(errorMessage);
         }
     }
+
+    public static class CompilerException extends LenguaGException {
+        public CompilerException(String errorMessage){
+            super(errorMessage);
+        }
+    }
 }

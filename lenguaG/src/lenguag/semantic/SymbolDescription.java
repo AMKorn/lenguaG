@@ -1,7 +1,9 @@
 package lenguag.semantic;
 
+import java.util.HashMap;
+
 import lenguag.*;
-import lenguag.syntactic.ParserSym;
+import lenguag.LenguaGException.CompilerException;
 import lenguag.syntactic.symbols.*;
 
 /**
@@ -11,7 +13,6 @@ public class SymbolDescription {
 
     // The variable's type
     private int type;
-    private int nBytes;
     private Object value;
 
     public int declaredLevel;
@@ -21,12 +22,16 @@ public class SymbolDescription {
     private int baseType;
     private int dimensions;
 
+    // Function information
+    private int nArgs;
+    private int returnType;
+    private HashMap<String, Integer> args; // arguments are name and type
+
     /**
      * Creates an empty description
      */
     public SymbolDescription(){
-        type = ParserSym.TYPE_VOID;
-        nBytes = 0;
+        type = Constants.TYPE_VOID;
         isConstant = false;
     }
 
@@ -37,18 +42,19 @@ public class SymbolDescription {
     public void changeType(SymbolType type) {
         this.type = type.getType();
         switch(this.type){
-            case ParserSym.TYPE_INTEGER:
-                nBytes = Constants.INTEGER_BYTES;
+            case Constants.TYPE_INTEGER:
                 break;
-            case ParserSym.TYPE_CHARACTER:
-                nBytes = Constants.CHAR_BYTES;
+            case Constants.TYPE_CHARACTER:
                 break;
-            case ParserSym.TYPE_BOOLEAN:
-                nBytes = Constants.BOOL_BYTES;
+            case Constants.TYPE_BOOLEAN:
                 break;
-            case ParserSym.TYPE_ARRAY:
+            case Constants.TYPE_ARRAY:
                 baseType = type.getBaseType();
                 dimensions = type.getArrayDimensions();
+            case Constants.TYPE_FUNCTION:
+                nArgs = 0;
+                returnType = Constants.TYPE_VOID;
+                args = new HashMap<>();
         }
     }
 
@@ -60,14 +66,38 @@ public class SymbolDescription {
         return type;
     }
 
-    public int getSize(){
-        return nBytes;
+    // Array methods
+    public void changeBaseType(int baseType) throws CompilerException {
+        if(type != Constants.TYPE_ARRAY) throw new CompilerException(" !! Compiler error !! Can't change baseType of a non-array variable.");
+        this.baseType = baseType;
+    }
+
+    public int getBaseType() throws CompilerException {
+        if(type != Constants.TYPE_ARRAY) throw new CompilerException(" !! Compiler error !! Can't get baseType of a non-array variable.");
+        return baseType;
+    }
+
+    public void changeDimensions(int dimensions) throws CompilerException {
+        if(type != Constants.TYPE_ARRAY) throw new CompilerException(" !! Compiler error !! Can't change dimensions of a non-array variable.");
+        this.dimensions = dimensions;
+    }
+
+    public int getDimensions() throws CompilerException {
+        if(type != Constants.TYPE_ARRAY) throw new CompilerException(" !! Compiler error !! Can't get dimensions of a non-array variable.");
+        return dimensions;
+    }
+
+    // Function methods
+    public void addArgument(String name, int type) throws CompilerException {
+        if(type != Constants.TYPE_FUNCTION) throw new CompilerException(" !! Compiler error !! Can't add arguments to a non-function");
+        args.put(name, type);
+        nArgs++;
     }
 
     @Override
     public String toString(){
         String sd = "[Type: " + Constants.getType(type);
-        if(type == ParserSym.TYPE_ARRAY) sd += " (Basetype: " + Constants.getType(baseType) + ", Dimensions: " + dimensions + ") ";
+        if(type == Constants.TYPE_ARRAY) sd += " (Basetype: " + Constants.getType(baseType) + ", Dimensions: " + dimensions + ") ";
         sd += ", Constant: " + isConstant;
         if(isConstant) sd += ", Value: " + value;
         sd += ", Declared level: " + declaredLevel + "]";

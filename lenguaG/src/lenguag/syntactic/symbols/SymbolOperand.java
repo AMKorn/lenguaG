@@ -7,7 +7,7 @@
  */
 package lenguag.syntactic.symbols;
 
-import lenguag.syntactic.ParserSym;
+import lenguag.*;
 
 /*
  * OPERAND ::= VALUE:value                                                     {: RESULT = new SymbolOperand(v); :}
@@ -22,7 +22,7 @@ public class SymbolOperand extends SymbolBase {
     private boolean isNegated; // this boolean is used both for boolean values and for integers
 
     // Variables for semantic control
-    public int type = ParserSym.TYPE_VOID;  // Set as void until known
+    public int type = Constants.TYPE_VOID;  // Set as void until known
     public boolean isConstant = true;       // Set as true by default so that as soon as we find a variable component we will know that this is not constant.
     
     public SymbolOperand(SymbolValue value, int line, int column){

@@ -114,7 +114,17 @@ public class Semantic {
         // TODO
     }
 
+    /**
+     * Function: getType(), getFunctionName(), getArgs(), getInstructions()
+     * @param func
+     */
     private void manage(SymbolFunc func){
+        /* Possible errors:
+         * 1. Function name already present
+         * 2. Function type and return type are not compatible.
+         *      Complex solution. No direct connection between SymbolFunc and any instruction in the function.
+         */
+        
         // TODO
     }
 

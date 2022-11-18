@@ -17,7 +17,6 @@ import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 
 // Our project imports
-import lenguag.*;
 import lenguag.syntactic.ParserSym;
 
 %%
