@@ -59,17 +59,19 @@ public class Semantic {
         SymbolType type = dec.getType();
         manage(type);
         SymbolOperation value = dec.getValue();
-        manage(value);
-        // Incompatible types
-        if(type.getBaseType() != value.type) {
-            writeError("Type incongruency with " + dec.variableName + ": "
-            + value.type + " cannot be cast into " + type.getType());
-            return;
-        }
-        // Constant declared, but value is variable.
-        if(dec.isConstant && !value.isConstant){
-            writeError("Cannot assign variable value to constant " + dec.variableName);
-            return;
+        if(value != null) {
+            manage(value);
+            // Incompatible types
+            if(type.getBaseType() != value.type) {
+                writeError("Type incongruency with " + dec.variableName + ": "
+                + value.type + " cannot be cast into " + type.getType());
+                return;
+            }
+            // Constant declared, but value is variable.
+            if(dec.isConstant && !value.isConstant){
+                writeError("Cannot assign variable value to constant " + dec.variableName);
+                return;
+            }
         }
 
         // Everything ok!

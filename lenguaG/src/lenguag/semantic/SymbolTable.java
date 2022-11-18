@@ -2,6 +2,7 @@ package lenguag.semantic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import lenguag.LenguaGException.SemanticException;
 
@@ -18,6 +19,7 @@ public class SymbolTable {
         symbolTable = new HashMap<>();
         currentLevel = 0;
         ambitsTable = new ArrayList<>();
+        ambitsTable.add(currentLevel, 0);
         expansionTable = new ArrayList<>();
     }
 
@@ -36,13 +38,14 @@ public class SymbolTable {
             int idxe = ambitsTable.get(currentLevel); // idxe = ambitsTable[currentLevel]
             idxe++;
             ambitsTable.set(currentLevel, idxe); // ambitsTable[currentLevel] = idxe
-            expansionTable.set(idxe, new tableEntry(variable, oldVarDesc)); // expansionTable[idxe] = description of the obscured variable
+            expansionTable.add(new tableEntry(variable, oldVarDesc)); // expansionTable[idxe] = description of the obscured variable
+            //expansionTable.set(idxe, new tableEntry(variable, oldVarDesc)); // expansionTable[idxe] = description of the obscured variable
         }
         desc.declaredLevel = currentLevel;
         symbolTable.put(variable, desc);
     }
 
-    public SymbolDescription getDescription(String variable){
+    public SymbolDescription getDescription(String variable) {
         return symbolTable.get(variable);
     }
 
@@ -50,6 +53,7 @@ public class SymbolTable {
         currentLevel = 0;
         symbolTable.clear();
         ambitsTable.clear();
+        expansionTable.clear();
     }
 
     public void enterBlock(){
@@ -68,6 +72,12 @@ public class SymbolTable {
             symbolTable.replace(te.variable, te.desc); // We restore the previous value
         }
         expansionTable.subList(from, to).clear(); // We clear the expansion table
+        
+        // Removal of symbols from the previous level
+        Iterator<HashMap.Entry<String, SymbolDescription>> it = symbolTable.entrySet().iterator();
+        while(it.hasNext()){
+            if(it.next().getValue().declaredLevel > currentLevel) it.remove();
+        }
     }
 
     @Override

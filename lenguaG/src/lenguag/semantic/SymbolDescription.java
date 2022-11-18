@@ -66,11 +66,11 @@ public class SymbolDescription {
 
     @Override
     public String toString(){
-        String sd = "Type: " + type + "\n";
-        if(type == ParserSym.TYPE_ARRAY) sd += "Basetype: " + baseType + ", Dimensions: " + dimensions + "\n";
-        sd += "Constant: " + isConstant + "\n";
-        if(isConstant) sd += "Value: " + value + "\n";
-        sd += "Declared level: " + declaredLevel + "\n";
+        String sd = "[Type: " + type;
+        if(type == ParserSym.TYPE_ARRAY) sd += " (Basetype: " + baseType + ", Dimensions: " + dimensions + ") ";
+        sd += ", Constant: " + isConstant;
+        if(isConstant) sd += ", Value: " + value;
+        sd += ", Declared level: " + declaredLevel + "]";
         return sd;
     }
 }
