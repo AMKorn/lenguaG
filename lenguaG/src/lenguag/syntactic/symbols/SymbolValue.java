@@ -14,26 +14,26 @@ package lenguag.syntactic.symbols;
  */
 public class SymbolValue extends SymbolBase {
     
-    private boolean isLiteral;
-    private Object value;
+    public boolean isConstant;
+    public Object value;
 
     // Variables for semantic control
-    public SymbolType type; 
+    public SymbolType type;
 
     public SymbolValue(Object value, int line, int column){
         super("Value", 0, line, column);
         this.value = value;
-        isLiteral = !(value instanceof SymbolBase);
+        isConstant = !(value instanceof SymbolBase);
     }
 
-    public boolean isLiteral(){
+    /* public boolean isLiteral(){
         return isLiteral;
     }
-
+ */
     /**
      * @return SymbolVar, SymbolFuncCall or any of the wrapped primitives that we have implemented.
      */
-    public Object getValue(){
-        return value;
-    }
+    // public Object getValue(){
+    //     return value;
+    // }
 }

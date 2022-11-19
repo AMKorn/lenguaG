@@ -66,7 +66,7 @@ public class SymbolList extends SymbolBase {
             SymbolOperation lo = l.getValue();
             SymbolOperand loo = lo.getLValue();
             SymbolValue loov = (SymbolValue) loo.getValue();
-            Character loovc = (Character) loov.getValue();
+            Character loovc = (Character) loov.value;
             s += loovc;
             l = l.getNext();
         }

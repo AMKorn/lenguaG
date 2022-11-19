@@ -83,7 +83,18 @@ public class SymbolTable {
     @Override
     public String toString(){
         String st = "Current level: " + currentLevel + "\n";
-        st += "Symbol Table: " + symbolTable.toString() + "\n";
+        //st += "Symbol Table: " + symbolTable.toString() + "\n";
+        st += "Symbol Table: \n";
+        StringBuilder sb = new StringBuilder();
+        Iterator<HashMap.Entry<String, SymbolDescription>> it = symbolTable.entrySet().iterator();
+        while(it.hasNext()){
+            HashMap.Entry<String, SymbolDescription> next = it.next();
+            sb.append(next.getKey());
+            sb.append(":\n\t");
+            sb.append(next.getValue());
+            sb.append("\n");
+        }
+        st += sb;
         st += "Ambit table:" + ambitsTable.toString() + "\n";
         st += "Expansion table:" + expansionTable.toString() + "\n";
         return st;

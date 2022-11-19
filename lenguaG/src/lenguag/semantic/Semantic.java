@@ -131,7 +131,7 @@ public class Semantic {
         // We add the variable to the symbol table 
         description.changeType(type);
         description.isConstant = dec.isConstant;
-        if(dec.isConstant) description.changeValue(value);
+        if(dec.isConstant) description.changeValue(value.semanticValue);
         try{ 
             symbolTable.insertVariable(dec.variableName, description);
         } catch(SemanticException se){
@@ -304,7 +304,7 @@ public class Semantic {
             SymbolValue value = (SymbolValue) operand.getValue();
             manage(value);
             operand.type = value.type;
-            if(operand.isConstant = value.isLiteral()) {operand.semanticValue = value.getValue();}
+            if(operand.isConstant = value.isConstant) {operand.semanticValue = value.value;}
         } else {
             SymbolOperation operation = (SymbolOperation) operand.getValue();
             manage(operation);
@@ -342,6 +342,7 @@ public class Semantic {
             // It only encapsulated an operand, so no operation must be done. Type and constant state is inherited
             operation.type = lValue.type;
             operation.isConstant = lValue.isConstant;
+            if(operation.isConstant) operation.semanticValue = lValue.semanticValue;
             return;
         } else if(op == null || rValue == null) {
             // Impossible case: one of them is null, but not both. Here as a safeguard to notify us
@@ -483,15 +484,17 @@ public class Semantic {
     }
 
     /**
-     * Value: getValue(), isLiteral()
+     * Value: getValue(), isConstant
      * @param value
      */
     private void manage(SymbolValue value){
-        Object val = value.getValue();
+        Object val = value.value;
         if(val instanceof SymbolVar) {
             SymbolVar var = (SymbolVar) val;
             manage(var);
             value.type = var.type;
+            value.isConstant = var.isConstant;
+            if(value.isConstant) value.value = var.semanticValue;
         } else if(val instanceof SymbolFuncCall) {
             manage((SymbolFuncCall) val);
             value.type = ((SymbolFuncCall) val).type;
@@ -546,7 +549,6 @@ public class Semantic {
         errorMessage = " !! Semantic error: " + errorMessage + " at position [line: " + line + ", column: " + column + "]";
         System.err.println(errorMessage);
         errors.add(errorMessage);
-        Thread.dumpStack();
     }
 
 }

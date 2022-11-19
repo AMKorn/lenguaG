@@ -128,9 +128,9 @@ public class SymbolDescription {
         String sd = "[Type: " + Constants.getTypeName(type);
         if(type == Constants.TYPE_ARRAY) sd += " (Basetype: " + Constants.getTypeName(baseType) + ", Dimensions: " + dimensions + ")";
         else if(type == Constants.TYPE_FUNCTION) sd += " (Returns: " + returnType + ", args:" + args + ")";
-        sd += ", Constant: " + isConstant;
-        if(isConstant) sd += ", Value: " + value;
-        sd += ", Declared level: " + declaredLevel + "]";
+        sd += "\n\tConstant: " + isConstant;
+        if(isConstant) sd += "\nValue: " + value;
+        sd += "\n\tDeclared level: " + declaredLevel + "]";
         return sd;
     }
 }
