@@ -135,8 +135,13 @@ precedence left  AND, OR;
 
 start with BODY;
 
-BODY ::= DECLARATIONS:v1 MAIN:v2                                        {: RESULT = new SymbolBody(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
-       | DECLARATIONS                                                
+BODY ::= DECLARATIONS:v1 MAIN:v2
+            {: int line, column;
+                if(v1xleft == null) { line = v2xleft.getLine(); column = v2xleft.getColumn(); }
+                else { line = v1xleft.getLine(); column = v1xleft.getColumn(); }
+                RESULT = new SymbolBody(v1, v2, line, column);
+            :}
+       | DECLARATIONS
             {: 
                 // Error case
                 report_error("No main found", null); 
@@ -172,7 +177,7 @@ MORE_ARGS ::= COMMA ARG:v1 MORE_ARGS:v2                                 {: RESUL
             |                                                           {: RESULT = new SymbolArgs(); :}
             ;
 
-ARG ::= TYPE:v1 VARIABLE:v2                                             {: RESULT = new SymbolArg(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
+ARG ::= TYPE:v1 IDENTIFIER:v2                                           {: RESULT = new SymbolArg(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
       ;
 
 INSTRUCTIONS ::= INSTRUCTION:v1 INSTRUCTIONS:v2                         {: RESULT = new SymbolInstrs(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
