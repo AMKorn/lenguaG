@@ -3,7 +3,6 @@ package lenguag.semantic;
 import java.util.HashMap;
 
 import lenguag.*;
-import lenguag.LenguaGException.CompilerException;
 import lenguag.syntactic.symbols.*;
 
 /**
@@ -122,8 +121,8 @@ public class SymbolDescription {
 
     @Override
     public String toString(){
-        String sd = "[Type: " + Constants.getType(type);
-        if(type == Constants.TYPE_ARRAY) sd += " (Basetype: " + Constants.getType(baseType) + ", Dimensions: " + dimensions + ")";
+        String sd = "[Type: " + Constants.getTypeName(type);
+        if(type == Constants.TYPE_ARRAY) sd += " (Basetype: " + Constants.getTypeName(baseType) + ", Dimensions: " + dimensions + ")";
         else if(type == Constants.TYPE_FUNCTION) sd += " (Returns: " + returnType + ", args:" + args + ")";
         sd += ", Constant: " + isConstant;
         if(isConstant) sd += ", Value: " + value;

@@ -38,6 +38,13 @@ public class SymbolType extends SymbolBase {
         arrayDimensions = 0;
     }
 
+    public SymbolType(){
+        super("Type", 0);
+        type = Constants.TYPE_VOID;
+        baseType = Constants.TYPE_VOID;
+        arrayDimensions = 0;
+    }
+
     public int getArrayDimensions(){
         return arrayDimensions;
     }
@@ -52,7 +59,7 @@ public class SymbolType extends SymbolBase {
 
     @Override
     public String toString(){
-        if(type == Constants.TYPE_ARRAY) return Constants.getType(baseType)+"[" + arrayDimensions + "]";
-        return Constants.getType(type);
+        if(type == Constants.TYPE_ARRAY) return Constants.getTypeName(baseType)+"[" + arrayDimensions + "]";
+        return Constants.getTypeName(type);
     }
 }

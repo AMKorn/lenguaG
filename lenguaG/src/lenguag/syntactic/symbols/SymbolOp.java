@@ -26,8 +26,8 @@ OP_REL ::= IS_EQUAL
  */
 public class SymbolOp extends SymbolBase {
 
-    private boolean isRelational;
-    private int operation;
+    public final boolean isRelational;
+    public final int operation;
 
     public SymbolOp(int operation) {
         super("Op", 0);
@@ -38,14 +38,6 @@ public class SymbolOp extends SymbolBase {
     public SymbolOp(int operation, boolean isRelational){
         super("Op", 0);
         this.operation = operation;
-        isRelational = true;
-    }
-
-    public int getOperation(){
-        return operation;
-    }
-
-    public boolean isRelational(){
-        return isRelational;
+        this.isRelational = isRelational;
     }
 }

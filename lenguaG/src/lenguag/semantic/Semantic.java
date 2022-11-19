@@ -40,7 +40,7 @@ public class Semantic {
      */
     private void manage(SymbolArg arg){
         /* Possible errors:
-         * 1. arg is already defined in this level (aka. two args with the same name). Dealth by symbolTable.
+         * 1. arg is already defined in this level (aka. two args with the same name). Thrown from symbolTable.
          * 2. arg is type void
          */
         String identifier = arg.identifier;
@@ -66,7 +66,7 @@ public class Semantic {
      */
     private void manage(SymbolArgs args){
         /* Possible errors:
-         * - None? 
+         * - None
          */
         manage(args.getArg());
         SymbolArgs next = args.getNext();
@@ -98,14 +98,20 @@ public class Semantic {
         if(type.getType() == Constants.TYPE_VOID){
             reportError("Tried to declare variable '" + dec.variableName + "' as type void", dec.line, dec.column);
         }
-        manage(type);
+        // manage(type);
         SymbolOperation value = dec.getValue();
         if(value != null) {
             manage(value);
             // Incompatible types
-            if(type.getBaseType() != value.type) {
+            if(type.getType() != value.type.getType()) {
+                // Two different types
                 reportError("Type incongruency with '" + dec.variableName + "': "
-                + Constants.getType(value.type) + " cannot be cast into " + Constants.getType(type.getType()), dec.line, dec.column);
+                + Constants.getTypeName(value.type.getType()) + " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
+                return;
+            } else if(type.getBaseType() != value.type.getBaseType()){
+                // Arrays, but from different base type.
+                reportError("Type incongruency with '" + dec.variableName + "': "
+                + Constants.getTypeName(value.type.getType()) + " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
                 return;
             }
             // Constant declared, but value is variable.
@@ -225,12 +231,54 @@ public class Semantic {
         // TODO
     }
 
+    /**
+     * Instruction: instructionType
+     * @param instruction
+     */
     private void manage(SymbolInstr instruction){
-        // TODO
+        switch(instruction.getInstructionType()){
+            case instDeclaration:
+                manage((SymbolDec) instruction);
+                return;
+            case instAssignation:
+                manage((SymbolAssign) instruction);
+                return;
+            case instSwap:
+                manage((SymbolSwap) instruction);
+                return;
+            case instFunctionCall:
+                manage((SymbolFuncCall) instruction);
+                return;
+            case instReturn:
+                manage((SymbolReturn) instruction);
+                return;
+            case instIf:
+                manage((SymbolIf) instruction);
+                return;
+            case instLoop:
+                manage((SymbolLoop) instruction);
+                return;
+            case instFor:
+                manage((SymbolFor) instruction);
+                return;
+            case instIn:
+                manage((SymbolIn) instruction);
+                return;
+            case instOut:
+                manage((SymbolOut) instruction);
+            default:
+                reportError("Unidentified instruction", instruction.line, instruction.column);
+        }
     }
 
+    /**
+     * Instructions: getInstruction(), getNext()
+     * @param instructions
+     */
     private void manage(SymbolInstrs instructions){
-        // TODO
+        manage(instructions.getInstruction());
+        SymbolInstrs next = instructions.getNext();
+        if(next != null) manage(next);
     }
 
     private void manage(SymbolList list){
@@ -250,11 +298,104 @@ public class Semantic {
     }
 
     private void manage(SymbolOperand operand){
+        operand.type = new SymbolType();
         // TODO
     }
 
+    /**
+     * Operation: getLValue(), getOp(), getRValue().
+     * @param operation
+    */
     private void manage(SymbolOperation operation){
-        // TODO
+        /* Possible errors:
+         * 1. l-value and r-value have incompatible types
+         * 2. Operation not supported for operand's types
+         */
+        SymbolOperand lValue = operation.getLValue();
+        manage(lValue);
+        SymbolOp op = operation.getOperation();
+        SymbolOperand rValue = operation.getRValue();
+        if(op == null && rValue == null){
+            // It only encapsulated an operand, so no operation must be done. Type and constant state is inherited
+            operation.type = lValue.type;
+            operation.isConstant = lValue.isConstant;
+            return;
+        } else if(op == null || rValue == null) {
+            // Impossible case: one of them is null, but not both. Here as a safeguard to notify us
+            System.err.println(" !! Compiler error in manage operation.");
+        }
+        manage(op);
+        manage(rValue);
+
+        switch (op.operation) {
+            case Constants.ADD:
+                // Supported operations
+                // int + int
+                if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
+                    // We accept. Result is int (same type as lValue)
+                    operation.type = lValue.type;
+                    break; // Exit switch case
+                }
+                // list + an item of the list's subtype
+                if((lValue.type.getType() == Constants.TYPE_ARRAY) && (lValue.type.getBaseType() == rValue.type.getType())) {
+                    // We accept. Result is same type as lValue
+                    operation.type = lValue.type;
+                    break;
+                }
+                // list + list of same baseType
+                if((lValue.type.getType() == Constants.TYPE_ARRAY) 
+                    && (rValue.type.getType() == Constants.TYPE_ARRAY)
+                    && (lValue.type.getBaseType() == rValue.type.getBaseType())) {
+                        // We accept. Result is same type as either list.
+                        operation.type = lValue.type;
+                        break;
+                }
+                // We do not accept.
+                reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
+                return;
+            case Constants.SUB:
+            case Constants.PROD:
+            case Constants.DIV:
+            case Constants.MOD:
+                // Only supported operation: int (op) int
+                if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
+                    // We accept. Result is int (same type as lValue)
+                    operation.type = lValue.type;
+                } else {
+                    reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
+                    return;
+                }
+                break;
+            case Constants.OR:
+            case Constants.AND:
+                // Only supported operation: bool (op) bool
+                if(((lValue.type.getType() == Constants.TYPE_BOOLEAN) && (rValue.type.getType() == Constants.TYPE_BOOLEAN))){
+                    // We accept. Result is boolean (same type as lValue)
+                    operation.type = lValue.type;
+                } else {
+                    reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
+                    return;
+                }
+                break;
+            default:
+                // Left to check: relational operations.
+                if(op.isRelational){
+                    // Only supported operation: int (op_rel) int
+                    if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
+                        // We accept. Result is boolean
+                        operation.type = new SymbolType(Constants.TYPE_BOOLEAN);
+                    } else {
+                        reportError("Unsupported operation: Cannot compare " + lValue.type + " and " + rValue.type, operation.line, operation.column);
+                        return;
+                    }
+                }
+        }
+
+        // If any of the operands is not constant, the result of the operation is also not constant
+        if(!lValue.isConstant || !rValue.isConstant){
+            operation.isConstant = false;
+        }
+
     }
 
     private void manage(SymbolOut out){
