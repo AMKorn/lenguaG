@@ -97,7 +97,9 @@ public class Semantic {
         // If type is void, error
         if(type.getType() == Constants.TYPE_VOID){
             reportError("Tried to declare variable '" + dec.variableName + "' as type void", dec.line, dec.column);
+            return;
         }
+        SymbolDescription description = new SymbolDescription();
         // manage(type);
         SymbolOperation value = dec.getValue();
         if(value != null) {
@@ -122,14 +124,14 @@ public class Semantic {
         } else if(dec.isConstant){
             // Set as constant but no value given
             reportError("Constant '" + dec.variableName + "' declared without value", dec.line, dec.column);
+            return;
         }
 
         // Everything ok!
         // We add the variable to the symbol table 
-        SymbolDescription description = new SymbolDescription();
         description.changeType(type);
         description.isConstant = dec.isConstant;
-        // if(dec.isConstant) TODO add value to description if constant
+        if(dec.isConstant) description.changeValue(value);
         try{ 
             symbolTable.insertVariable(dec.variableName, description);
         } catch(SemanticException se){
@@ -301,10 +303,12 @@ public class Semantic {
         if(operand.isLeaf()) {
             SymbolValue value = (SymbolValue) operand.getValue();
             manage(value);
-            if(operand.isConstant = value.isLiteral()) operand.semanticValue = value.getValue();
+            operand.type = value.type;
+            if(operand.isConstant = value.isLiteral()) {operand.semanticValue = value.getValue();}
         } else {
             SymbolOperation operation = (SymbolOperation) operand.getValue();
             manage(operation);
+            operand.type = operation.type;
             if(operand.isConstant = operation.isConstant) operand.semanticValue = operation.semanticValue;
         }
         
@@ -456,7 +460,6 @@ public class Semantic {
                     }
                 }
         }
-
     }
 
     private void manage(SymbolOut out){
@@ -479,12 +482,63 @@ public class Semantic {
         // TODO
     }
 
+    /**
+     * Value: getValue(), isLiteral()
+     * @param value
+     */
     private void manage(SymbolValue value){
-        // TODO
+        Object val = value.getValue();
+        if(val instanceof SymbolVar) {
+            SymbolVar var = (SymbolVar) val;
+            manage(var);
+            value.type = var.type;
+        } else if(val instanceof SymbolFuncCall) {
+            manage((SymbolFuncCall) val);
+            value.type = ((SymbolFuncCall) val).type;
+        } else if(val instanceof Integer) value.type = new SymbolType(Constants.TYPE_INTEGER);
+        else if(val instanceof Boolean) value.type = new SymbolType(Constants.TYPE_BOOLEAN);
+        else if(val instanceof Character) value.type = new SymbolType(Constants.TYPE_CHARACTER);
     }
 
+    /**
+     * Var: getId(), getArrSuffix()
+     * @param var
+    */
     private void manage(SymbolVar var){
-        // TODO
+        /* Possible errors:
+         * 1. Variable not declared
+         * 2. Var is detected as array, but was not declared as array.
+         * 3. The dimensions of the suffix are not the same as the dimensions of the declared array
+         */
+        String id = var.getId();
+
+        SymbolDescription desc = symbolTable.getDescription(id);
+        if(desc == null){
+            reportError("Variable " + id + " has not been declared.", var.line, var.column);
+            return;
+        }
+        if(var.isArray()){
+            if(desc.getType() != Constants.TYPE_ARRAY){
+                reportError("Cannot index variable " + id, var.line, var.column);
+                return;
+            }
+            SymbolArrSuff arrSuff = var.getArrSuff();
+            if(arrSuff.getDimensions() != desc.getDimensions()){
+                reportError("Stated dimensions for " + id + " different to what was declared.", var.line, var.column);
+            }
+            manage(arrSuff);
+
+            // Array suffix correct!
+            var.isConstant = false;
+            // We get the BASE type of the array.
+            var.type = new SymbolType(desc.getBaseType());
+            return;
+        }
+
+        // Not an array: we get the type of the variable.
+        var.type = new SymbolType(desc.getType());
+        var.isConstant = desc.isConstant;
+        if(var.isConstant) var.semanticValue = desc.getValue();
     }
 
     private void reportError(String errorMessage, int line, int column){
@@ -492,6 +546,7 @@ public class Semantic {
         errorMessage = " !! Semantic error: " + errorMessage + " at position [line: " + line + ", column: " + column + "]";
         System.err.println(errorMessage);
         errors.add(errorMessage);
+        Thread.dumpStack();
     }
 
 }

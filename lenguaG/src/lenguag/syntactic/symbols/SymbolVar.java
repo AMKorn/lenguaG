@@ -15,13 +15,18 @@ public class SymbolVar extends SymbolBase {
     private String idName;
     private SymbolArrSuff arraySuffix;
 
+    // Variables for semantic control
+    public SymbolType type;                 // Not set until known
+    public boolean isConstant;
+    public Object semanticValue;            // To set as a primitive object during semantic control if it's a constant
+
     public SymbolVar(String idName, SymbolArrSuff arraySuffix, int line, int column) {
         super("Variable", 0, line, column);
         this.idName = idName;
         this.arraySuffix = arraySuffix;
     }
     
-    public String getName(){
+    public String getId(){
         return idName;
     }
 

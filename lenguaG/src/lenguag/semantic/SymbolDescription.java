@@ -70,6 +70,10 @@ public class SymbolDescription {
         this.value = value;
     }
 
+    public Object getValue(){
+        return value;
+    }
+
     public int getType(){
         return type;
     }

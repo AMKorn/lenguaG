@@ -17,6 +17,9 @@ public class SymbolValue extends SymbolBase {
     private boolean isLiteral;
     private Object value;
 
+    // Variables for semantic control
+    public SymbolType type; 
+
     public SymbolValue(Object value, int line, int column){
         super("Value", 0, line, column);
         this.value = value;

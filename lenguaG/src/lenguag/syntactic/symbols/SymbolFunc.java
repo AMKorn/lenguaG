@@ -30,7 +30,7 @@ public class SymbolFunc extends SymbolBase {
     }
 
     public String getFunctionName(){
-        return variable.getName();
+        return variable.getId();
     }
 
     /**
