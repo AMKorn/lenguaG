@@ -8,23 +8,23 @@
 package lenguag.syntactic.symbols;
 
 /**
- * ARG ::= TYPE:type VARIABLE:variable
+ * ARG ::= TYPE:type IDENTIFIER:identifier
  */
 public class SymbolArg extends SymbolBase {
     private SymbolType type;
-    private SymbolVar variable;
+    public final String identifier;
 
-    public SymbolArg(SymbolType type, SymbolVar variable, int line, int column) {
+    public SymbolArg(SymbolType type, String identifier, int line, int column) {
         super("Argument", 0, line, column);
         this.type = type;
-        this.variable = variable;
+        this.identifier = identifier;
     }
 
-    public int getType(){
-        return type.getType();
+    public SymbolType getType(){
+        return type;
     }
 
-    public SymbolVar getVariable(){
+    /* public String getVariable(){
         return variable;
-    }
+    } */
 }

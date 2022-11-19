@@ -34,8 +34,30 @@ public class Semantic {
         manage(main);
     }
     
+    /**
+     * Arg: getType(), identifier
+     * @param arg
+     */
     private void manage(SymbolArg arg){
-        // TODO
+        /* Possible errors:
+         * 1. arg is already defined in this level (aka. two args with the same name). Dealth by symbolTable.
+         * 2. arg is type void
+         */
+        String identifier = arg.identifier;
+        SymbolType type = arg.getType();
+        if(type.getType() == Constants.TYPE_VOID) {
+            reportError("Function argument '" + identifier + "' cannot be of type void", arg.line, arg.column);
+            return;
+        }
+        SymbolDescription desc = new SymbolDescription();
+        desc.changeType(type);
+        try{
+            symbolTable.insertVariable(identifier, desc);
+        } catch(SemanticException se) {
+            reportError("Argument '" + identifier + "' declared twice", arg.line, arg.column);
+            return;
+        }
+        currentFunction.addArgument(identifier, type);
     }
 
     /**
@@ -66,29 +88,34 @@ public class Semantic {
     private void manage(SymbolDec dec){
         /* Possible errors:
          * 1. Set as constant but has a variable value or no value
-         * 2. type and the value's type are incompatible
-         * 3. variableName already present in symbolTable at this level.
+         * 2. Variable set as void
+         * 3. type and the value's type are incompatible
+         * 4. variableName already present in symbolTable at this level.
          *      This is detected INSIDE SymbolTable, but error must be caught here
          */
         SymbolType type = dec.getType();
+        // If type is void, error
+        if(type.getType() == Constants.TYPE_VOID){
+            reportError("Tried to declare variable '" + dec.variableName + "' as type void", dec.line, dec.column);
+        }
         manage(type);
         SymbolOperation value = dec.getValue();
         if(value != null) {
             manage(value);
             // Incompatible types
             if(type.getBaseType() != value.type) {
-                reportError("Type incongruency with " + dec.variableName + ": "
+                reportError("Type incongruency with '" + dec.variableName + "': "
                 + Constants.getType(value.type) + " cannot be cast into " + Constants.getType(type.getType()), dec.line, dec.column);
                 return;
             }
             // Constant declared, but value is variable.
             if(dec.isConstant && !value.isConstant){
-                reportError("Cannot assign variable value to constant " + dec.variableName, dec.line, dec.column);
+                reportError("Cannot assign variable value to constant '" + dec.variableName + "'", dec.line, dec.column);
                 return;
             }
         } else if(dec.isConstant){
             // Set as constant but no value given
-            reportError("Constant " + dec.variableName + " declared without value", dec.line, dec.column);
+            reportError("Constant '" + dec.variableName + "' declared without value", dec.line, dec.column);
         }
 
         // Everything ok!

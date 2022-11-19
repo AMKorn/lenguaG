@@ -34,7 +34,7 @@ public class SymbolTable {
         // We search for the string (which functions as the hashmap key) in the symbol table
         SymbolDescription oldVarDesc = symbolTable.get(variable);
         if(oldVarDesc != null){
-            if(oldVarDesc.declaredLevel == currentLevel) throw new SemanticException("Variable " + variable + " already declared in this level");
+            if(oldVarDesc.declaredLevel == currentLevel) throw new SemanticException("Variable '" + variable + "' already declared in this level");
             // We add the old obscured variable to the expansion table.
             int idxe = ambitsTable.get(currentLevel); // idxe = ambitsTable[currentLevel]
             idxe++;
