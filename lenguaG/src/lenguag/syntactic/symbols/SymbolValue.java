@@ -31,7 +31,7 @@ public class SymbolValue extends SymbolBase {
     }
  */
     /**
-     * @return SymbolVar, SymbolFuncCall or any of the wrapped primitives that we have implemented.
+     * @return SymbolVar, SymbolFuncCall, SymbolList or any of the wrapped primitives that we have implemented.
      */
     // public Object getValue(){
     //     return value;

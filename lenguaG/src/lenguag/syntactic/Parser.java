@@ -1386,7 +1386,10 @@ class CUP$Parser$actions {
 		Location vxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location vxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String v = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		 RESULT = new SymbolList(v, vxleft.getLine(), vxleft.getColumn()); 
+		 
+                v = v.substring(1, v.length()-1);
+                RESULT = new SymbolList(v, vxleft.getLine(), vxleft.getColumn()); 
+            
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("LIST",25, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

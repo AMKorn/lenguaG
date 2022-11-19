@@ -18,8 +18,9 @@ public class SymbolDescription {
     public boolean isConstant;
 
     // Array information
-    private int baseType;
-    private int dimensions;
+    private SymbolType baseType;
+    private int depth;
+    private int length;
 
     // Function information
     private int nArgs;
@@ -42,14 +43,14 @@ public class SymbolDescription {
         this.type = type.getType();
         if(this.type == Constants.TYPE_ARRAY){
             baseType = type.getBaseType();
-            dimensions = type.getArrayDimensions();
+            depth = type.getArrayDepth();
         }
     }
 
     /**
      * Changes the type of the variable to which this description is associated, given the value of Constants.
-     * If given TYPE_ARRAY, baseType and dimensions will be set to void and 0, respectively, so those should be set afterwards
-     * using changeBaseType() and changeDimensions().
+     * If given TYPE_ARRAY, baseType and depth will be set to void and 0, respectively, so those should be set afterwards
+     * using changeBaseType() and changeDepth().
      * Likewise, nArgs, returnType and args will be set to 0, void and an empty HashMap, respectively. 
      * Use addArgument() and setReturnType() to change them.
      * @param type
@@ -57,8 +58,8 @@ public class SymbolDescription {
     public void changeType(int type) {
         this.type = type;
         if(this.type == Constants.TYPE_ARRAY){
-            baseType = Constants.TYPE_VOID;
-            dimensions = 0;
+            baseType = new SymbolType();
+            depth = 0;
         } else if(this.type == Constants.TYPE_FUNCTION){
             nArgs = 0;
             returnType = new SymbolType(Constants.TYPE_VOID);
@@ -79,20 +80,28 @@ public class SymbolDescription {
     }
 
     // Array methods
-    public void changeBaseType(int baseType) {
+    public void changeBaseType(SymbolType baseType) {
         this.baseType = baseType;
     }
 
-    public int getBaseType() {
+    public SymbolType getBaseType() {
         return baseType;
     }
 
-    public void changeDimensions(int dimensions) {
-        this.dimensions = dimensions;
+    public void changeDepth(int depth) {
+        this.depth = depth;
     }
 
-    public int getDimensions()  {
-        return dimensions;
+    public int getDepth()  {
+        return depth;
+    }
+
+    public void setLength(int length){
+        this.length = length;
+    }
+
+    public int getLength(){
+        return length;
     }
 
     // Function methods
@@ -126,7 +135,7 @@ public class SymbolDescription {
     @Override
     public String toString(){
         String sd = "[Type: " + Constants.getTypeName(type);
-        if(type == Constants.TYPE_ARRAY) sd += " (Basetype: " + Constants.getTypeName(baseType) + ", Dimensions: " + dimensions + ")";
+        if(type == Constants.TYPE_ARRAY) sd += " (Basetype: " + Constants.getTypeName(baseType.getType()) + ", Depth: " + depth + ")";
         else if(type == Constants.TYPE_FUNCTION) sd += " (Returns: " + returnType + ", args:" + args + ")";
         sd += "\n\tConstant: " + isConstant;
         if(isConstant) sd += "\nValue: " + value;

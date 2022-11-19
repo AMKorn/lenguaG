@@ -73,7 +73,14 @@ public class Semantic {
         if(next != null) manage(next);
     }
 
+    /**
+     * ArrSuff: getIndex(), getNext(), getDimensions()
+     * @param arrSuff
+     */
     private void manage(SymbolArrSuff arrSuff){
+        /* Possible errors:
+         * 1. Index is less than 
+         */
         // TODO
     }
 
@@ -110,12 +117,22 @@ public class Semantic {
                 reportError("Type incongruency with '" + dec.variableName + "': "
                 + Constants.getTypeName(value.type.getType()) + " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
                 return;
-            } else if(type.getBaseType() != value.type.getBaseType()){
+            } else if(type.getType() == Constants.TYPE_ARRAY && value.type.getType() == Constants.TYPE_ARRAY){
+                // Both are arrays
+                if(type.getBaseType().getType() != value.type.getBaseType().getType()){
+                    // Arrays, but from different base type.
+                    reportError("Type incongruency with '" + dec.variableName + "': "
+                    + Constants.getTypeName(value.type.getType())+ " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
+                }
+            }
+
+            /* else if(type.getBaseType().getType() != value.type.getBaseType().getType()){
+                //  FIXME
                 // Arrays, but from different base type.
                 reportError("Type incongruency with '" + dec.variableName + "': "
                 + Constants.getTypeName(value.type.getType()) + " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
                 return;
-            }
+            } */
             // Constant declared, but value is variable.
             if(dec.isConstant && !value.isConstant){
                 reportError("Cannot assign variable value to constant '" + dec.variableName + "'", dec.line, dec.column);
@@ -132,6 +149,7 @@ public class Semantic {
         description.changeType(type);
         description.isConstant = dec.isConstant;
         if(dec.isConstant) description.changeValue(value.semanticValue);
+        // TODO add array length to description
         try{ 
             symbolTable.insertVariable(dec.variableName, description);
         } catch(SemanticException se){
@@ -283,8 +301,24 @@ public class Semantic {
         if(next != null) manage(next);
     }
 
+    /**
+     * List: getValue(), getNext(), length
+     * @param list
+     */
     private void manage(SymbolList list){
-        // TODO
+        /* Possible errors:
+         * 1. Different types declared in array
+         */
+        SymbolOperation value = list.getValue();
+        manage(value);
+        SymbolList next = list.getNext();
+        if(next != null && next.getValue() != null) {
+            manage(next);
+            if(value.type.getType() != next.type.getBaseType().getType()){
+                reportError("Cannot declare an array with heterogeneous types.", list.line, list.column);
+            }
+        }
+        list.type = new SymbolType(Constants.TYPE_ARRAY, value.type);
     }
 
     private void manage(SymbolLoop loop){
@@ -305,6 +339,9 @@ public class Semantic {
             manage(value);
             operand.type = value.type;
             if(operand.isConstant = value.isConstant) {operand.semanticValue = value.value;}
+            if(operand.type.getType() == Constants.TYPE_ARRAY){
+                // TODO operand.length = value.length
+            }
         } else {
             SymbolOperation operation = (SymbolOperation) operand.getValue();
             manage(operation);
@@ -320,8 +357,6 @@ public class Semantic {
                     operand.semanticValue = !(Boolean) operand.semanticValue;
             }
         }
-        
-
     }
 
     /**
@@ -366,7 +401,7 @@ public class Semantic {
                     break; // Exit switch case
                 }
                 // list + an item of the list's subtype
-                if((lValue.type.getType() == Constants.TYPE_ARRAY) && (lValue.type.getBaseType() == rValue.type.getType())) {
+                if((lValue.type.getType() == Constants.TYPE_ARRAY) && (lValue.type.getBaseType().getType() == rValue.type.getType())) {
                     // We accept. Result is same type as lValue
                     operation.type = lValue.type;
                     break;
@@ -496,8 +531,17 @@ public class Semantic {
             value.isConstant = var.isConstant;
             if(value.isConstant) value.value = var.semanticValue;
         } else if(val instanceof SymbolFuncCall) {
-            manage((SymbolFuncCall) val);
-            value.type = ((SymbolFuncCall) val).type;
+            SymbolFuncCall fcall = (SymbolFuncCall) val;
+            manage(fcall);
+            value.type = fcall.type;
+            value.isConstant = false;
+        } else if(val instanceof SymbolList) {
+            SymbolList list = (SymbolList) val;
+            manage(list);
+            value.type = list.type;
+            value.isConstant = false;
+
+            // TODO value.type, value.length;
         } else if(val instanceof Integer) value.type = new SymbolType(Constants.TYPE_INTEGER);
         else if(val instanceof Boolean) value.type = new SymbolType(Constants.TYPE_BOOLEAN);
         else if(val instanceof Character) value.type = new SymbolType(Constants.TYPE_CHARACTER);
@@ -526,15 +570,15 @@ public class Semantic {
                 return;
             }
             SymbolArrSuff arrSuff = var.getArrSuff();
-            if(arrSuff.getDimensions() != desc.getDimensions()){
-                reportError("Stated dimensions for " + id + " different to what was declared.", var.line, var.column);
+            if(arrSuff.getDimensions() != desc.getDepth()){
+                reportError("Stated dimensions for " + id + " different to what was declared (" + arrSuff.getDimensions() + " " + desc.getDepth()+ ")", var.line, var.column);
             }
             manage(arrSuff);
 
             // Array suffix correct!
             var.isConstant = false;
             // We get the BASE type of the array.
-            var.type = new SymbolType(desc.getBaseType());
+            var.type = desc.getBaseType();
             return;
         }
 
