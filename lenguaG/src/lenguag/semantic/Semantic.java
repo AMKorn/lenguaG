@@ -293,17 +293,36 @@ public class Semantic {
         // TODO
     }
 
-    private void manage(SymbolOp op){
-        // TODO
-    }
-
+    /**
+     * Operand: Value/Operation, isNegated
+     * @param operand
+     */
     private void manage(SymbolOperand operand){
-        operand.type = new SymbolType();
-        // TODO
+        if(operand.isLeaf()) {
+            SymbolValue value = (SymbolValue) operand.getValue();
+            manage(value);
+            if(operand.isConstant = value.isLiteral()) operand.semanticValue = value.getValue();
+        } else {
+            SymbolOperation operation = (SymbolOperation) operand.getValue();
+            manage(operation);
+            if(operand.isConstant = operation.isConstant) operand.semanticValue = operation.semanticValue;
+        }
+        
+        if(operand.isConstant){
+            if(operand.isNegated()){
+                if(operand.semanticValue instanceof Integer)
+                    operand.semanticValue = -(Integer) operand.semanticValue;
+                else if(operand.semanticValue instanceof Boolean)
+                    operand.semanticValue = !(Boolean) operand.semanticValue;
+            }
+        }
+        
+
     }
 
     /**
      * Operation: getLValue(), getOp(), getRValue().
+     * FIXME THIS IS AWFUL
      * @param operation
     */
     private void manage(SymbolOperation operation){
@@ -324,8 +343,12 @@ public class Semantic {
             // Impossible case: one of them is null, but not both. Here as a safeguard to notify us
             System.err.println(" !! Compiler error in manage operation.");
         }
-        manage(op);
         manage(rValue);
+
+        // If any of the operands is not constant, the result of the operation is also not constant
+        if(!lValue.isConstant || !rValue.isConstant){
+            operation.isConstant = false;
+        }
 
         switch (op.operation) {
             case Constants.ADD:
@@ -334,6 +357,7 @@ public class Semantic {
                 if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
                     // We accept. Result is int (same type as lValue)
                     operation.type = lValue.type;
+                    if(operation.isConstant) operation.semanticValue = (Integer) lValue.semanticValue + (Integer) rValue.semanticValue;
                     break; // Exit switch case
                 }
                 // list + an item of the list's subtype
@@ -353,47 +377,84 @@ public class Semantic {
                 // We do not accept.
                 reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
                 return;
-            case Constants.SUB:
-            case Constants.PROD:
-            case Constants.DIV:
-            case Constants.MOD:
-                // Only supported operation: int (op) int
-                if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
-                    // We accept. Result is int (same type as lValue)
+            case Constants.OR:
+                // Only supported operation: bool or bool
+                if(((lValue.type.getType() == Constants.TYPE_BOOLEAN) && (rValue.type.getType() == Constants.TYPE_BOOLEAN))){
+                    // We accept. Result is boolean (same type as lValue)
                     operation.type = lValue.type;
+                    if(operation.isConstant){
+                        operation.semanticValue = (Boolean) lValue.semanticValue || (Boolean) rValue.semanticValue;
+                    }
                 } else {
                     reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
                     return;
                 }
                 break;
-            case Constants.OR:
             case Constants.AND:
                 // Only supported operation: bool (op) bool
                 if(((lValue.type.getType() == Constants.TYPE_BOOLEAN) && (rValue.type.getType() == Constants.TYPE_BOOLEAN))){
                     // We accept. Result is boolean (same type as lValue)
                     operation.type = lValue.type;
+                    if(operation.isConstant){
+                        operation.semanticValue = (Boolean) lValue.semanticValue && (Boolean) rValue.semanticValue;
+                    }
                 } else {
                     reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
                     return;
                 }
                 break;
             default:
-                // Left to check: relational operations.
-                if(op.isRelational){
+                // Left to check: SUB, PROD, DIV, MOD. They follow the same rules, so they are here in order to recycle code and avoid making many comparisons.
+                if(!op.isRelational){
+                    // Only supported operation: int (op) int
+                    if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
+                        // We accept. Result is int (same type as lValue)
+                        operation.type = lValue.type;
+                        if(operation.isConstant){
+                            switch(op.operation){
+                                case Constants.SUB:
+                                    operation.semanticValue = (Integer) lValue.semanticValue - (Integer) rValue.semanticValue;
+                                case Constants.PROD:
+                                    operation.semanticValue = (Integer) lValue.semanticValue * (Integer) rValue.semanticValue;
+                                case Constants.DIV:
+                                    operation.semanticValue = (Integer) lValue.semanticValue / (Integer) rValue.semanticValue;
+                                case Constants.MOD:
+                                    operation.semanticValue = (Integer) lValue.semanticValue % (Integer) rValue.semanticValue;
+                            }
+                        }
+                    } else {
+                        reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
+                        return;
+                    }
+                    break;
+
+                } else {
+                    // Relational operation
                     // Only supported operation: int (op_rel) int
                     if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
                         // We accept. Result is boolean
                         operation.type = new SymbolType(Constants.TYPE_BOOLEAN);
+                        if(operation.isConstant){
+                            switch(op.operation){
+                                case Constants.IS_EQUAL:
+                                    operation.semanticValue = (Integer) lValue.semanticValue == (Integer) rValue.semanticValue;
+                                case Constants.BIGGER:
+                                    operation.semanticValue = (Integer) lValue.semanticValue > (Integer) rValue.semanticValue;
+                                case Constants.BEQ:
+                                    operation.semanticValue = (Integer) lValue.semanticValue >= (Integer) rValue.semanticValue;
+                                case Constants.LESSER:
+                                    operation.semanticValue = (Integer) lValue.semanticValue < (Integer) rValue.semanticValue;
+                                case Constants.LEQ:
+                                    operation.semanticValue = (Integer) lValue.semanticValue <= (Integer) rValue.semanticValue;
+                                case Constants.NEQ:
+                                    operation.semanticValue = (Integer) lValue.semanticValue != (Integer) rValue.semanticValue;
+                            }
+                        }
                     } else {
                         reportError("Unsupported operation: Cannot compare " + lValue.type + " and " + rValue.type, operation.line, operation.column);
                         return;
                     }
                 }
-        }
-
-        // If any of the operands is not constant, the result of the operation is also not constant
-        if(!lValue.isConstant || !rValue.isConstant){
-            operation.isConstant = false;
         }
 
     }
