@@ -18,7 +18,7 @@ public class SymbolVar extends SymbolBase {
     // Variables for semantic control
     public SymbolType type;                 // Not set until known
     public boolean isConstant;
-    public Object semanticValue;            // To set as a primitive object during semantic control if it's a constant
+    //public Object semanticValue;            // To set as a primitive object during semantic control if it's a constant
 
     public SymbolVar(String idName, SymbolArrSuff arraySuffix, int line, int column) {
         super("Variable", 0, line, column);
@@ -36,5 +36,13 @@ public class SymbolVar extends SymbolBase {
 
     public boolean isArray(){
         return arraySuffix != null;
+    }
+
+    public Object getSemanticValue(){
+        return value;
+    }
+
+    public void setSemanticValue(Object value){
+        this.value = value;
     }
 }

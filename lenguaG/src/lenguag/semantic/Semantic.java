@@ -148,7 +148,7 @@ public class Semantic {
         // We add the variable to the symbol table 
         description.changeType(type);
         description.isConstant = dec.isConstant;
-        if(dec.isConstant) description.changeValue(value.semanticValue);
+        if(dec.isConstant) description.changeValue(value.getSemanticValue());
         // TODO add array length to description
         try{ 
             symbolTable.insertVariable(dec.variableName, description);
@@ -338,7 +338,7 @@ public class Semantic {
             SymbolValue value = (SymbolValue) operand.getValue();
             manage(value);
             operand.type = value.type;
-            if(operand.isConstant = value.isConstant) {operand.semanticValue = value.value;}
+            if(operand.isConstant = value.isConstant) {operand.setSemanticValue(value.getSemanticValue());}
             if(operand.type.getType() == Constants.TYPE_ARRAY){
                 // TODO operand.length = value.length
             }
@@ -346,15 +346,15 @@ public class Semantic {
             SymbolOperation operation = (SymbolOperation) operand.getValue();
             manage(operation);
             operand.type = operation.type;
-            if(operand.isConstant = operation.isConstant) operand.semanticValue = operation.semanticValue;
+            if(operand.isConstant = operation.isConstant) operand.setSemanticValue(operation.getSemanticValue());
         }
         
         if(operand.isConstant){
             if(operand.isNegated()){
-                if(operand.semanticValue instanceof Integer)
-                    operand.semanticValue = -(Integer) operand.semanticValue;
-                else if(operand.semanticValue instanceof Boolean)
-                    operand.semanticValue = !(Boolean) operand.semanticValue;
+                if(operand.getSemanticValue() instanceof Integer)
+                    operand.setSemanticValue(-(Integer) operand.getSemanticValue());
+                else if(operand.getSemanticValue() instanceof Boolean)
+                    operand.setSemanticValue(!(Boolean) operand.getSemanticValue());
             }
         }
     }
@@ -377,7 +377,7 @@ public class Semantic {
             // It only encapsulated an operand, so no operation must be done. Type and constant state is inherited
             operation.type = lValue.type;
             operation.isConstant = lValue.isConstant;
-            if(operation.isConstant) operation.semanticValue = lValue.semanticValue;
+            if(operation.isConstant) operation.setSemanticValue(lValue.getSemanticValue());
             return;
         } else if(op == null || rValue == null) {
             // Impossible case: one of them is null, but not both. Here as a safeguard to notify us
@@ -397,7 +397,7 @@ public class Semantic {
                 if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
                     // We accept. Result is int (same type as lValue)
                     operation.type = lValue.type;
-                    if(operation.isConstant) operation.semanticValue = (Integer) lValue.semanticValue + (Integer) rValue.semanticValue;
+                    if(operation.isConstant) operation.setSemanticValue((Integer) lValue.getSemanticValue() + (Integer) rValue.getSemanticValue());
                     break; // Exit switch case
                 }
                 // list + an item of the list's subtype
@@ -423,7 +423,7 @@ public class Semantic {
                     // We accept. Result is boolean (same type as lValue)
                     operation.type = lValue.type;
                     if(operation.isConstant){
-                        operation.semanticValue = (Boolean) lValue.semanticValue || (Boolean) rValue.semanticValue;
+                        operation.setSemanticValue((Boolean) lValue.getSemanticValue() || (Boolean) rValue.getSemanticValue());
                     }
                 } else {
                     reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
@@ -436,7 +436,7 @@ public class Semantic {
                     // We accept. Result is boolean (same type as lValue)
                     operation.type = lValue.type;
                     if(operation.isConstant){
-                        operation.semanticValue = (Boolean) lValue.semanticValue && (Boolean) rValue.semanticValue;
+                        operation.setSemanticValue((Boolean) lValue.getSemanticValue() && (Boolean) rValue.getSemanticValue());
                     }
                 } else {
                     reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
@@ -453,13 +453,13 @@ public class Semantic {
                         if(operation.isConstant){
                             switch(op.operation){
                                 case Constants.SUB:
-                                    operation.semanticValue = (Integer) lValue.semanticValue - (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() - (Integer) rValue.getSemanticValue());
                                 case Constants.PROD:
-                                    operation.semanticValue = (Integer) lValue.semanticValue * (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() * (Integer) rValue.getSemanticValue());
                                 case Constants.DIV:
-                                    operation.semanticValue = (Integer) lValue.semanticValue / (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() / (Integer) rValue.getSemanticValue());
                                 case Constants.MOD:
-                                    operation.semanticValue = (Integer) lValue.semanticValue % (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() % (Integer) rValue.getSemanticValue());
                             }
                         }
                     } else {
@@ -477,17 +477,17 @@ public class Semantic {
                         if(operation.isConstant){
                             switch(op.operation){
                                 case Constants.IS_EQUAL:
-                                    operation.semanticValue = (Integer) lValue.semanticValue == (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() == (Integer) rValue.getSemanticValue());
                                 case Constants.BIGGER:
-                                    operation.semanticValue = (Integer) lValue.semanticValue > (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() > (Integer) rValue.getSemanticValue());
                                 case Constants.BEQ:
-                                    operation.semanticValue = (Integer) lValue.semanticValue >= (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() >= (Integer) rValue.getSemanticValue());
                                 case Constants.LESSER:
-                                    operation.semanticValue = (Integer) lValue.semanticValue < (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() < (Integer) rValue.getSemanticValue());
                                 case Constants.LEQ:
-                                    operation.semanticValue = (Integer) lValue.semanticValue <= (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() <= (Integer) rValue.getSemanticValue());
                                 case Constants.NEQ:
-                                    operation.semanticValue = (Integer) lValue.semanticValue != (Integer) rValue.semanticValue;
+                                    operation.setSemanticValue((Integer) lValue.getSemanticValue() != (Integer) rValue.getSemanticValue());
                             }
                         }
                     } else {
@@ -523,13 +523,13 @@ public class Semantic {
      * @param value
      */
     private void manage(SymbolValue value){
-        Object val = value.value;
+        Object val = value.getSemanticValue();
         if(val instanceof SymbolVar) {
             SymbolVar var = (SymbolVar) val;
             manage(var);
             value.type = var.type;
             value.isConstant = var.isConstant;
-            if(value.isConstant) value.value = var.semanticValue;
+            if(value.isConstant) value.setSemanticValue(var.getSemanticValue());
         } else if(val instanceof SymbolFuncCall) {
             SymbolFuncCall fcall = (SymbolFuncCall) val;
             manage(fcall);
@@ -585,7 +585,7 @@ public class Semantic {
         // Not an array: we get the type of the variable.
         var.type = new SymbolType(desc.getType());
         var.isConstant = desc.isConstant;
-        if(var.isConstant) var.semanticValue = desc.getValue();
+        if(var.isConstant) var.setSemanticValue(desc.getValue());
     }
 
     private void reportError(String errorMessage, int line, int column){

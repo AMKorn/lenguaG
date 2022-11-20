@@ -16,23 +16,23 @@ package lenguag.syntactic.symbols;
  */
 public class SymbolOperand extends SymbolBase {
 
-    private SymbolBase value;
+    //private SymbolBase value;
     private boolean isNegated; // this boolean is used both for boolean values and for integers
 
     // Variables for semantic control
     public SymbolType type;                 // Set as null until known
     public boolean isConstant = true;       // Set as true by default so that as soon as we find a variable component we will know that this is not constant.
-    public Object semanticValue;            // To set as a primitive object during semantic control if it's a constant
+    //public Object semanticValue;            // To set as a primitive object during semantic control if it's a constant
     
     public SymbolOperand(SymbolValue value, int line, int column){
-        super("Operand", 0, line, column);
-        this.value = value;
+        super("Operand", value, line, column);
+        //this.value = value;
         isNegated = false;
     }
 
     public SymbolOperand(SymbolOperation operation, int line, int column){
-        super("Operand", 0, line, column);
-        this.value = operation;
+        super("Operand", operation, line, column);
+        //this.value = operation;
         isNegated = false;
     }
 
@@ -50,11 +50,19 @@ public class SymbolOperand extends SymbolBase {
         isNegated = !isNegated;
     }
 
-    public SymbolBase getValue(){
+    public Object getValue(){
         return value;
     }
 
     public boolean isNegated(){
         return isNegated;
+    }
+
+    public Object getSemanticValue(){
+        return value;
+    }
+
+    public void setSemanticValue(Object value){
+        this.value = value;
     }
 }

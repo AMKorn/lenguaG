@@ -1,5 +1,5 @@
-int begin;
-int end;
+val int begin = 2;
+val int end = 5+begin;
 char[] frase = "a";
 int[] intArray = [5, 9, 4, 6, 5, 3];
 
