@@ -138,7 +138,7 @@ public class SymbolDescription {
         if(type == Constants.TYPE_ARRAY) sd += " (Basetype: " + Constants.getTypeName(baseType.getType()) + ", Depth: " + depth + ")";
         else if(type == Constants.TYPE_FUNCTION) sd += " (Returns: " + returnType + ", args:" + args + ")";
         sd += "\n\tConstant: " + isConstant;
-        if(isConstant) sd += "\nValue: " + value;
+        if(isConstant) sd += "\n\tValue: " + value;
         sd += "\n\tDeclared level: " + declaredLevel + "]";
         return sd;
     }
