@@ -1,219 +1,219 @@
-int : TYPE_INTEGER
-begin : IDENTIFIER
-= : EQUAL
-; : ENDLINE
-int : TYPE_INTEGER
-end : IDENTIFIER
-; : ENDLINE
-int : TYPE_INTEGER
-[ : L_BRACKET
-] : R_BRACKET
-intArray : IDENTIFIER
-; : ENDLINE
-void : TYPE_VOID
-quickSort : IDENTIFIER
-( : L_PAREN
-int : TYPE_INTEGER
-[ : L_BRACKET
-] : R_BRACKET
-array : IDENTIFIER
-, : COMMA
-int : TYPE_INTEGER
-begin : IDENTIFIER
-, : COMMA
-int : TYPE_INTEGER
-end : IDENTIFIER
-) : R_PAREN
-{ : L_KEY
-if : RES_IF
-( : L_PAREN
-begin : IDENTIFIER
-< : LESSER
-end : IDENTIFIER
-) : R_PAREN
-{ : L_KEY
-int : TYPE_INTEGER
-partitionIndex : IDENTIFIER
-= : EQUAL
-partition : IDENTIFIER
-( : L_PAREN
-arr : IDENTIFIER
-, : COMMA
-begin : IDENTIFIER
-, : COMMA
-end : IDENTIFIER
-) : R_PAREN
-; : ENDLINE
-quickSort : IDENTIFIER
-( : L_PAREN
-array : IDENTIFIER
-, : COMMA
-begin : IDENTIFIER
-, : COMMA
-partitionIndex : IDENTIFIER
-- : SUB
-1 : INTEGER
-) : R_PAREN
-; : ENDLINE
-quickSort : IDENTIFIER
-( : L_PAREN
-array : IDENTIFIER
-, : COMMA
-partitionIndex : IDENTIFIER
-+ : ADD
-1 : INTEGER
-, : COMMA
-end : IDENTIFIER
-) : R_PAREN
-; : ENDLINE
-} : R_KEY
-} : R_KEY
-int : TYPE_INTEGER
-partition : IDENTIFIER
-( : L_PAREN
-int : TYPE_INTEGER
-[ : L_BRACKET
-] : R_BRACKET
-array : IDENTIFIER
-, : COMMA
-int : TYPE_INTEGER
-begin : IDENTIFIER
-, : COMMA
-int : TYPE_INTEGER
-end : IDENTIFIER
-) : R_PAREN
-{ : L_KEY
-int : TYPE_INTEGER
-pivot : IDENTIFIER
-= : EQUAL
-array : IDENTIFIER
-[ : L_BRACKET
-end : IDENTIFIER
-] : R_BRACKET
-; : ENDLINE
-int : TYPE_INTEGER
-i : IDENTIFIER
-= : EQUAL
-( : L_PAREN
-begin : IDENTIFIER
-- : SUB
-1 : INTEGER
-) : R_PAREN
-; : ENDLINE
-for : RES_FOR
-( : L_PAREN
-int : TYPE_INTEGER
-j : IDENTIFIER
-= : EQUAL
-begin : IDENTIFIER
-; : ENDLINE
-j : IDENTIFIER
-< : LESSER
-end : IDENTIFIER
-; : ENDLINE
-j : IDENTIFIER
-= : EQUAL
-j : IDENTIFIER
-+ : ADD
-1 : INTEGER
-) : R_PAREN
-{ : L_KEY
-if : RES_IF
-( : L_PAREN
-array : IDENTIFIER
-[ : L_BRACKET
-j : IDENTIFIER
-] : R_BRACKET
-<= : LEQ
-pivot : IDENTIFIER
-) : R_PAREN
-{ : L_KEY
-i : IDENTIFIER
-= : EQUAL
-i : IDENTIFIER
-+ : ADD
-1 : INTEGER
-; : ENDLINE
-array : IDENTIFIER
-[ : L_BRACKET
-i : IDENTIFIER
-] : R_BRACKET
-<<>> : OP_SWAP
-array : IDENTIFIER
-[ : L_BRACKET
-j : IDENTIFIER
-] : R_BRACKET
-; : ENDLINE
-} : R_KEY
-} : R_KEY
-array : IDENTIFIER
-[ : L_BRACKET
-i : IDENTIFIER
-+ : ADD
-1 : INTEGER
-] : R_BRACKET
-<<>> : OP_SWAP
-array : IDENTIFIER
-[ : L_BRACKET
-end : IDENTIFIER
-] : R_BRACKET
-; : ENDLINE
-return : RES_RETURN
-i : IDENTIFIER
-+ : ADD
-1 : INTEGER
-; : ENDLINE
-} : R_KEY
-main : RES_MAIN
-{ : L_KEY
-intArray : IDENTIFIER
-= : EQUAL
-[ : L_BRACKET
-5 : INTEGER
-, : COMMA
-9 : INTEGER
-, : COMMA
-4 : INTEGER
-, : COMMA
-6 : INTEGER
-, : COMMA
-5 : INTEGER
-, : COMMA
-3 : INTEGER
-] : R_BRACKET
-; : ENDLINE
-begin : IDENTIFIER
-= : EQUAL
-- : SUB
-1 : INTEGER
-; : ENDLINE
-end : IDENTIFIER
-= : EQUAL
-- : SUB
-0xF : INTEGER
-; : ENDLINE
-quickSort : IDENTIFIER
-( : L_PAREN
-intArray : IDENTIFIER
-, : COMMA
-begin : IDENTIFIER
-, : COMMA
-end : IDENTIFIER
-) : R_PAREN
-; : ENDLINE
-our : IDENTIFIER
-( : L_PAREN
-"El array ordenado es: " : STRING
-) : R_PAREN
-; : ENDLINE
-out : RES_OUT
-( : L_PAREN
-intArray : IDENTIFIER
-) : R_PAREN
-; : ENDLINE
-out : RES_OUT
-( : L_PAREN
-"\n" : STRING
-) : R_PAREN
-; : ENDLINE
-} : R_KEY
+Type: int
+Identifier: begin
+AssignOp: =
+Symbol : ;
+Type: int
+Identifier: end
+Symbol : ;
+Type: int
+Symbol : [
+Symbol : ]
+Identifier: intArray
+Symbol : ;
+Type: void
+Identifier: quickSort
+Symbol : (
+Type: int
+Symbol : [
+Symbol : ]
+Identifier: array
+Symbol : ,
+Type: int
+Identifier: begin
+Symbol : ,
+Type: int
+Identifier: end
+Symbol : )
+Symbol : {
+Terminal : if
+Symbol : (
+Identifier: begin
+Op: <
+Identifier: end
+Symbol : )
+Symbol : {
+Type: int
+Identifier: partitionIndex
+AssignOp: =
+Identifier: partition
+Symbol : (
+Identifier: arr
+Symbol : ,
+Identifier: begin
+Symbol : ,
+Identifier: end
+Symbol : )
+Symbol : ;
+Identifier: quickSort
+Symbol : (
+Identifier: array
+Symbol : ,
+Identifier: begin
+Symbol : ,
+Identifier: partitionIndex
+Op: -
+Number: 1
+Symbol : )
+Symbol : ;
+Identifier: quickSort
+Symbol : (
+Identifier: array
+Symbol : ,
+Identifier: partitionIndex
+Op: +
+Number: 1
+Symbol : ,
+Identifier: end
+Symbol : )
+Symbol : ;
+Symbol : }
+Symbol : }
+Type: int
+Identifier: partition
+Symbol : (
+Type: int
+Symbol : [
+Symbol : ]
+Identifier: array
+Symbol : ,
+Type: int
+Identifier: begin
+Symbol : ,
+Type: int
+Identifier: end
+Symbol : )
+Symbol : {
+Type: int
+Identifier: pivot
+AssignOp: =
+Identifier: array
+Symbol : [
+Identifier: end
+Symbol : ]
+Symbol : ;
+Type: int
+Identifier: i
+AssignOp: =
+Symbol : (
+Identifier: begin
+Op: -
+Number: 1
+Symbol : )
+Symbol : ;
+Terminal : for
+Symbol : (
+Type: int
+Identifier: j
+AssignOp: =
+Identifier: begin
+Symbol : ;
+Identifier: j
+Op: <
+Identifier: end
+Symbol : ;
+Identifier: j
+AssignOp: =
+Identifier: j
+Op: +
+Number: 1
+Symbol : )
+Symbol : {
+Terminal : if
+Symbol : (
+Identifier: array
+Symbol : [
+Identifier: j
+Symbol : ]
+Op: <=
+Identifier: pivot
+Symbol : )
+Symbol : {
+Identifier: i
+AssignOp: =
+Identifier: i
+Op: +
+Number: 1
+Symbol : ;
+Identifier: array
+Symbol : [
+Identifier: i
+Symbol : ]
+AssignOp: <<>>
+Identifier: array
+Symbol : [
+Identifier: j
+Symbol : ]
+Symbol : ;
+Symbol : }
+Symbol : }
+Identifier: array
+Symbol : [
+Identifier: i
+Op: +
+Number: 1
+Symbol : ]
+AssignOp: <<>>
+Identifier: array
+Symbol : [
+Identifier: end
+Symbol : ]
+Symbol : ;
+Terminal : return
+Identifier: i
+Op: +
+Number: 1
+Symbol : ;
+Symbol : }
+Terminal : main
+Symbol : {
+Identifier: intArray
+AssignOp: =
+Symbol : [
+Number: 5
+Symbol : ,
+Number: 9
+Symbol : ,
+Number: 4
+Symbol : ,
+Number: 6
+Symbol : ,
+Number: 5
+Symbol : ,
+Number: 3
+Symbol : ]
+Symbol : ;
+Identifier: begin
+AssignOp: =
+Op: -
+Number: 1
+Symbol : ;
+Identifier: end
+AssignOp: =
+Op: -
+Number: 0xF
+Symbol : ;
+Identifier: quickSort
+Symbol : (
+Identifier: intArray
+Symbol : ,
+Identifier: begin
+Symbol : ,
+Identifier: end
+Symbol : )
+Symbol : ;
+Identifier: our
+Symbol : (
+string: "El array ordenado es: "
+Symbol : )
+Symbol : ;
+Terminal : out
+Symbol : (
+Identifier: intArray
+Symbol : )
+Symbol : ;
+Terminal : out
+Symbol : (
+string: "\n"
+Symbol : )
+Symbol : ;
+Symbol : }

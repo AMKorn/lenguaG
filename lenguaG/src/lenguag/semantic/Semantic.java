@@ -79,8 +79,20 @@ public class Semantic {
      */
     private void manage(SymbolArrSuff arrSuff){
         /* Possible errors:
-         * 1. Index is less than 
+         * 1. Index is not an int
          */
+        SymbolOperation index = arrSuff.getIndex();
+        if(index == null) {
+            reportError("No index specified", arrSuff.line, arrSuff.column);
+            return;
+        }
+        manage(index);
+        if(index.type.getType() != Constants.TYPE_INTEGER){
+            reportError("Array must be indexed by an integer", arrSuff.line, arrSuff.column);
+            return;
+        }
+        SymbolArrSuff next = arrSuff.getNext();
+        if(next != null) manage(next);
         // TODO
     }
 
@@ -125,14 +137,6 @@ public class Semantic {
                     + Constants.getTypeName(value.type.getType())+ " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
                 }
             }
-
-            /* else if(type.getBaseType().getType() != value.type.getBaseType().getType()){
-                //  FIXME
-                // Arrays, but from different base type.
-                reportError("Type incongruency with '" + dec.variableName + "': "
-                + Constants.getTypeName(value.type.getType()) + " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
-                return;
-            } */
             // Constant declared, but value is variable.
             if(dec.isConstant && !value.isConstant){
                 reportError("Cannot assign variable value to constant '" + dec.variableName + "'", dec.line, dec.column);

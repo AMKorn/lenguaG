@@ -1,7 +1,7 @@
 val int begin = 2;
 val int end = 5+begin;
-char[] frase = "a";
 int[] intArray = [5, 9, 4, 6, 5, 3];
+int a = intArray[end];
 
 // Function that sorts the given array
 void quickSort (int[] array, int begin, int end) {
