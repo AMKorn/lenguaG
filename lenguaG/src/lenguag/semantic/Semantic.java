@@ -88,12 +88,11 @@ public class Semantic {
         }
         manage(index);
         if(index.type.getType() != Constants.TYPE_INTEGER){
-            reportError("Array must be indexed by an integer", arrSuff.line, arrSuff.column);
+            reportError("Array must be indexed by an integer value", arrSuff.line, arrSuff.column);
             return;
         }
         SymbolArrSuff next = arrSuff.getNext();
         if(next != null) manage(next);
-        // TODO
     }
 
     private void manage(SymbolAssign assign){
@@ -574,15 +573,24 @@ public class Semantic {
                 return;
             }
             SymbolArrSuff arrSuff = var.getArrSuff();
-            if(arrSuff.getDimensions() != desc.getDepth()){
-                reportError("Stated dimensions for " + id + " different to what was declared (" + arrSuff.getDimensions() + " " + desc.getDepth()+ ")", var.line, var.column);
-            }
+            // if(arrSuff.getDimensions() != desc.getDepth()){
+            //     reportError("Stated dimensions for " + id + " different to what was declared (" + arrSuff.getDimensions() + " " + desc.getDepth()+ ")", var.line, var.column);
+            // }
             manage(arrSuff);
 
             // Array suffix correct!
             var.isConstant = false;
             // We get the BASE type of the array.
             var.type = desc.getBaseType();
+            // If it has more than one dimensions, we must iterate until we get to the last BaseType
+            for(int i = 1; i < arrSuff.getDimensions(); i++){
+                SymbolType temp = var.type.getBaseType();
+                if(temp == null){
+                    reportError("Array indexing dimensions different than the array's dimensions", var.line, var.column);
+                    return;
+                }
+                var.type = temp;
+            }
             return;
         }
 

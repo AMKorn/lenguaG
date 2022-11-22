@@ -1,3 +1,13 @@
 Generacion codigo 3 direcciones:
 - Para optimizar: mini tabla de variables con las variables que se van creando en la que apuntar las veces que se utiliza
 - lista enlazada con las instrucciones
+
+Grafos de flujo
+-Identificar los lideres: la primera instruccion del c3a, los destinos de los botes (las etiquetas) y la primera instruccion despues de un bote
+-Final: Instruccion anterior a un lider y el final del codigo
+-Identificar los botes para establecer las aristas 
+
+Tabla de etiquetas, indexada por la etiqueta y apuntando al bloque basico que empieza por ella
+De un bloque debemos poder encontrar el lider y el final y acceder a ellos desde el codigo 
+Ejemplo pg. 66 diapositivas
+

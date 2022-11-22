@@ -1,7 +1,14 @@
-val int begin = 2;
+val int begin = 1;
 val int end = 5+begin;
-int[] intArray = [5, 9, 4, 6, 5, 3];
-int a = intArray[end];
+int[][][] intArray = 
+    [
+     [[5, 9, 4, 6, 5, 3, 9],
+      [1, 2, 3, 4, 5, 6, 2]],
+      
+     [[5, 9, 4, 6, 5, 3, 9],
+      [1, 2, 3, 4, 5, 6, 2]]
+    ];
+int a = intArray[end][begin][0];
 
 // Function that sorts the given array
 void quickSort (int[] array, int begin, int end) {

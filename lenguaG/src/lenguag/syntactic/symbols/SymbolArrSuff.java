@@ -27,7 +27,7 @@ public class SymbolArrSuff extends SymbolBase {
 
     public SymbolArrSuff(){
         super("Array Suffix", 0);
-        nDims = 0;
+        nDims = 1;
     }
 
     public int getDimensions(){

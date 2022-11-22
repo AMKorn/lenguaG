@@ -135,8 +135,13 @@ public class SymbolDescription {
     @Override
     public String toString(){
         String sd = "[Type: " + Constants.getTypeName(type);
-        if(type == Constants.TYPE_ARRAY) sd += " (Basetype: " + Constants.getTypeName(baseType.getType()) + ", Depth: " + depth + ")";
-        else if(type == Constants.TYPE_FUNCTION) sd += " (Returns: " + returnType + ", args:" + args + ")";
+        if(type == Constants.TYPE_ARRAY) {
+            SymbolType bt = baseType;
+            for(int i = 1; i < depth; i++){
+                bt = bt.getBaseType();
+            }
+            sd += " (Basetype: " + Constants.getTypeName(bt.getType()) + ", Depth: " + depth + ")";
+        } else if(type == Constants.TYPE_FUNCTION) sd += " (Returns: " + returnType + ", args:" + args + ")";
         sd += "\n\tConstant: " + isConstant;
         if(isConstant) sd += "\n\tValue: " + value;
         sd += "\n\tDeclared level: " + declaredLevel + "]";
