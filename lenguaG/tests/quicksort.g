@@ -1,4 +1,4 @@
-val int begin = 1;
+val int begin;
 val int end = 5+begin;
 int[][][] intArray = 
     [

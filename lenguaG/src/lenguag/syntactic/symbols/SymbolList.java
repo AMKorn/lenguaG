@@ -20,7 +20,7 @@ public class SymbolList extends SymbolBase {
     private int length;
 
     // Variables for semantic control
-    public SymbolType type;
+    public SymbolType type = new SymbolType();
 
     public SymbolList(SymbolOperation value, SymbolList contList, int line, int column) {
         super("List", 0, line, column);

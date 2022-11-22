@@ -20,7 +20,7 @@ public class SymbolOperand extends SymbolBase {
     private boolean isNegated; // this boolean is used both for boolean values and for integers
 
     // Variables for semantic control
-    public SymbolType type;                 // Set as null until known
+    public SymbolType type = new SymbolType();
     public boolean isConstant = true;       // Set as true by default so that as soon as we find a variable component we will know that this is not constant.
     //public Object semanticValue;            // To set as a primitive object during semantic control if it's a constant
     

@@ -16,7 +16,7 @@ public class SymbolVar extends SymbolBase {
     private SymbolArrSuff arraySuffix;
 
     // Variables for semantic control
-    public SymbolType type;                 // Not set until known
+    public SymbolType type = new SymbolType();                 // Not set until known
     public boolean isConstant;
     //public Object semanticValue;            // To set as a primitive object during semantic control if it's a constant
 

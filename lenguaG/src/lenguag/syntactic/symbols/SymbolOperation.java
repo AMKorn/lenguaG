@@ -18,7 +18,7 @@ public class SymbolOperation extends SymbolBase {
     private SymbolOperand rValue;
 
     // Variables for semantic control
-    public SymbolType type;                 // Not set until known
+    public SymbolType type = new SymbolType();                 // Not set until known
     public boolean isConstant = true;       // Set as true by default so that as soon as we find a variable component we will know that this is not constant.
     //public Object semanticValue;            // To set as a primitive object during semantic control if it's a constant
 

@@ -1,8 +1,6 @@
 val : CONSTANT
 int : TYPE_INTEGER
 begin : IDENTIFIER
-= : EQUAL
-1 : INTEGER
 ; : ENDLINE
 val : CONSTANT
 int : TYPE_INTEGER

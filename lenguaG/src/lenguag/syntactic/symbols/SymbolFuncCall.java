@@ -16,7 +16,7 @@ public class SymbolFuncCall extends SymbolInstr {
     private SymbolParams params;
 
     // Variables for semantic control
-    public SymbolType type;                 // Not set until known
+    public SymbolType type = new SymbolType();
 
     public SymbolFuncCall(SymbolVar functionName, SymbolParams params, int line, int column) {
         super("Function call", 0, instructionType.instFunctionCall, line, column);

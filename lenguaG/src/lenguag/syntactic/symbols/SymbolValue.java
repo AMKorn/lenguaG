@@ -18,7 +18,7 @@ public class SymbolValue extends SymbolBase {
     //public Object value;
 
     // Variables for semantic control
-    public SymbolType type;
+    public SymbolType type = new SymbolType();
 
     public SymbolValue(Object value, int line, int column){
         super("Value", value, line, column);
