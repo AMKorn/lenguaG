@@ -123,8 +123,11 @@ public class Semantic {
             + Constants.getTypeName(rSide.type.getType())+ " cannot be cast into " + Constants.getTypeName(varDesc.getType()), assign.line, assign.column);
             return;
         }
-        if(rSide.type.getType() == Constants.TYPE_ARRAY){}
-        // TODO
+        if(rSide.type.getType() == Constants.TYPE_ARRAY && !rSide.type.getBaseType().equals(varDesc.getBaseType())){
+            // Both arrays, but from different base type or dimensions
+            reportError("Type incongruency with '" + var + "': lists of different base types or dimensions", assign.line, assign.column);
+            return; 
+        }
     }
 
     /**
@@ -156,14 +159,11 @@ public class Semantic {
                 reportError("Type incongruency with '" + dec.variableName + "': "
                 + Constants.getTypeName(value.type.getType()) + " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
                 return;
-            } else if(type.getType() == Constants.TYPE_ARRAY && value.type.getType() == Constants.TYPE_ARRAY){
-                // Both are arrays
-                if(type.getBaseType().getType() != value.type.getBaseType().getType()){
-                    // Arrays, but from different base type.
-                    reportError("Type incongruency with '" + dec.variableName + "': "
-                    + Constants.getTypeName(value.type.getType())+ " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
-                }
-                // TODO improve in case of array dimensions different to 1
+            }
+            if(type.getType() == Constants.TYPE_ARRAY && !type.getBaseType().equals(value.type.getBaseType())){
+                // Arrays, but from different base type or dimensions
+                reportError("Type incongruency with '" + dec.variableName + "': lists of different base types or dimensions", dec.line, dec.column);
+                return;
             }
             // Constant declared, but value is variable.
             if(dec.isConstant && !value.isConstant){
@@ -318,6 +318,7 @@ public class Semantic {
                 return;
             case instOut:
                 manage((SymbolOut) instruction);
+                return;
             default:
                 reportError("Unidentified instruction", instruction.line, instruction.column);
         }
@@ -357,8 +358,18 @@ public class Semantic {
         // TODO
     }
 
+    /**
+     * Main: getInstructions()
+     * @param main
+     */
     private void manage(SymbolMain main){
-        // TODO
+        /* Possible errors:
+         * 1.
+         */
+        SymbolInstrs instrs = main.getInstructions();
+        if(instrs != null) {
+            manage(instrs);
+        }
     }
 
     /**
@@ -528,6 +539,8 @@ public class Semantic {
                     }
                 }
         }
+
+        // TODO 3 address code generation
     }
 
     private void manage(SymbolOut out){

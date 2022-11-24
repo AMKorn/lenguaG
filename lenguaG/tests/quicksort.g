@@ -1,5 +1,5 @@
-val int begin;
-val int end = 5+begin;
+val int begin = 0;
+val int end = 5;
 int[][][] intArray = 
     [
      [[5, 9, 4, 6, 5, 3, 9],
@@ -38,10 +38,8 @@ int partition(int[] array, int begin, int end) {
 }
 
 main {
-	begin = 0;
-	end = 5;
 	quickSort(intArray, begin, end);
-    our("El array ordenado es: ");
+    out("El array ordenado es: ");
     out(intArray);
     out("\n");
 }

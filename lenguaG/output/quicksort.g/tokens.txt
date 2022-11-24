@@ -1,14 +1,14 @@
 val : CONSTANT
 int : TYPE_INTEGER
 begin : IDENTIFIER
+= : EQUAL
+0 : INTEGER
 ; : ENDLINE
 val : CONSTANT
 int : TYPE_INTEGER
 end : IDENTIFIER
 = : EQUAL
 5 : INTEGER
-+ : ADD
-begin : IDENTIFIER
 ; : ENDLINE
 int : TYPE_INTEGER
 [ : L_BRACKET
@@ -259,14 +259,6 @@ i : IDENTIFIER
 } : R_KEY
 main : RES_MAIN
 { : L_KEY
-begin : IDENTIFIER
-= : EQUAL
-0 : INTEGER
-; : ENDLINE
-end : IDENTIFIER
-= : EQUAL
-5 : INTEGER
-; : ENDLINE
 quickSort : IDENTIFIER
 ( : L_PAREN
 intArray : IDENTIFIER
@@ -276,7 +268,7 @@ begin : IDENTIFIER
 end : IDENTIFIER
 ) : R_PAREN
 ; : ENDLINE
-our : IDENTIFIER
+out : RES_OUT
 ( : L_PAREN
 "El array ordenado es: " : STRING
 ) : R_PAREN

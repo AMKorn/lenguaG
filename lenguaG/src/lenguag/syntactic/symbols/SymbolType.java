@@ -90,7 +90,7 @@ public class SymbolType extends SymbolBase {
     public boolean equals(SymbolType other){
         if(this.type != other.type) return false;
         if(this.arrayDepth != other.arrayDepth) return false;
-        if(arrayDepth > 1) return this.equals(other);
+        if(arrayDepth > 1) return this.baseType.equals(other.baseType);
         return true;
     }
 }
