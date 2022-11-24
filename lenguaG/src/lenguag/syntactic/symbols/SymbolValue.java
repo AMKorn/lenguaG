@@ -15,7 +15,6 @@ package lenguag.syntactic.symbols;
 public class SymbolValue extends SymbolBase {
     
     public boolean isConstant;
-    //public Object value;
 
     // Variables for semantic control
     public SymbolType type = new SymbolType();
@@ -33,15 +32,4 @@ public class SymbolValue extends SymbolBase {
     public void setSemanticValue(Object value){
         this.value = value;
     }
-
-    /* public boolean isLiteral(){
-        return isLiteral;
-    }
- */
-    /**
-     * @return SymbolVar, SymbolFuncCall, SymbolList or any of the wrapped primitives that we have implemented.
-     */
-    // public Object getValue(){
-    //     return value;
-    // }
 }

@@ -95,7 +95,35 @@ public class Semantic {
         if(next != null) manage(next);
     }
 
+    /**
+     * Assign: getVariable(), getRightSide()
+     * @param assign
+     */
     private void manage(SymbolAssign assign){
+        /* Possible errors:
+         * 1. Variable was not declared.
+         * 2. Trying to change the value of a constant variable.
+         * 3. Trying to assign a different type.
+         */
+        String var = assign.getVariable().getId();
+        SymbolDescription varDesc = symbolTable.getDescription(var);
+        if(varDesc == null) {
+            reportError("Variable '" + var + "' was not declared", assign.line, assign.column);
+            return;
+        }
+        if(varDesc.isConstant) {
+            reportError("Can't change the value of constant '" + var + "'", assign.line, assign.column);
+            return;
+        }
+        SymbolOperation rSide = assign.getRightSide();
+        manage(rSide);
+        if(rSide.type.getType() != varDesc.getType()){
+            // Different types
+            reportError("Type incongruency with '" + var + "': "
+            + Constants.getTypeName(rSide.type.getType())+ " cannot be cast into " + Constants.getTypeName(varDesc.getType()), assign.line, assign.column);
+            return;
+        }
+        if(rSide.type.getType() == Constants.TYPE_ARRAY){}
         // TODO
     }
 
@@ -135,6 +163,7 @@ public class Semantic {
                     reportError("Type incongruency with '" + dec.variableName + "': "
                     + Constants.getTypeName(value.type.getType())+ " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
                 }
+                // TODO improve in case of array dimensions different to 1
             }
             // Constant declared, but value is variable.
             if(dec.isConstant && !value.isConstant){

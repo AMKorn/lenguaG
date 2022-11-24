@@ -86,4 +86,11 @@ public class SymbolType extends SymbolBase {
         if(type == Constants.TYPE_ARRAY) return Constants.getTypeName(baseType.getType())+"[" + arrayDepth + "]";
         return Constants.getTypeName(type);
     }
+
+    public boolean equals(SymbolType other){
+        if(this.type != other.type) return false;
+        if(this.arrayDepth != other.arrayDepth) return false;
+        if(arrayDepth > 1) return this.equals(other);
+        return true;
+    }
 }
