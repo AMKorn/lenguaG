@@ -8,23 +8,23 @@
 package lenguag.syntactic.symbols;
 
 /*
- * FUNCTION_CALL ::= VARIABLE:functionName L_PAREN PARAMS:params R_PAREN
+ * FUNCTION_CALL ::= IDENTIFIER:name L_PAREN PARAMS:params R_PAREN
                 ;
  */
 public class SymbolFuncCall extends SymbolInstr {
-    private SymbolVar functionName;
+    private String functionName;
     private SymbolParams params;
 
     // Variables for semantic control
     public SymbolType type = new SymbolType();
 
-    public SymbolFuncCall(SymbolVar functionName, SymbolParams params, int line, int column) {
+    public SymbolFuncCall(String functionName, SymbolParams params, int line, int column) {
         super("Function call", 0, instructionType.instFunctionCall, line, column);
         this.functionName = functionName;
         this.params = params;
     }
     
-    public SymbolVar getFunctionName(){
+    public String getFunctionName(){
         return functionName;
     }
 

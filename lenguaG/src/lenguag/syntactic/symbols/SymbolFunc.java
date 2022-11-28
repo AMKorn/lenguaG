@@ -9,18 +9,18 @@
 package lenguag.syntactic.symbols;
 
 /*
- * FUNCTION ::= TYPE:type VARIABLE:variable L_PAREN ARGS:args R_PAREN L_KEY INSTRUCTIONS:instructions R_KEY 
+ * FUNCTION ::= TYPE:type IDENTIFIER:name L_PAREN ARGS:args R_PAREN L_KEY INSTRUCTIONS:instructions R_KEY 
  */
 public class SymbolFunc extends SymbolBase {
     private SymbolType type;
-    private SymbolVar variable;
+    private String name;
     private SymbolArgs args;
     private SymbolInstrs instructions;
 
-    public SymbolFunc(SymbolType type, SymbolVar variable, SymbolArgs args, SymbolInstrs instructions, int line, int column) {
+    public SymbolFunc(SymbolType type, String name, SymbolArgs args, SymbolInstrs instructions, int line, int column) {
         super("Function", 0, line, column);
         this.type = type;
-        this.variable = variable;
+        this.name = name;
         this.args = args;
         this.instructions = instructions;
     }
@@ -30,7 +30,7 @@ public class SymbolFunc extends SymbolBase {
     }
 
     public String getFunctionName(){
-        return variable.getId();
+        return name;
     }
 
     /**
