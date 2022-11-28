@@ -273,6 +273,8 @@ public class Semantic {
          * 1. Function already declared (checked inside of symbolTable)
          * 2. Function type and return type are not compatible.
          *      Complex solution. No direct connection between SymbolFunc and any instruction in the function.
+         *      Is solved instead in manage(SymbolReturn)
+         * 3. Returns something but no return was found 
          */
         String name = func.getFunctionName();
         // We check whether the function was already declared or not. 
@@ -313,6 +315,9 @@ public class Semantic {
         // Instructions treatment. Inside here, we will deal with the return statement being of a compatible type with the function's return type
         SymbolInstrs instrs = func.getInstructions();
         if(instrs != null) manage(instrs);
+
+        // After managing the instructions, we check if a return was found.
+        // TODO check if return was correct
 
         // We return to the previous ambit
         try{
@@ -645,8 +650,32 @@ public class Semantic {
         }
     }
 
+    /**
+     * sReturn: getValue()
+     * @param sReturn
+    */
     private void manage(SymbolReturn sReturn){
-        // TODO
+        /* Possible errors:
+         * 1. value's type does not equal the function return type.
+         * 2. TODO check if return is inside an if
+         */
+        SymbolOperation value = sReturn.getValue();
+
+        if(value == null){
+            if(currentFunction.getReturnType().getType() != Constants.TYPE_VOID){
+                reportError("Function must return " + currentFunction.getReturnType(), sReturn.line, sReturn.column);
+                return;
+            }
+            // Accept
+            return; 
+        } 
+
+        manage(value);
+        
+        if(!value.type.equals(currentFunction.getReturnType())){
+            reportError("Can't return " + value.type + ", function must return " + currentFunction.getReturnType(), sReturn.line, sReturn.column);
+            return;
+        }
     }
 
     /**
