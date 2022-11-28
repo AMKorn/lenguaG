@@ -319,8 +319,32 @@ public class Semantic {
         }
     }
 
+    /**
+     * functionCall: getFunctionName(), getNParams(), getParams()
+     * @param functionCall
+     */
     private void manage(SymbolFuncCall functionCall){
-        // TODO
+        /* Possible errors:
+         * 1. Function does not exist.
+         * 2. nParams and declared function's nArgs are different
+         * 3. Params are a different type than the function's Args
+         */
+        String name = functionCall.getFunctionName();
+        SymbolDescription desc = symbolTable.getDescription(name);
+        if(desc == null) {
+            // Function not declared
+            reportError("Function '" + name + "' was not declared", functionCall.line, functionCall.column);
+            return;
+        }
+        if(functionCall.getNParams() != desc.getNArgs()) {
+            // Differing parameter amounts
+            reportError("Differing parameters amount with function '" 
+            + name + "', expecting " + desc.getNArgs() + " parameters, found " + functionCall.getNParams(), functionCall.line, functionCall.column);
+            return;
+        }
+        SymbolParams params = functionCall.getParams();
+        if(params != null) manage(params);
+        // TODO params == args
     }
 
     private void manage(SymbolIf sIf){
