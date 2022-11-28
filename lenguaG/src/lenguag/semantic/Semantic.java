@@ -1,6 +1,7 @@
 package lenguag.semantic;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import lenguag.*;
 import lenguag.LenguaGException.CompilerException;
@@ -11,8 +12,11 @@ public class Semantic {
     
     public SymbolTable symbolTable;
 
-    // Variables that specify inside which function we are currently.
+    // Description to the function in which we are currently.
     private SymbolDescription currentFunction;
+    // When checking if a function's parameters are correct, we use this stack to store the declared function's types.
+    // We use a stack because we will be taking elements out every time we process them.
+    private Stack<SymbolType> currentArgs;
 
     private ArrayList<String> errors;
     public boolean thereIsError = false;
@@ -304,11 +308,11 @@ public class Semantic {
 
         // Arguments treatment. Inside here, currentFunction should receive the different arguments of the function.
         SymbolArgs args = func.getArgs();
-        manage(args);
+        if(args != null) manage(args);
 
         // Instructions treatment. Inside here, we will deal with the return statement being of a compatible type with the function's return type
         SymbolInstrs instrs = func.getInstructions();
-        manage(instrs);
+        if(instrs != null) manage(instrs);
 
         // We return to the previous ambit
         try{
@@ -343,8 +347,10 @@ public class Semantic {
             return;
         }
         SymbolParams params = functionCall.getParams();
-        if(params != null) manage(params);
-        // TODO params == args
+        if(params != null) {
+            currentArgs = desc.getArgsTypes();
+            manage(params);
+        }
     }
 
     private void manage(SymbolIf sIf){
@@ -620,8 +626,25 @@ public class Semantic {
         // TODO
     }
 
+    /**
+     * Params: getValue(), getNext()
+     * @param params
+     */
     private void manage(SymbolParams params){
-        // TODO
+        /* Possible errors:
+         * 1. Type incongruency between params and declared arguments
+         */
+        // Arguments are in a stack so we must go to the last one
+        SymbolParams next = params.getNext();
+        if(next != null) manage(next);
+        
+        SymbolOperation value = params.getValue();
+        manage(value);
+        SymbolType arg = currentArgs.pop();
+        if(!value.type.equals(arg)){
+            reportError("Type incongruency with parameter: expected " + arg + " but received " + value.type + " instead", params.line, params.column);
+            return;
+        }
     }
 
     private void manage(SymbolReturn sReturn){
@@ -670,7 +693,6 @@ public class Semantic {
          * 3. The dimensions of the suffix are not the same as the dimensions of the declared array
          */
         String id = var.getId();
-
         SymbolDescription desc = symbolTable.getDescription(id);
         if(desc == null){
             reportError("Variable " + id + " has not been declared.", var.line, var.column);
@@ -700,6 +722,11 @@ public class Semantic {
                 }
                 var.type = temp;
             }
+            return;
+        }
+        if(desc.getType() == Constants.TYPE_ARRAY){
+            var.type = new SymbolType(Constants.TYPE_ARRAY, desc.getBaseType());
+            var.isConstant = false;
             return;
         }
 

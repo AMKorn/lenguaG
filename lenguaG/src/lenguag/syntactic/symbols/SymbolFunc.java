@@ -38,6 +38,7 @@ public class SymbolFunc extends SymbolBase {
      * @return
      */
     public int getNArgs(){
+        if(args == null) return 0;
         return args.getNArgs();
     }
 

@@ -1,6 +1,7 @@
 package lenguag.semantic;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Stack;
 
 import lenguag.*;
 import lenguag.syntactic.symbols.*;
@@ -25,7 +26,7 @@ public class SymbolDescription {
     // Function information
     private int nArgs;
     private SymbolType returnType;
-    private HashMap<String, SymbolType> args; // arguments are name and type
+    private ArrayList<Argument> args; // arguments are name and type
 
     /**
      * Creates an empty description
@@ -63,7 +64,7 @@ public class SymbolDescription {
         } else if(this.type == Constants.TYPE_FUNCTION){
             nArgs = 0;
             returnType = new SymbolType(Constants.TYPE_VOID);
-            args = new HashMap<>();
+            args = new ArrayList<>();
         }
     }
 
@@ -112,20 +113,24 @@ public class SymbolDescription {
      * @param type
      */
     public void addArgument(String name, SymbolType type) {
-        args.put(name, type);
+        args.add(new Argument(name, type));
         nArgs++;
-    }
-
-    public void setReturnType(SymbolType returnType) {
-        this.returnType = returnType;
     }
 
     public int getNArgs() {
         return nArgs;
     }
 
-    public HashMap<String, SymbolType> getArgs() {
-        return args;
+    public Stack<SymbolType> getArgsTypes() {
+        Stack<SymbolType> types = new Stack<>();
+        for(Argument a : args){
+            types.push(a.type);
+        }
+        return types;
+    }
+
+    public void setReturnType(SymbolType returnType) {
+        this.returnType = returnType;
     }
 
     public SymbolType getReturnType() {
@@ -146,5 +151,20 @@ public class SymbolDescription {
         if(isConstant) sd += "\n\tValue: " + value;
         sd += "\n\tDeclared level: " + declaredLevel + "]";
         return sd;
+    }
+
+    private class Argument{
+        public String name;
+        public SymbolType type;
+
+        public Argument(String name, SymbolType type){
+            this.name = name;
+            this.type = type;
+        }
+
+        @Override
+        public String toString(){
+            return type + " " + name;
+        }
     }
 }

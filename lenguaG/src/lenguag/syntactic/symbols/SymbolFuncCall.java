@@ -29,6 +29,7 @@ public class SymbolFuncCall extends SymbolInstr {
     }
 
     public int getNParams(){
+        if(params == null) return 0;
         return params.getNParams();
     }
 
