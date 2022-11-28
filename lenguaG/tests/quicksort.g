@@ -1,5 +1,5 @@
 val int begin = 0;
-val int end = 5;
+val int end = 6;
 int[] intArray = [5, 9, 4, 6, 5, 3, 9];
 
 // Function that sorts the given array

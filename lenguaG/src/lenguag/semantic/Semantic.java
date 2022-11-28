@@ -41,7 +41,7 @@ public class Semantic {
     public String getErrors(){
         String s = "";
         for(String e : errors){
-            s += e;
+            s += e + "\n";
         }
         return s;
     }
@@ -618,8 +618,6 @@ public class Semantic {
                     }
                 }
         }
-
-        // TODO 3 address code generation
     }
 
     private void manage(SymbolOut out){
@@ -651,8 +649,31 @@ public class Semantic {
         // TODO
     }
 
+    /**
+     * Swap: getVar1(), getVar2()
+     * @param swap
+     */
     private void manage(SymbolSwap swap){
-        // TODO
+        /* Possible errors:
+         * 1. Try to swap constant(s).
+         * 2. Variables of different types.
+         */
+        SymbolVar var1 = swap.getVar1();
+        manage(var1);
+        SymbolVar var2 = swap.getVar2();
+        manage(var2);
+        if(var1.isConstant){
+            reportError("Can't swap constant '" + var1.getId() + "'", var1.line, var1.column);
+            return;
+        }
+        if(var2.isConstant){
+            reportError("Can't swap constant '" + var2.getId() + "'", var2.line, var2.column);
+            return;
+        }
+        if(!var1.type.equals(var2.type)){
+            reportError("Can't swap " + var1.type + " and " + var2.type, swap.line, swap.column);
+            return;
+        }
     }
 
     /**
@@ -695,7 +716,7 @@ public class Semantic {
         String id = var.getId();
         SymbolDescription desc = symbolTable.getDescription(id);
         if(desc == null){
-            reportError("Variable " + id + " has not been declared.", var.line, var.column);
+            reportError("Variable " + id + " has not been declared", var.line, var.column);
             return;
         }
         if(var.isArray()){
