@@ -12,7 +12,7 @@ public class Semantic {
     public SymbolTable symbolTable;
 
     // Variables that specify inside which function we are currently.
-    SymbolDescription currentFunction;
+    private SymbolDescription currentFunction;
 
     private ArrayList<String> errors;
     public boolean thereIsError = false;
@@ -32,6 +32,14 @@ public class Semantic {
         if(decs != null) manage(decs);
         SymbolMain main = body.getMain();
         manage(main);
+    }
+
+    public String getErrors(){
+        String s = "";
+        for(String e : errors){
+            s += e;
+        }
+        return s;
     }
     
     /**
@@ -207,8 +215,49 @@ public class Semantic {
         // TODO
     }
 
+    /**
+     * sFor: getInit(), getCondition(), getFinal(), getInstructions()
+     * @param sFor
+     */
     private void manage(SymbolFor sFor){
-        // TODO
+        /* Possible errors:
+         * 1. Condition not a viable value (can't be void or char)
+         */
+        
+        // We must enter a new block
+        symbolTable.enterBlock();
+
+        // getInit() -> SymbolDec, SymbolAssign, SymbolSwap or SymbolFuncCall
+        SymbolBase init = sFor.getInit();
+        if(init instanceof SymbolDec) manage((SymbolDec) init);
+        else if(init instanceof SymbolAssign) manage((SymbolAssign) init);
+        else if(init instanceof SymbolSwap) manage((SymbolSwap) init);
+        else if(init instanceof SymbolFuncCall) manage((SymbolFuncCall) init);
+
+        SymbolOperation cond = sFor.getCondition();
+        manage(cond);
+        if(cond.type.getType() == Constants.TYPE_VOID || cond.type.getType() == Constants.TYPE_CHARACTER){
+            reportError("Condition can't be of type " + cond.type, sFor.line, sFor.column);
+            // We don't return: we try to find errors in the instructions.
+        }
+
+        SymbolInstrs instrs = sFor.getInstructions();
+        if(instrs != null) {
+            manage(instrs);
+        }
+
+        // getInit() -> SymbolDec, SymbolAssign, SymbolSwap or SymbolFuncCall
+        SymbolBase end = sFor.getFinal();
+        if(end instanceof SymbolDec) manage((SymbolDec) end);
+        else if(end instanceof SymbolAssign) manage((SymbolAssign) end);
+        else if(end instanceof SymbolSwap) manage((SymbolSwap) end);
+        else if(end instanceof SymbolFuncCall) manage((SymbolFuncCall) end);
+
+        try {
+            symbolTable.exitBlock();
+        } catch(CompilerException ce){
+            ce.printStackTrace();
+        }
     }
 
     /**
@@ -556,10 +605,6 @@ public class Semantic {
     }
 
     private void manage(SymbolSwap swap){
-        // TODO
-    }
-
-    private void manage(SymbolType type){
         // TODO
     }
 

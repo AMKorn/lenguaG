@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import lenguag.LenguaG;
 import lenguag.LenguaGException.CompilerException;
 import lenguag.LenguaGException.SemanticException;
 
@@ -63,6 +64,8 @@ public class SymbolTable {
     }
 
     public void exitBlock() throws CompilerException {
+        if(LenguaG.DEBUGGING) System.out.println(this);
+
         if(currentLevel == 0) throw new CompilerException(" !!! Compiler error !!! Tried to exit last block in symbol table.");
         int to = ambitsTable.get(currentLevel); // Finishing index: indicates the last variable added to the expansion table.
         ambitsTable.remove(currentLevel);       // we decrement the current level
