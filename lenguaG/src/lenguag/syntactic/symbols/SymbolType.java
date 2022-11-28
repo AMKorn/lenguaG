@@ -48,27 +48,6 @@ public class SymbolType extends SymbolBase {
         arrayDepth = 0;
     }
 
-    /* public SymbolType(int type, SymbolType baseType){
-        super("Type", 0);
-        this.type = type;
-        this.baseType = baseType.getType();
-        arrayDepth = baseType.getArrayDepth()+1;
-    }
-
-    public SymbolType(int type){
-        super("Type", 0);
-        this.type = type;
-        this.baseType = type;
-        arrayDepth = 0;
-    } */
-
-    /* public SymbolType(){
-        super("Type", 0);
-        type = Constants.TYPE_VOID;
-        baseType = Constants.TYPE_VOID;
-        arrayDepth = 0;
-    } */
-
     public int getArrayDepth(){
         return arrayDepth;
     }
@@ -83,7 +62,7 @@ public class SymbolType extends SymbolBase {
 
     @Override
     public String toString(){
-        if(type == Constants.TYPE_ARRAY) return Constants.getTypeName(baseType.getType())+"[" + arrayDepth + "]";
+        if(type == Constants.TYPE_ARRAY) return baseType + "[]";
         return Constants.getTypeName(type);
     }
 

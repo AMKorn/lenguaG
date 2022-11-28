@@ -8,7 +8,6 @@ int[][][] intArray =
      [[5, 9, 4, 6, 5, 3, 9],
       [1, 2, 3, 4, 5, 6, 2]]
     ];
-int a = intArray[end][begin][0];
 
 // Function that sorts the given array
 void quickSort (int[] array, int begin, int end) {
@@ -38,6 +37,7 @@ int partition(int[] array, int begin, int end) {
 }
 
 main {
+    int a = intArray[end][begin][0];
 	quickSort(intArray, begin, end);
     out("El array ordenado es: ");
     out(intArray);

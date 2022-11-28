@@ -66,7 +66,7 @@ public class Semantic {
      */
     private void manage(SymbolArgs args){
         /* Possible errors:
-         * - None
+         * - None that are not treated inside of manage(SymbolArg)
          */
         manage(args.getArg());
         SymbolArgs next = args.getNext();
@@ -120,7 +120,7 @@ public class Semantic {
         if(rSide.type.getType() != varDesc.getType()){
             // Different types
             reportError("Type incongruency with '" + var + "': "
-            + Constants.getTypeName(rSide.type.getType())+ " cannot be cast into " + Constants.getTypeName(varDesc.getType()), assign.line, assign.column);
+            + rSide.type + " cannot be cast into " + Constants.getTypeName(varDesc.getType()), assign.line, assign.column);
             return;
         }
         if(rSide.type.getType() == Constants.TYPE_ARRAY && !rSide.type.getBaseType().equals(varDesc.getBaseType())){
@@ -157,7 +157,7 @@ public class Semantic {
             if(type.getType() != value.type.getType()) {
                 // Two different types
                 reportError("Type incongruency with '" + dec.variableName + "': "
-                + Constants.getTypeName(value.type.getType()) + " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
+                + value.type + " cannot be cast into " + type, dec.line, dec.column);
                 return;
             }
             if(type.getType() == Constants.TYPE_ARRAY && !type.getBaseType().equals(value.type.getBaseType())){
@@ -181,7 +181,6 @@ public class Semantic {
         description.changeType(type);
         description.isConstant = dec.isConstant;
         if(dec.isConstant) description.changeValue(value.getSemanticValue());
-        // TODO add array length to description
         try{ 
             symbolTable.insertVariable(dec.variableName, description);
         } catch(SemanticException se){
@@ -363,12 +362,16 @@ public class Semantic {
      * @param main
      */
     private void manage(SymbolMain main){
-        /* Possible errors:
-         * 1.
-         */
         SymbolInstrs instrs = main.getInstructions();
         if(instrs != null) {
+            symbolTable.enterBlock();
             manage(instrs);
+            try {
+                symbolTable.exitBlock();
+            } catch (CompilerException ce){
+                // !!! Compiler error !!!
+                ce.printStackTrace();
+            }
         }
     }
 
@@ -382,9 +385,6 @@ public class Semantic {
             manage(value);
             operand.type = value.type;
             if(operand.isConstant = value.isConstant) {operand.setSemanticValue(value.getSemanticValue());}
-            if(operand.type.getType() == Constants.TYPE_ARRAY){
-                // TODO operand.length = value.length
-            }
         } else {
             SymbolOperation operation = (SymbolOperation) operand.getValue();
             manage(operation);
@@ -585,8 +585,6 @@ public class Semantic {
             manage(list);
             value.type = list.type;
             value.isConstant = false;
-
-            // TODO value.type, value.length;
         } else if(val instanceof Integer) value.type = new SymbolType(Constants.TYPE_INTEGER);
         else if(val instanceof Boolean) value.type = new SymbolType(Constants.TYPE_BOOLEAN);
         else if(val instanceof Character) value.type = new SymbolType(Constants.TYPE_CHARACTER);
