@@ -215,8 +215,30 @@ public class Semantic {
         if (nextDecs != null) manage(nextDecs);
     }
 
+    /**
+     * sElse: getIf() | getInstructions()
+     * @param sElse
+     */
     private void manage(SymbolElse sElse){
-        // TODO
+        /* Possible errors:
+         * 1. 
+         */
+
+        SymbolIf nextIf = sElse.getIf();
+        SymbolInstrs instrs = sElse.getInstructions();
+        if(nextIf != null) manage(nextIf);
+        else if(instrs != null) {
+            symbolTable.enterBlock();
+            manage(instrs);
+            try {
+                symbolTable.exitBlock();
+            } catch(CompilerException ce) {
+                ce.printStackTrace();
+            }
+        } else {
+            reportError("Unexpected compilation error: else missing", sElse.line, sElse.column);
+            return;
+        }
     }
 
     /**
@@ -284,7 +306,7 @@ public class Semantic {
             symbolTable.insertVariable(name, currentFunction);
         } catch(SemanticException se){
             // If symbol table already found the name of the function, it's a compilation error. 
-            // This means that a variable and a function cannot share the same name. FIXME later if we have enough time to think of an easy solution,
+            // This means that a variable and a function cannot share the same name. //FIXME later if we have enough time to think of an easy solution,
             // otherwise this is by design. Sort of.
             reportError(se.getMessage(), func.line, func.column);
             return;
@@ -356,14 +378,46 @@ public class Semantic {
             currentArgs = desc.getArgsTypes();
             manage(params);
         }
+        // We set the type to the function's return type
+        functionCall.type = desc.getReturnType();
     }
 
+    /**
+     * sIf: getCondition(), getInstructions(), getElse()
+     * @param sIf
+     */
     private void manage(SymbolIf sIf){
-        // TODO
+        /* Possible errors:
+         * 1. Condition not a viable value (can't be void or char)
+         */
+        
+        // We enter a new block
+        symbolTable.enterBlock();
+
+        SymbolOperation cond = sIf.getCondition();
+        manage(cond);
+        if(cond.type.getType() == Constants.TYPE_VOID || cond.type.getType() == Constants.TYPE_CHARACTER){
+            reportError("Condition can't be of type " + cond.type, sIf.line, sIf.column);
+            // We don't return: we try to find errors in the instructions.
+        }
+
+        SymbolInstrs instrs = sIf.getInstructions();
+        if(instrs != null) {
+            manage(instrs);
+        }
+
+        try {
+            symbolTable.exitBlock();
+        } catch (CompilerException ce){
+            ce.printStackTrace();
+        }
+
+        SymbolElse sElse = sIf.getElse();
+        if(sElse != null) manage(sElse);
     }
 
     private void manage(SymbolIn in){
-        // TODO
+        // TODO in
     }
 
     /**
@@ -438,7 +492,7 @@ public class Semantic {
     }
 
     private void manage(SymbolLoop loop){
-        // TODO
+        // TODO loop
     }
 
     /**
@@ -446,6 +500,9 @@ public class Semantic {
      * @param main
      */
     private void manage(SymbolMain main){
+        currentFunction = new SymbolDescription();
+        currentFunction.changeType(Constants.TYPE_FUNCTION); // This sets the current function to a void function with 0 arguments
+
         SymbolInstrs instrs = main.getInstructions();
         if(instrs != null) {
             symbolTable.enterBlock();
@@ -488,7 +545,7 @@ public class Semantic {
 
     /**
      * Operation: getLValue(), getOp(), getRValue().
-     * FIXME THIS IS AWFUL
+     * //FIXME THIS IS AWFUL
      * @param operation
     */
     private void manage(SymbolOperation operation){
@@ -626,7 +683,7 @@ public class Semantic {
     }
 
     private void manage(SymbolOut out){
-        // TODO
+        // TODO out
     }
 
     /**
@@ -657,7 +714,7 @@ public class Semantic {
     private void manage(SymbolReturn sReturn){
         /* Possible errors:
          * 1. value's type does not equal the function return type.
-         * 2. TODO check if return is inside an if
+         * 2. //TODO check if return is inside an if
          */
         SymbolOperation value = sReturn.getValue();
 

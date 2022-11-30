@@ -2,16 +2,6 @@ val int begin = 0;
 val int end = 6;
 int[] intArray = [5, 9, 4, 6, 5, 3, 9];
 
-// Function that sorts the given array
-void quickSort (int[] array, int begin, int end) {
-    if (begin < end) {
-        int partitionIndex = partition(arr, begin, end);
-
-        quickSort(array, begin, partitionIndex-1);
-        quickSort(array, partitionIndex+1, end);
-    }
-}
-
 int partition(int[] array, int begin, int end) {
     int pivot = array[end];
     int i = (begin-1);
@@ -27,6 +17,16 @@ int partition(int[] array, int begin, int end) {
     array[i+1] <<>> array[end];
 
     return i+1;
+}
+
+// Function that sorts the given array
+void quickSort (int[] array, int begin, int end) {
+    if (begin < end) {
+        int partitionIndex = partition(array, begin, end);
+
+        quickSort(array, begin, partitionIndex-1);
+        quickSort(array, partitionIndex+1, end);
+    }
 }
 
 main {
