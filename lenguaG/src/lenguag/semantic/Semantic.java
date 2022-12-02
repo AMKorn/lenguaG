@@ -1,6 +1,7 @@
 package lenguag.semantic;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import lenguag.*;
 import lenguag.LenguaGException.CompilerException;
@@ -11,8 +12,11 @@ public class Semantic {
     
     public SymbolTable symbolTable;
 
-    // Variables that specify inside which function we are currently.
-    SymbolDescription currentFunction;
+    // Description to the function in which we are currently.
+    private SymbolDescription currentFunction;
+    // When checking if a function's parameters are correct, we use this stack to store the declared function's types.
+    // We use a stack because we will be taking elements out every time we process them.
+    private Stack<SymbolType> currentArgs;
 
     private ArrayList<String> errors;
     public boolean thereIsError = false;
@@ -32,6 +36,14 @@ public class Semantic {
         if(decs != null) manage(decs);
         SymbolMain main = body.getMain();
         manage(main);
+    }
+
+    public String getErrors(){
+        String s = "";
+        for(String e : errors){
+            s += e + "\n";
+        }
+        return s;
     }
     
     /**
@@ -66,7 +78,7 @@ public class Semantic {
      */
     private void manage(SymbolArgs args){
         /* Possible errors:
-         * - None
+         * - None that are not treated inside of manage(SymbolArg)
          */
         manage(args.getArg());
         SymbolArgs next = args.getNext();
@@ -120,11 +132,14 @@ public class Semantic {
         if(rSide.type.getType() != varDesc.getType()){
             // Different types
             reportError("Type incongruency with '" + var + "': "
-            + Constants.getTypeName(rSide.type.getType())+ " cannot be cast into " + Constants.getTypeName(varDesc.getType()), assign.line, assign.column);
+            + rSide.type + " cannot be cast into " + Constants.getTypeName(varDesc.getType()), assign.line, assign.column);
             return;
         }
-        if(rSide.type.getType() == Constants.TYPE_ARRAY){}
-        // TODO
+        if(rSide.type.getType() == Constants.TYPE_ARRAY && !rSide.type.getBaseType().equals(varDesc.getBaseType())){
+            // Both arrays, but from different base type or dimensions
+            reportError("Type incongruency with '" + var + "': lists of different base types or dimensions", assign.line, assign.column);
+            return; 
+        }
     }
 
     /**
@@ -154,16 +169,13 @@ public class Semantic {
             if(type.getType() != value.type.getType()) {
                 // Two different types
                 reportError("Type incongruency with '" + dec.variableName + "': "
-                + Constants.getTypeName(value.type.getType()) + " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
+                + value.type + " cannot be cast into " + type, dec.line, dec.column);
                 return;
-            } else if(type.getType() == Constants.TYPE_ARRAY && value.type.getType() == Constants.TYPE_ARRAY){
-                // Both are arrays
-                if(type.getBaseType().getType() != value.type.getBaseType().getType()){
-                    // Arrays, but from different base type.
-                    reportError("Type incongruency with '" + dec.variableName + "': "
-                    + Constants.getTypeName(value.type.getType())+ " cannot be cast into " + Constants.getTypeName(type.getType()), dec.line, dec.column);
-                }
-                // TODO improve in case of array dimensions different to 1
+            }
+            if(type.getType() == Constants.TYPE_ARRAY && !type.getBaseType().equals(value.type.getBaseType())){
+                // Arrays, but from different base type or dimensions
+                reportError("Type incongruency with '" + dec.variableName + "': lists of different base types or dimensions", dec.line, dec.column);
+                return;
             }
             // Constant declared, but value is variable.
             if(dec.isConstant && !value.isConstant){
@@ -181,7 +193,6 @@ public class Semantic {
         description.changeType(type);
         description.isConstant = dec.isConstant;
         if(dec.isConstant) description.changeValue(value.getSemanticValue());
-        // TODO add array length to description
         try{ 
             symbolTable.insertVariable(dec.variableName, description);
         } catch(SemanticException se){
@@ -204,12 +215,75 @@ public class Semantic {
         if (nextDecs != null) manage(nextDecs);
     }
 
+    /**
+     * sElse: getIf() | getInstructions()
+     * @param sElse
+     */
     private void manage(SymbolElse sElse){
-        // TODO
+        /* Possible errors:
+         * 1. 
+         */
+
+        SymbolIf nextIf = sElse.getIf();
+        SymbolInstrs instrs = sElse.getInstructions();
+        if(nextIf != null) manage(nextIf);
+        else if(instrs != null) {
+            symbolTable.enterBlock();
+            manage(instrs);
+            try {
+                symbolTable.exitBlock();
+            } catch(CompilerException ce) {
+                ce.printStackTrace();
+            }
+        } else {
+            reportError("Unexpected compilation error: else missing", sElse.line, sElse.column);
+            return;
+        }
     }
 
+    /**
+     * sFor: getInit(), getCondition(), getFinal(), getInstructions()
+     * @param sFor
+     */
     private void manage(SymbolFor sFor){
-        // TODO
+        /* Possible errors:
+         * 1. Condition not a viable value (can't be void or char)
+         */
+        
+        // We must enter a new block
+        symbolTable.enterBlock();
+
+        // getInit() -> SymbolDec, SymbolAssign, SymbolSwap or SymbolFuncCall
+        SymbolBase init = sFor.getInit();
+        if(init instanceof SymbolDec) manage((SymbolDec) init);
+        else if(init instanceof SymbolAssign) manage((SymbolAssign) init);
+        else if(init instanceof SymbolSwap) manage((SymbolSwap) init);
+        else if(init instanceof SymbolFuncCall) manage((SymbolFuncCall) init);
+
+        SymbolOperation cond = sFor.getCondition();
+        manage(cond);
+        if(cond.type.getType() == Constants.TYPE_VOID || cond.type.getType() == Constants.TYPE_CHARACTER){
+            reportError("Condition can't be of type " + cond.type, sFor.line, sFor.column);
+            // We don't return: we try to find errors in the instructions.
+        }
+
+        SymbolInstrs instrs = sFor.getInstructions();
+        if(instrs != null) {
+            manage(instrs);
+        }
+
+        // getInit() -> SymbolDec, SymbolAssign, SymbolSwap or SymbolFuncCall
+        SymbolBase end = sFor.getFinal();
+        if(end instanceof SymbolDec) manage((SymbolDec) end);
+        else if(end instanceof SymbolAssign) manage((SymbolAssign) end);
+        else if(end instanceof SymbolSwap) manage((SymbolSwap) end);
+        else if(end instanceof SymbolFuncCall) manage((SymbolFuncCall) end);
+
+        try {
+            symbolTable.exitBlock();
+        } catch(CompilerException ce){
+            ce.printStackTrace();
+        }
     }
 
     /**
@@ -221,6 +295,8 @@ public class Semantic {
          * 1. Function already declared (checked inside of symbolTable)
          * 2. Function type and return type are not compatible.
          *      Complex solution. No direct connection between SymbolFunc and any instruction in the function.
+         *      Is solved instead in manage(SymbolReturn)
+         * 3. Returns something but no return was found 
          */
         String name = func.getFunctionName();
         // We check whether the function was already declared or not. 
@@ -230,7 +306,7 @@ public class Semantic {
             symbolTable.insertVariable(name, currentFunction);
         } catch(SemanticException se){
             // If symbol table already found the name of the function, it's a compilation error. 
-            // This means that a variable and a function cannot share the same name. FIXME later if we have enough time to think of an easy solution,
+            // This means that a variable and a function cannot share the same name. //FIXME later if we have enough time to think of an easy solution,
             // otherwise this is by design. Sort of.
             reportError(se.getMessage(), func.line, func.column);
             return;
@@ -256,11 +332,14 @@ public class Semantic {
 
         // Arguments treatment. Inside here, currentFunction should receive the different arguments of the function.
         SymbolArgs args = func.getArgs();
-        manage(args);
+        if(args != null) manage(args);
 
         // Instructions treatment. Inside here, we will deal with the return statement being of a compatible type with the function's return type
         SymbolInstrs instrs = func.getInstructions();
-        manage(instrs);
+        if(instrs != null) manage(instrs);
+
+        // After managing the instructions, we check if a return was found.
+        // TODO check if return was correct
 
         // We return to the previous ambit
         try{
@@ -271,16 +350,74 @@ public class Semantic {
         }
     }
 
+    /**
+     * functionCall: getFunctionName(), getNParams(), getParams()
+     * @param functionCall
+     */
     private void manage(SymbolFuncCall functionCall){
-        // TODO
+        /* Possible errors:
+         * 1. Function does not exist.
+         * 2. nParams and declared function's nArgs are different
+         * 3. Params are a different type than the function's Args
+         */
+        String name = functionCall.getFunctionName();
+        SymbolDescription desc = symbolTable.getDescription(name);
+        if(desc == null) {
+            // Function not declared
+            reportError("Function '" + name + "' was not declared", functionCall.line, functionCall.column);
+            return;
+        }
+        if(functionCall.getNParams() != desc.getNArgs()) {
+            // Differing parameter amounts
+            reportError("Differing parameters amount with function '" 
+            + name + "', expecting " + desc.getNArgs() + " parameters, found " + functionCall.getNParams(), functionCall.line, functionCall.column);
+            return;
+        }
+        SymbolParams params = functionCall.getParams();
+        if(params != null) {
+            currentArgs = desc.getArgsTypes();
+            manage(params);
+        }
+        // We set the type to the function's return type
+        functionCall.type = desc.getReturnType();
     }
 
+    /**
+     * sIf: getCondition(), getInstructions(), getElse()
+     * @param sIf
+     */
     private void manage(SymbolIf sIf){
-        // TODO
+        /* Possible errors:
+         * 1. Condition not a viable value (can't be void or char)
+         */
+        
+        // We enter a new block
+        symbolTable.enterBlock();
+
+        SymbolOperation cond = sIf.getCondition();
+        manage(cond);
+        if(cond.type.getType() == Constants.TYPE_VOID || cond.type.getType() == Constants.TYPE_CHARACTER){
+            reportError("Condition can't be of type " + cond.type, sIf.line, sIf.column);
+            // We don't return: we try to find errors in the instructions.
+        }
+
+        SymbolInstrs instrs = sIf.getInstructions();
+        if(instrs != null) {
+            manage(instrs);
+        }
+
+        try {
+            symbolTable.exitBlock();
+        } catch (CompilerException ce){
+            ce.printStackTrace();
+        }
+
+        SymbolElse sElse = sIf.getElse();
+        if(sElse != null) manage(sElse);
     }
 
     private void manage(SymbolIn in){
-        // TODO
+        // TODO in
     }
 
     /**
@@ -318,6 +455,7 @@ public class Semantic {
                 return;
             case instOut:
                 manage((SymbolOut) instruction);
+                return;
             default:
                 reportError("Unidentified instruction", instruction.line, instruction.column);
         }
@@ -354,11 +492,28 @@ public class Semantic {
     }
 
     private void manage(SymbolLoop loop){
-        // TODO
+        // TODO loop
     }
 
+    /**
+     * Main: getInstructions()
+     * @param main
+     */
     private void manage(SymbolMain main){
-        // TODO
+        currentFunction = new SymbolDescription();
+        currentFunction.changeType(Constants.TYPE_FUNCTION); // This sets the current function to a void function with 0 arguments
+
+        SymbolInstrs instrs = main.getInstructions();
+        if(instrs != null) {
+            symbolTable.enterBlock();
+            manage(instrs);
+            try {
+                symbolTable.exitBlock();
+            } catch (CompilerException ce){
+                // !!! Compiler error !!!
+                ce.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -371,9 +526,6 @@ public class Semantic {
             manage(value);
             operand.type = value.type;
             if(operand.isConstant = value.isConstant) {operand.setSemanticValue(value.getSemanticValue());}
-            if(operand.type.getType() == Constants.TYPE_ARRAY){
-                // TODO operand.length = value.length
-            }
         } else {
             SymbolOperation operation = (SymbolOperation) operand.getValue();
             manage(operation);
@@ -393,7 +545,7 @@ public class Semantic {
 
     /**
      * Operation: getLValue(), getOp(), getRValue().
-     * FIXME THIS IS AWFUL
+     * //FIXME THIS IS AWFUL
      * @param operation
     */
     private void manage(SymbolOperation operation){
@@ -531,23 +683,83 @@ public class Semantic {
     }
 
     private void manage(SymbolOut out){
-        // TODO
+        // TODO out
     }
 
+    /**
+     * Params: getValue(), getNext()
+     * @param params
+     */
     private void manage(SymbolParams params){
-        // TODO
+        /* Possible errors:
+         * 1. Type incongruency between params and declared arguments
+         */
+        // Arguments are in a stack so we must go to the last one
+        SymbolParams next = params.getNext();
+        if(next != null) manage(next);
+        
+        SymbolOperation value = params.getValue();
+        manage(value);
+        SymbolType arg = currentArgs.pop();
+        if(!value.type.equals(arg)){
+            reportError("Type incongruency with parameter: expected " + arg + " but received " + value.type + " instead", params.line, params.column);
+            return;
+        }
     }
 
+    /**
+     * sReturn: getValue()
+     * @param sReturn
+    */
     private void manage(SymbolReturn sReturn){
-        // TODO
+        /* Possible errors:
+         * 1. value's type does not equal the function return type.
+         * 2. //TODO check if return is inside an if
+         */
+        SymbolOperation value = sReturn.getValue();
+
+        if(value == null){
+            if(currentFunction.getReturnType().getType() != Constants.TYPE_VOID){
+                reportError("Function must return " + currentFunction.getReturnType(), sReturn.line, sReturn.column);
+                return;
+            }
+            // Accept
+            return; 
+        } 
+
+        manage(value);
+        
+        if(!value.type.equals(currentFunction.getReturnType())){
+            reportError("Can't return " + value.type + ", function must return " + currentFunction.getReturnType(), sReturn.line, sReturn.column);
+            return;
+        }
     }
 
+    /**
+     * Swap: getVar1(), getVar2()
+     * @param swap
+     */
     private void manage(SymbolSwap swap){
-        // TODO
-    }
-
-    private void manage(SymbolType type){
-        // TODO
+        /* Possible errors:
+         * 1. Try to swap constant(s).
+         * 2. Variables of different types.
+         */
+        SymbolVar var1 = swap.getVar1();
+        manage(var1);
+        SymbolVar var2 = swap.getVar2();
+        manage(var2);
+        if(var1.isConstant){
+            reportError("Can't swap constant '" + var1.getId() + "'", var1.line, var1.column);
+            return;
+        }
+        if(var2.isConstant){
+            reportError("Can't swap constant '" + var2.getId() + "'", var2.line, var2.column);
+            return;
+        }
+        if(!var1.type.equals(var2.type)){
+            reportError("Can't swap " + var1.type + " and " + var2.type, swap.line, swap.column);
+            return;
+        }
     }
 
     /**
@@ -572,8 +784,6 @@ public class Semantic {
             manage(list);
             value.type = list.type;
             value.isConstant = false;
-
-            // TODO value.type, value.length;
         } else if(val instanceof Integer) value.type = new SymbolType(Constants.TYPE_INTEGER);
         else if(val instanceof Boolean) value.type = new SymbolType(Constants.TYPE_BOOLEAN);
         else if(val instanceof Character) value.type = new SymbolType(Constants.TYPE_CHARACTER);
@@ -590,10 +800,9 @@ public class Semantic {
          * 3. The dimensions of the suffix are not the same as the dimensions of the declared array
          */
         String id = var.getId();
-
         SymbolDescription desc = symbolTable.getDescription(id);
         if(desc == null){
-            reportError("Variable " + id + " has not been declared.", var.line, var.column);
+            reportError("Variable " + id + " has not been declared", var.line, var.column);
             return;
         }
         if(var.isArray()){
@@ -620,6 +829,11 @@ public class Semantic {
                 }
                 var.type = temp;
             }
+            return;
+        }
+        if(desc.getType() == Constants.TYPE_ARRAY){
+            var.type = new SymbolType(Constants.TYPE_ARRAY, desc.getBaseType());
+            var.isConstant = false;
             return;
         }
 

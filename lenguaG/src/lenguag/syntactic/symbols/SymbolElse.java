@@ -35,7 +35,7 @@ public class SymbolElse extends SymbolBase {
         return nextIf;
     }
 
-    public SymbolInstrs geInstructions(){
+    public SymbolInstrs getInstructions(){
         return instructions;
     }
 }

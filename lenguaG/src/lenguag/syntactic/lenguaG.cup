@@ -165,7 +165,7 @@ CONT_DECLARATION ::= TYPE:v1 IDENTIFIER:v2 EQUAL OPERATION:v3           {: RESUL
                    | TYPE:v1 IDENTIFIER:v2                              {: RESULT = new SymbolDecCont(v1, v2); :}
                    ;
 
-FUNCTION ::= TYPE:v1 VARIABLE:v2 L_PAREN ARGS:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY 
+FUNCTION ::= TYPE:v1 IDENTIFIER:v2 L_PAREN ARGS:v3 R_PAREN L_KEY INSTRUCTIONS:v4 R_KEY 
                                                                         {: RESULT = new SymbolFunc(v1, v2, v3, v4, v1xleft.getLine(), v1xleft.getColumn()); :}
            ;
 
@@ -294,7 +294,7 @@ HEADER_SEGMENT ::= DECLARATION:v                                        {: RESUL
                  ; 
                     // ^- Quitar FUNCTION_CALL si no implementamos pasar por referencia
 
-FUNCTION_CALL ::= VARIABLE:v1 L_PAREN PARAMS:v2 R_PAREN                 {: RESULT = new SymbolFuncCall(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
+FUNCTION_CALL ::= IDENTIFIER:v1 L_PAREN PARAMS:v2 R_PAREN                 {: RESULT = new SymbolFuncCall(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
                 ;
 
 PARAMS ::= OPERATION:v1 MORE_PARAMS:v2                                  {: RESULT = new SymbolParams(v1, v2, v1xleft.getLine(), v1xleft.getColumn()); :}
