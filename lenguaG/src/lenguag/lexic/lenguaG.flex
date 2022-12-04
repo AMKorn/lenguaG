@@ -230,7 +230,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {swapSym} 			{ tokens.add(yytext() + " : OP_SWAP"); return symbol(ParserSym.OP_SWAP); }
 
 // Non-reserved words
-{character}			{ tokens.add(yytext() + " : CHARACTER"); return symbol(ParserSym.CHARACTER, yytext().charAt(0)); }
+{character}			{ tokens.add(yytext() + " : CHARACTER"); return symbol(ParserSym.CHARACTER, yytext().charAt(1)); }
 {int_number}		{ 	try {
 							Integer value = parseNum(yytext()); 
 							tokens.add(yytext() + " : INTEGER"); 
