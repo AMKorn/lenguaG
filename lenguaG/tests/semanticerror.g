@@ -1,5 +1,8 @@
-val int i;
+val int i = 2;
 
 main {
-    i = 2;
+    while(i){
+
+    }
+    //i = 2;
 }

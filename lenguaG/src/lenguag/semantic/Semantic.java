@@ -492,6 +492,31 @@ public class Semantic {
     }
 
     private void manage(SymbolLoop loop){
+        /*
+         * Possible errors:
+         * 1. Condition not a viable value (can't be void or char)
+         */
+
+        // We must enter a new block
+        System.out.print("Hello World!");
+        symbolTable.enterBlock();
+        SymbolOperation cond = loop.getCondition();
+        manage(cond);
+        if (cond.type.getType() == Constants.TYPE_VOID || cond.type.getType() == Constants.TYPE_CHARACTER) {
+            reportError("Condition can't be of type " + cond.type, loop.line, loop.column);
+            // We don't return: we try to find errors in the instructions.
+        }
+
+        SymbolInstrs instrs = loop.getInstructions();
+        if (instrs != null) {
+            manage(instrs);
+        }
+
+        try {
+            symbolTable.exitBlock();
+        } catch (CompilerException ce) {
+            ce.printStackTrace();
+        }
         // TODO loop
     }
 
