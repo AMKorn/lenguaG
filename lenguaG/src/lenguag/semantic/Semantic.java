@@ -516,7 +516,6 @@ public class Semantic {
         } catch (CompilerException ce) {
             ce.printStackTrace();
         }
-        // TODO loop
     }
 
     /**
