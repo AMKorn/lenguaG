@@ -498,7 +498,6 @@ public class Semantic {
          */
 
         // We must enter a new block
-        System.out.print("Hello World!");
         symbolTable.enterBlock();
         SymbolOperation cond = loop.getCondition();
         manage(cond);
