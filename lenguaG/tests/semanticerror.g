@@ -1,7 +1,7 @@
-val int i = 2;
+val char i = '\n';
 
 main {
-    while(i){
+    while(i != '\n'){
 
     }
     //i = 2;
