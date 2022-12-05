@@ -3,6 +3,7 @@ package lenguag.semantic;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import java_cup.runtime.Symbol;
 import lenguag.*;
 import lenguag.LenguaGException.CompilerException;
 import lenguag.LenguaGException.SemanticException;
@@ -417,7 +418,26 @@ public class Semantic {
     }
 
     private void manage(SymbolIn in){
-        // TODO in
+        /*
+         * Possible errors:
+         * 2. Parameter not of supported type (which are int or char)
+         */
+        SymbolVar var = in.getVar();
+        int line = in.line, column = in.column;
+        if (var == null) {
+            reportError("Must have parameter of type int or char", line, column);
+            
+        }
+        manage(var);
+        if(var.isConstant){
+            reportError("Cannot store input in value " + var.getId(), line, column);
+            return;
+        }
+        int type = var.type.getType();
+        if(type != Constants.TYPE_INTEGER || type != Constants.TYPE_CHARACTER){
+            reportError("Unsupported parameter type: "+ var.type, line, column);
+            return;
+        }
     }
 
     /**
@@ -706,7 +726,20 @@ public class Semantic {
     }
 
     private void manage(SymbolOut out){
-        // TODO out
+        /* Possible  errors:
+         * 1. 0 parameters passed by
+         * 2. Parameter void type
+         */
+        SymbolOperation value = out.getValue();
+        int line=out.line,column=out.column;
+        if(value == null){
+            reportError("Parameter required for function out()", line, column);
+            return;
+        }
+        manage(value);
+        if(value.type.getType() == Constants.TYPE_VOID){
+            reportError("Unsupported Operation: Parameter of out() cannot be void type", line,column);
+        }
     }
 
     /**
