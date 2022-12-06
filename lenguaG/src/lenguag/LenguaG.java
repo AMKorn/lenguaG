@@ -21,7 +21,7 @@ import lenguag.LenguaGException.*;
  */
 public class LenguaG {
 
-    public static final boolean DEBUGGING = true;
+    public static final boolean DEBUGGING = false;
     public static final String OUTPUT_PATH = "../output/";
 
     public static String outputPath = OUTPUT_PATH;

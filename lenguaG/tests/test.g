@@ -1,11 +1,20 @@
-main {
-    int a = 0;
-    int b = 1;
-    if(a<b) {
-        out(a);
-    } else if(b>a) {
-        out(b);
-    } else {
-        return;
+int foo(){
+    int a = 1;
+    int b = 2;
+    if(a<b){
+        return 1;
+    } else if(a>b) {
+        return 2;
+        int c = a+b;
     }
+    int c = a+b;
+    return 0;
+}
+
+void bar(){
+    int a = 0;
+}
+
+main {
+    int a = foo();
 }
