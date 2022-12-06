@@ -3,7 +3,6 @@ package lenguag.semantic;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import java_cup.runtime.Symbol;
 import lenguag.*;
 import lenguag.LenguaGException.CompilerException;
 import lenguag.LenguaGException.SemanticException;
@@ -18,6 +17,7 @@ public class Semantic {
     // When checking if a function's parameters are correct, we use this stack to store the declared function's types.
     // We use a stack because we will be taking elements out every time we process them.
     private Stack<SymbolType> currentArgs;
+    private boolean returnFound;
 
     private ArrayList<String> errors;
     public boolean thereIsError = false;
@@ -268,6 +268,10 @@ public class Semantic {
             // We don't return: we try to find errors in the instructions.
         }
 
+        // If we are in a function, the inside of a for may or may not be accessed, so a return in there is not enough for us to make sure that a return was found.
+        // We must store the previous value and then restore it.
+        boolean prevReturn = returnFound;
+
         SymbolInstrs instrs = sFor.getInstructions();
         if(instrs != null) {
             manage(instrs);
@@ -279,6 +283,8 @@ public class Semantic {
         else if(end instanceof SymbolAssign) manage((SymbolAssign) end);
         else if(end instanceof SymbolSwap) manage((SymbolSwap) end);
         else if(end instanceof SymbolFuncCall) manage((SymbolFuncCall) end);
+
+        returnFound = prevReturn;
 
         try {
             symbolTable.exitBlock();
@@ -328,6 +334,8 @@ public class Semantic {
         currentFunction.changeType(Constants.TYPE_FUNCTION);
         // We manage the return type of the function.
         SymbolType type = func.getType();
+        // We set a found return to false
+        returnFound = false;
         // manage(type); No need to do anything
         currentFunction.setReturnType(type); // and set it in the description.
 
@@ -340,8 +348,10 @@ public class Semantic {
         if(instrs != null) manage(instrs);
 
         // After managing the instructions, we check if a return was found.
-        // TODO check if return was correct
-
+        if(!returnFound && type.getType() != Constants.TYPE_VOID){
+            reportError("Return for function " + name + " not found or inside branches which might not be accessed", func.line, func.column);
+        }
+        
         // We return to the previous ambit
         try{
             symbolTable.exitBlock();
@@ -394,6 +404,9 @@ public class Semantic {
         
         // We enter a new block
         symbolTable.enterBlock();
+        // We will need two booleans to check if a return was found inside of a branch, and whether a return statement will always be reached,
+        // and another to store the previous value just in case.
+        boolean returnIf = false, returnElse = false, prevReturn = returnFound;
 
         SymbolOperation cond = sIf.getCondition();
         manage(cond);
@@ -402,9 +415,13 @@ public class Semantic {
             // We don't return: we try to find errors in the instructions.
         }
 
+        // We manage the instructions. This may change returnFound.
         SymbolInstrs instrs = sIf.getInstructions();
         if(instrs != null) {
             manage(instrs);
+            // We store if a return was found inside of the if, and reset returnFound.
+            returnIf = returnFound;
+            returnFound = prevReturn;
         }
 
         try {
@@ -414,18 +431,28 @@ public class Semantic {
         }
 
         SymbolElse sElse = sIf.getElse();
-        if(sElse != null) manage(sElse);
+        if(sElse != null) {
+            // We manage the else operation, which may also change return found. 
+            manage(sElse);
+            returnElse = returnFound;
+            returnFound = prevReturn;
+        }
+
+        // there is a return if a return was found previously or if both branches of the if had a safe return found.
+        returnFound = returnFound || (returnIf && returnElse);
     }
 
     private void manage(SymbolIn in){
         /*
          * Possible errors:
-         * 2. Parameter not of supported type (which are int or char)
+         * 1. Variable is a constant
+         * 2. Variable type not supported (supported types are int or char)
          */
         SymbolVar var = in.getVar();
         int line = in.line, column = in.column;
         if (var == null) {
-            reportError("Must have parameter of type int or char", line, column);
+            reportError("Parameter expected for operation int()", line, column);
+            return;
             
         }
         manage(var);
@@ -486,6 +513,10 @@ public class Semantic {
      * @param instructions
      */
     private void manage(SymbolInstrs instructions){
+        if(returnFound){
+            // This is a warning, not a semantic error.
+            System.err.println("Warning: Instructions directly after return might not be accessed at position [line: " + instructions.line + ", column: " + instructions.column + "]");
+        }
         manage(instructions.getInstruction());
         SymbolInstrs next = instructions.getNext();
         if(next != null) manage(next);
@@ -526,10 +557,16 @@ public class Semantic {
             // We don't return: we try to find errors in the instructions.
         }
 
+        // The instructions inside a while may or may not be accessed, so if we are inside a function, reaching a return statement is not ensured even if there is one inside.
+        // We must store the previous value and then restore it.
+        boolean prevReturn = returnFound;
+
         SymbolInstrs instrs = loop.getInstructions();
         if (instrs != null) {
             manage(instrs);
         }
+
+        returnFound = prevReturn;
 
         try {
             symbolTable.exitBlock();
@@ -545,6 +582,9 @@ public class Semantic {
     private void manage(SymbolMain main){
         currentFunction = new SymbolDescription();
         currentFunction.changeType(Constants.TYPE_FUNCTION); // This sets the current function to a void function with 0 arguments
+
+        // Main cannot have a return.
+        returnFound = false;
 
         SymbolInstrs instrs = main.getInstructions();
         if(instrs != null) {
@@ -789,6 +829,8 @@ public class Semantic {
             reportError("Can't return " + value.type + ", function must return " + currentFunction.getReturnType(), sReturn.line, sReturn.column);
             return;
         }
+
+        returnFound = true;
     }
 
     /**
