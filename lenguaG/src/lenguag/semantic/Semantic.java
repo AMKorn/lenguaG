@@ -810,7 +810,6 @@ public class Semantic {
     private void manage(SymbolReturn sReturn){
         /* Possible errors:
          * 1. value's type does not equal the function return type.
-         * 2. //TODO check if return is inside an if
          */
         SymbolOperation value = sReturn.getValue();
 

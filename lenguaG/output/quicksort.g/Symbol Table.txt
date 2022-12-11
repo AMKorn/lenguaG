@@ -1,0 +1,28 @@
+Current level: 0
+
+Symbol Table: 
+partition:
+	[Type: function (Returns: int, args:[int[] array, int begin, int end])
+	Constant: false
+	Declared level: 0]
+end:
+	[Type: int
+	Constant: true
+	Value: 6
+	Declared level: 0]
+quickSort:
+	[Type: function (Returns: void, args:[int[] array, int begin, int end])
+	Constant: false
+	Declared level: 0]
+begin:
+	[Type: int
+	Constant: true
+	Value: 0
+	Declared level: 0]
+intArray:
+	[Type: list (Basetype: int, Depth: 1)
+	Constant: false
+	Declared level: 0]
+
+Ambit table:[0]
+Expansion table:[]

@@ -62,6 +62,7 @@ public class LenguaG {
             if(la.thereIsError()) 
                 throw new LexicException("Lexic analysis failed. Ending compilation process.");
             // If the lexic analysis was correct, we print the tokens to outputPath/tokens.txt
+            if(DEBUGGING) System.out.println("Writing tokens list...");
             writeFile(outputPath, "tokens.txt", la.writeTokens());
             
             if(parser.thereIsError || !(resultSyn instanceof SymbolBody)) 
@@ -70,10 +71,12 @@ public class LenguaG {
             // Semantic analysis
             Semantic sem = new Semantic();
             sem.manage((SymbolBody) resultSyn);
-            if(DEBUGGING) {
-                System.out.println(sem.symbolTable);
-                System.out.println(sem.getErrors());
+            if(sem.thereIsError){
+                System.err.println("Semantic analysis failed. Ending compilation process.");
+                return;
             }
+            if(DEBUGGING) System.out.println("Writing symbol table...");
+            writeFile(outputPath, "Symbol Table.txt", sem.symbolTable.toString());
             
         } catch (FileNotFoundException fnf) {
             // User error
@@ -108,10 +111,9 @@ public class LenguaG {
         File outf = new File(path);
         outf.mkdirs();
         // We write the file with the tokens
-        FileWriter lexicOut = new FileWriter(path + file);
-        lexicOut.write(text);
-        lexicOut.close();
-
+        FileWriter fileOut = new FileWriter(path + file);
+        fileOut.write(text);
+        fileOut.close();
     }
 
     static private String getOutputPath(String file) {

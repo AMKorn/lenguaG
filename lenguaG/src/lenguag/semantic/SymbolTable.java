@@ -85,7 +85,7 @@ public class SymbolTable {
 
     @Override
     public String toString(){
-        String st = "Current level: " + currentLevel + "\n";
+        String st = "Current level: " + currentLevel + "\n\n";
         //st += "Symbol Table: " + symbolTable.toString() + "\n";
         st += "Symbol Table: \n";
         StringBuilder sb = new StringBuilder();
@@ -97,7 +97,7 @@ public class SymbolTable {
             sb.append(next.getValue());
             sb.append("\n");
         }
-        st += sb;
+        st += sb + "\n";
         st += "Ambit table:" + ambitsTable.toString() + "\n";
         st += "Expansion table:" + expansionTable.toString() + "\n";
         return st;
