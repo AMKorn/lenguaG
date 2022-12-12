@@ -1,0 +1,14 @@
+Current level: 0
+
+Symbol Table: 
+function:
+	[Type: function (Returns: int, args:[int counter])
+	Constant: false
+	Declared level: 0]
+generalCounter:
+	[Type: int
+	Constant: false
+	Declared level: 0]
+
+Ambit table:[0]
+Expansion table:[]
