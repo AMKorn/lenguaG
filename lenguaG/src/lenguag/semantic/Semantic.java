@@ -6,7 +6,6 @@ import java.util.Stack;
 import lenguag.*;
 import lenguag.LenguaGException.CompilerException;
 import lenguag.LenguaGException.SemanticException;
-import lenguag.backend.*;
 import lenguag.syntactic.symbols.*;
 
 public class Semantic {
@@ -23,13 +22,9 @@ public class Semantic {
     private ArrayList<String> errors;
     public boolean thereIsError = false;
 
-    // Intermediate code generation
-    public IntermediateCodeGenerator c3a;
-
     public Semantic(){
         symbolTable = new SymbolTable();
         errors = new ArrayList<>();
-        c3a = new IntermediateCodeGenerator();
     }
 
     /**
