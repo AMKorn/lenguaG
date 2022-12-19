@@ -1,6 +1,7 @@
 val int begin = 0;
 val int end = 6;
 int[] intArray = [5, 9, 4, 6, 5, 3, 9];
+char[] string = "Esto es un string";
 
 int partition(int[] array, int begin, int end) {
     int pivot = array[end];

@@ -3,6 +3,7 @@ package lenguag.backend;
 import java.util.ArrayList;
 
 import lenguag.backend.Instruction.InstructionType;
+import lenguag.semantic.SymbolDescription;
 import lenguag.semantic.SymbolTable;
 import lenguag.syntactic.symbols.*;
 
@@ -68,6 +69,10 @@ public class IntermediateCodeGenerator {
      * @param dec
      */
     private void generate(SymbolDec dec){
+        SymbolDescription desc = symbolTable.getDescription(dec.variableName);
+        // if(dec.isConstant){
+        //     addInstruction(InstructionType.copy, dec.getValue().getSemanticValue().toString(), dec.variableName);
+        // }
         SymbolOperation value = dec.getValue();
         generate(value);
         String t = newVariable();
@@ -242,15 +247,18 @@ public class IntermediateCodeGenerator {
     }
 
     private void addInstruction(InstructionType instruction, String left, String right, String destination){
-        c3a.add(new Instruction(instruction, left, right, destination));
+        Instruction i = new Instruction(instruction, left, right, destination);
+        c3a.add(i);
     }
     
     private void addInstruction(InstructionType instruction, String left, String destination){
-        c3a.add(new Instruction(instruction, left, destination));
+        Instruction i = new Instruction(instruction, left, destination);
+        c3a.add(i);
     }
     
     private void addInstruction(InstructionType instruction, String destination){
-        c3a.add(new Instruction(instruction, destination));
+        Instruction i = new Instruction(instruction, destination);
+        c3a.add(i);
     }
 
     public String toString(){

@@ -14,6 +14,7 @@ import lenguag.syntactic.*;
 import lenguag.syntactic.symbols.*;
 import lenguag.semantic.*;
 import lenguag.LenguaGException.*;
+import lenguag.backend.IntermediateCodeGenerator;
 
 /**
  *
@@ -77,6 +78,10 @@ public class LenguaG {
             }
             if(DEBUGGING) System.out.println("Writing symbol table...");
             writeFile(outputPath, "Symbol Table.txt", sem.symbolTable.toString());
+            IntermediateCodeGenerator c3a = new IntermediateCodeGenerator(sem.symbolTable);
+            c3a.generate((SymbolBody) resultSyn);
+            if(DEBUGGING) System.out.println("Writing three address code...");
+            writeFile(outputPath, "c3a.txt", c3a.toString());
             
         } catch (FileNotFoundException fnf) {
             // User error

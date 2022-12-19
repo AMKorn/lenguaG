@@ -31,6 +31,13 @@ intArray : IDENTIFIER
 9 : INTEGER
 ] : R_BRACKET
 ; : ENDLINE
+char : TYPE_CHARACTER
+[ : L_BRACKET
+] : R_BRACKET
+string : IDENTIFIER
+= : EQUAL
+"Esto es un string" : STRING
+; : ENDLINE
 int : TYPE_INTEGER
 partition : IDENTIFIER
 ( : L_PAREN

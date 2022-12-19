@@ -11,3 +11,13 @@ Tabla de etiquetas, indexada por la etiqueta y apuntando al bloque basico que em
 De un bloque debemos poder encontrar el lider y el final y acceder a ellos desde el codigo 
 Ejemplo pg. 66 diapositivas
 
+
+
+COSAS PROBLEMÁTICAS:
+1. Cómo lidiar con las declaraciones tapadas sin la tabla de simbolos dinámica. 
+    -- El problema viene de volver a recorrer el árbol
+2. Gestionar arrays
+    -- Longitudes variables, operaciones con arrays...
+    -- Posibilidad: tener una variable junto al array que especifique la longitud. Cuando la longitud del array aumente más de lo especificado, guardarlo en otra posicion de memoria
+    -- Otra posibilidad: modificar la gramática y el semántico para que la longitud de los arrays no sea mutable. Irónicamente creo que esta podría ser la más fácil.
+3. 

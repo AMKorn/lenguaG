@@ -5,6 +5,10 @@ partition:
 	[Type: function (Returns: int, args:[int[] array, int begin, int end])
 	Constant: false
 	Declared level: 0]
+string:
+	[Type: list (Basetype: char, Depth: 1)
+	Constant: false
+	Declared level: 0]
 end:
 	[Type: int
 	Constant: true
