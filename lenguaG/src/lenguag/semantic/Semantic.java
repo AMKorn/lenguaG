@@ -860,6 +860,34 @@ public class Semantic {
     }
 
     /**
+     * Type: getType(), getArrayDepth(), getBaseType(), getLength().
+     * @param type
+     */
+    private void manage(SymbolType type){
+        /* Possible errors:
+         * 1. getLength() is not an integer
+         */
+        SymbolType baseType = type.getBaseType();
+        if(baseType != null) manage(baseType);
+
+        SymbolOperation length = type.getLength();
+        if(length == null) {
+            type.arrayLength = 0;
+            return;
+        }
+        manage(length);
+        if(length.type.getType() != Constants.TYPE_INTEGER){
+            reportError("Array length must be an integer ", type.line, type.column);
+            return;
+        }
+        if(!length.isConstant){
+            reportError("Array length must be a constant value.", type.line, type.column);
+            return;
+        }
+        type.arrayLength = (Integer) length.getSemanticValue();
+    }
+
+    /**
      * Value: getValue(), isConstant
      * @param value
      */
