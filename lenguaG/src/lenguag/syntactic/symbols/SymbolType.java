@@ -62,13 +62,14 @@ public class SymbolType extends SymbolBase {
 
     @Override
     public String toString(){
-        if(type == Constants.TYPE_ARRAY) return baseType + "[]";
+        if(type == Constants.TYPE_ARRAY) return baseType + "[" + arrayLength + "]";
         return Constants.getTypeName(type);
     }
 
     public boolean equals(SymbolType other){
         if(this.type != other.type) return false;
         if(this.arrayDepth != other.arrayDepth) return false;
+        // if(this.arrayLength != Constants.UNKNOWN && this.arrayLength != other.arrayLength) return false;
         if(arrayDepth > 1) return this.baseType.equals(other.baseType);
         return true;
     }

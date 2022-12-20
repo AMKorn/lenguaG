@@ -136,10 +136,14 @@ public class Semantic {
             + rSide.type + " cannot be cast into " + Constants.getTypeName(varDesc.getType()), assign.line, assign.column);
             return;
         }
-        if(rSide.type.getType() == Constants.TYPE_ARRAY && !rSide.type.getBaseType().equals(varDesc.getBaseType())){
-            // Both arrays, but from different base type or dimensions
-            reportError("Type incongruency with '" + var + "': lists of different base types or dimensions", assign.line, assign.column);
-            return; 
+        // Array declaration
+        if(rSide.type.getType() == Constants.TYPE_ARRAY){
+            if(!varDesc.getBaseType().equals(rSide.type.getBaseType())){
+                // Arrays, but from different base type or dimensions
+                reportError("Type incongruency with '" + var + "': lists of different base types or dimensions", assign.line, assign.column);
+                return;
+            }
+            varDesc.setLength(rSide.type.arrayLength);
         }
     }
 
@@ -173,15 +177,19 @@ public class Semantic {
                 + value.type + " cannot be cast into " + type, dec.line, dec.column);
                 return;
             }
-            if(type.getType() == Constants.TYPE_ARRAY && !type.getBaseType().equals(value.type.getBaseType())){
-                // Arrays, but from different base type or dimensions
-                reportError("Type incongruency with '" + dec.variableName + "': lists of different base types or dimensions", dec.line, dec.column);
-                return;
-            }
             // Constant declared, but value is variable.
             if(dec.isConstant && !value.isConstant){
                 reportError("Cannot assign variable value to constant '" + dec.variableName + "'", dec.line, dec.column);
                 return;
+            }
+            // Array declaration
+            if(type.getType() == Constants.TYPE_ARRAY){
+                if(!type.getBaseType().equals(value.type.getBaseType())){
+                    // Arrays, but from different base type or dimensions
+                    reportError("Type incongruency with '" + dec.variableName + "': lists of different base types or dimensions", dec.line, dec.column);
+                    return;
+                }
+                type.arrayLength = value.type.arrayLength;
             }
         } else if(dec.isConstant){
             // Set as constant but no value given
@@ -669,8 +677,11 @@ public class Semantic {
                 }
                 // list + an item of the list's subtype
                 if((lValue.type.getType() == Constants.TYPE_ARRAY) && (lValue.type.getBaseType().getType() == rValue.type.getType())) {
-                    // We accept. Result is same type as lValue
-                    operation.type = lValue.type;
+                    // We accept. Result is same type as lValue, but the length is incremented by one.
+                    // We create a different type so as to not modify the original type (reference)
+                    operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
+                    operation.type.arrayLength++;
+                    //operation.type = lValue.type;
                     break;
                 }
                 // list + list of same baseType
@@ -678,7 +689,9 @@ public class Semantic {
                     && (rValue.type.getType() == Constants.TYPE_ARRAY)
                     && (lValue.type.getBaseType() == rValue.type.getBaseType())) {
                         // We accept. Result is same type as either list.
-                        operation.type = lValue.type;
+                        operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
+                        operation.type.arrayLength++;
+                        // operation.type = lValue.type;
                         break;
                 }
                 // We do not accept.
@@ -880,6 +893,7 @@ public class Semantic {
             SymbolList list = (SymbolList) val;
             manage(list);
             value.type = list.type;
+            value.type.arrayLength = list.getLength();
             value.isConstant = false;
         } else if(val instanceof Integer) value.type = new SymbolType(Constants.TYPE_INTEGER);
         else if(val instanceof Boolean) value.type = new SymbolType(Constants.TYPE_BOOLEAN);

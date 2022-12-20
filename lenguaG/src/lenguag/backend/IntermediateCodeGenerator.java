@@ -73,11 +73,11 @@ public class IntermediateCodeGenerator {
         // if(dec.isConstant){
         //     addInstruction(InstructionType.copy, dec.getValue().getSemanticValue().toString(), dec.variableName);
         // }
-        SymbolOperation value = dec.getValue();
-        generate(value);
-        String t = newVariable();
-        addInstruction(InstructionType.copy, value.r, t);
-        dec.r = t;
+        // SymbolOperation value = dec.getValue();
+        // generate(value);
+        // String t = newVariable();
+        // addInstruction(InstructionType.copy, value.r, t);
+        // dec.r = t;
     }
 
     /**

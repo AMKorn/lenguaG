@@ -27,6 +27,7 @@ public class SymbolList extends SymbolBase {
         this.value = value;
         this.contList = contList;
         length = contList.length+1;
+        type.arrayLength = length;
     }
 
     public SymbolList(String s, int line, int column){

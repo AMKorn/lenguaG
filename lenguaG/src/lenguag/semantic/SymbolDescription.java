@@ -11,6 +11,7 @@ import lenguag.syntactic.symbols.*;
  */
 public class SymbolDescription {
 
+    // TODO fix type
     // The variable's type
     private int type;
     private Object value;
@@ -45,6 +46,7 @@ public class SymbolDescription {
         if(this.type == Constants.TYPE_ARRAY){
             baseType = type.getBaseType();
             depth = type.getArrayDepth();
+            length = type.arrayLength;
         }
     }
 
@@ -61,6 +63,7 @@ public class SymbolDescription {
         if(this.type == Constants.TYPE_ARRAY){
             baseType = new SymbolType();
             depth = 0;
+            length = 0;
         } else if(this.type == Constants.TYPE_FUNCTION){
             nArgs = 0;
             returnType = new SymbolType(Constants.TYPE_VOID);
@@ -145,7 +148,7 @@ public class SymbolDescription {
             for(int i = 1; i < depth; i++){
                 bt = bt.getBaseType();
             }
-            sd += " (Basetype: " + Constants.getTypeName(bt.getType()) + ", Depth: " + depth + ")";
+            sd += " (Basetype: " + Constants.getTypeName(bt.getType()) + ", Length: " + length + ", Depth: " + depth + ")";
         } else if(type == Constants.TYPE_FUNCTION) sd += " (Returns: " + returnType + ", args:" + args + ")";
         sd += "\n\tConstant: " + isConstant;
         if(isConstant) sd += "\n\tValue: " + value;

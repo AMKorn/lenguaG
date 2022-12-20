@@ -1,12 +1,12 @@
 Current level: 0
 
 Symbol Table: 
-partition:
-	[Type: function (Returns: int, args:[int[] array, int begin, int end])
+a:
+	[Type: list (Basetype: int, Length: 2, Depth: 2)
 	Constant: false
 	Declared level: 0]
-string:
-	[Type: list (Basetype: char, Depth: 1)
+partition:
+	[Type: function (Returns: int, args:[int[0] array, int begin, int end])
 	Constant: false
 	Declared level: 0]
 end:
@@ -15,7 +15,7 @@ end:
 	Value: 6
 	Declared level: 0]
 quickSort:
-	[Type: function (Returns: void, args:[int[] array, int begin, int end])
+	[Type: function (Returns: void, args:[int[0] array, int begin, int end])
 	Constant: false
 	Declared level: 0]
 begin:
@@ -24,7 +24,7 @@ begin:
 	Value: 0
 	Declared level: 0]
 intArray:
-	[Type: list (Basetype: int, Depth: 1)
+	[Type: list (Basetype: int, Length: 7, Depth: 1)
 	Constant: false
 	Declared level: 0]
 
