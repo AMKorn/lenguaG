@@ -1,11 +1,3 @@
-/**
- * Asignatura: 21780 - Compiladores
- * Miembros:
- * 	- Román Colom, Marc
- * 	- Korn, Andreas Manuel
- * 	- Vilella Candia, Joan 
- */
-
 package lenguag.syntactic.symbols;
 
 import lenguag.Constants;
@@ -25,7 +17,7 @@ public class SymbolType extends SymbolBase {
     private int arrayDepth;
 
     // Variables for semantic control
-    public int arrayLength; // The length of the current level of the array.
+    public int arrayLength = Constants.UNKNOWN; // The length of the current level of the array.
 
     public SymbolType(int type, SymbolType baseType){
         super("Type", 0);
@@ -62,14 +54,15 @@ public class SymbolType extends SymbolBase {
 
     @Override
     public String toString(){
-        if(type == Constants.TYPE_ARRAY) return baseType + "[" + arrayLength + "]";
+        if(type == Constants.TYPE_ARRAY) return baseType + "[" + (arrayLength!=Constants.UNKNOWN ? arrayLength : "") + "]";
         return Constants.getTypeName(type);
     }
 
     public boolean equals(SymbolType other){
         if(this.type != other.type) return false;
         if(this.arrayDepth != other.arrayDepth) return false;
-        // if(this.arrayLength != Constants.UNKNOWN && this.arrayLength != other.arrayLength) return false;
+        // if(this.arrayLength != other.arrayLength) return false;
+        if(this.arrayLength != Constants.UNKNOWN && this.arrayLength != other.arrayLength) return false;
         if(arrayDepth > 1) return this.baseType.equals(other.baseType);
         return true;
     }

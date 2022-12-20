@@ -6,7 +6,7 @@ a:
 	Constant: false
 	Declared level: 0]
 partition:
-	[Type: function (Returns: int, args:[int[0] array, int begin, int end])
+	[Type: function (Returns: int, args:[int[] array, int begin, int end])
 	Constant: false
 	Declared level: 0]
 end:
@@ -15,7 +15,7 @@ end:
 	Value: 6
 	Declared level: 0]
 quickSort:
-	[Type: function (Returns: void, args:[int[0] array, int begin, int end])
+	[Type: function (Returns: void, args:[int[] array, int begin, int end])
 	Constant: false
 	Declared level: 0]
 begin:

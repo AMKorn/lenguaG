@@ -1,3 +1,10 @@
+/**
+ * Asignatura: 21780 - Compiladores
+ * Miembros:
+ * 	- Korn, Andreas Manuel
+ * 	- Román Colom, Marc
+ * 	- Vilella Candía, Joan 
+ */
 package lenguag.backend;
 
 import java.util.ArrayList;

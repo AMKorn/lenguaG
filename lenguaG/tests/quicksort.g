@@ -33,6 +33,7 @@ void quickSort (int[] array, int begin, int end) {
 }
 
 main {
+    intArray = [5, 9, 4, 6, 5, 3];
     quickSort(intArray, begin, end);
     out("El array ordenado es: ");
     out(intArray);

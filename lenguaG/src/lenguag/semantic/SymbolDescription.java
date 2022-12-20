@@ -11,7 +11,7 @@ import lenguag.syntactic.symbols.*;
  */
 public class SymbolDescription {
 
-    // TODO fix type
+    // FIXME types
     // The variable's type
     private int type;
     private Object value;

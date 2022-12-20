@@ -1,3 +1,10 @@
+/**
+ * Asignatura: 21780 - Compiladores
+ * Miembros:
+ * 	- Korn, Andreas Manuel
+ * 	- Román Colom, Marc
+ * 	- Vilella Candía, Joan 
+ */
 package lenguag.semantic;
 
 import java.util.ArrayList;
@@ -143,7 +150,6 @@ public class Semantic {
                 reportError("Type incongruency with '" + var + "': lists of different base types or dimensions", assign.line, assign.column);
                 return;
             }
-            varDesc.setLength(rSide.type.arrayLength);
         }
     }
 
@@ -189,7 +195,8 @@ public class Semantic {
                     reportError("Type incongruency with '" + dec.variableName + "': lists of different base types or dimensions", dec.line, dec.column);
                     return;
                 }
-                type.arrayLength = value.type.arrayLength;
+                // If it's an array and no dimension errors were found we can just copy the type
+                type = value.type;
             }
         } else if(dec.isConstant){
             // Set as constant but no value given
