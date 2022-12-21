@@ -8,6 +8,7 @@
 package lenguag.backend;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import lenguag.backend.Instruction.InstructionType;
 import lenguag.semantic.SymbolDescription;
@@ -17,6 +18,7 @@ import lenguag.syntactic.symbols.*;
 public class IntermediateCodeGenerator {
 
     private ArrayList<Instruction> c3a;
+    private Hashtable<String, Integer> eList;
 
     private SymbolTable symbolTable;
     
@@ -76,15 +78,15 @@ public class IntermediateCodeGenerator {
      * @param dec
      */
     private void generate(SymbolDec dec){
-        SymbolDescription desc = symbolTable.getDescription(dec.variableName);
-        // if(dec.isConstant){
-        //     addInstruction(InstructionType.copy, dec.getValue().getSemanticValue().toString(), dec.variableName);
-        // }
-        // SymbolOperation value = dec.getValue();
-        // generate(value);
-        // String t = newVariable();
-        // addInstruction(InstructionType.copy, value.r, t);
-        // dec.r = t;
+        if(dec.isConstant){
+            addInstruction(InstructionType.copy, dec.getValue().getSemanticValue().toString(), dec.variableName);
+            return;
+        }
+        SymbolOperation value = dec.getValue();
+        generate(value);
+        String t = newVariable();
+        addInstruction(InstructionType.copy, value.r, t);
+        dec.r = t;
     }
 
     /**
@@ -95,7 +97,12 @@ public class IntermediateCodeGenerator {
         // No code is generated here, equal to its semantic.manage() equivalent
         SymbolBase dec = decs.getDeclaration();
         if(dec instanceof SymbolDec) generate((SymbolDec) dec);
-        else if (dec instanceof SymbolFunc) generate((SymbolFunc) dec);
+        else if (dec instanceof SymbolFunc) {
+            String eContDecs = newTag();
+            addInstruction(InstructionType.go_to, eContDecs); // We must skip the function during executions unless called
+            generate((SymbolFunc) dec);
+            addInstruction(InstructionType.skip, eContDecs);
+        }
         
         SymbolDecs nextDecs = decs.getNext();
         if (nextDecs != null) generate(nextDecs);
@@ -186,7 +193,26 @@ public class IntermediateCodeGenerator {
      * @param operand
      */
     private void generate(SymbolOperand operand){
+        if(operand.isLeaf()) {
+            SymbolValue value = (SymbolValue) operand.getValue();
+            generate(value);
+            operand.type = value.type;
+            if(operand.isConstant = value.isConstant) {operand.setSemanticValue(value.getSemanticValue());}
+        } else {
+            SymbolOperation operation = (SymbolOperation) operand.getValue();
+            generate(operation);
+            operand.type = operation.type;
+            if(operand.isConstant = operation.isConstant) operand.setSemanticValue(operation.getSemanticValue());
+        }
         
+        if(operand.isConstant){
+            if(operand.isNegated()){
+                if(operand.getSemanticValue() instanceof Integer)
+                    operand.setSemanticValue(-(Integer) operand.getSemanticValue());
+                else if(operand.getSemanticValue() instanceof Boolean)
+                    operand.setSemanticValue(!(Boolean) operand.getSemanticValue());
+            }
+        }
     }
 
     /**
@@ -194,7 +220,12 @@ public class IntermediateCodeGenerator {
      * @param operation
     */
     private void generate(SymbolOperation operation){
-        
+        SymbolOperand lValue = operation.getLValue();
+        generate(lValue);
+        SymbolOp op = operation.getOperation();
+        SymbolOperand rValue = operation.getRValue();
+        if(op == null || rValue == null) return;
+        generate(rValue);
     }
 
     /**
@@ -234,7 +265,28 @@ public class IntermediateCodeGenerator {
      * @param value
      */
     private void generate(SymbolValue value){
-        
+        // TODO
+        // Object val = value.getSemanticValue();
+        // if(val instanceof SymbolVar) {
+        //     SymbolVar var = (SymbolVar) val;
+        //     manage(var);
+        //     value.type = var.type;
+        //     value.isConstant = var.isConstant;
+        //     if(value.isConstant) value.setSemanticValue(var.getSemanticValue());
+        // } else if(val instanceof SymbolFuncCall) {
+        //     SymbolFuncCall fcall = (SymbolFuncCall) val;
+        //     manage(fcall);
+        //     value.type = fcall.type;
+        //     value.isConstant = false;
+        // } else if(val instanceof SymbolList) {
+        //     SymbolList list = (SymbolList) val;
+        //     manage(list);
+        //     value.type = list.type;
+        //     value.type.arrayLength = list.getLength();
+        //     value.isConstant = false;
+        // } else if(val instanceof Integer) value.type = new SymbolType(Constants.TYPE_INTEGER);
+        // else if(val instanceof Boolean) value.type = new SymbolType(Constants.TYPE_BOOLEAN);
+        // else if(val instanceof Character) value.type = new SymbolType(Constants.TYPE_CHARACTER);
     }
 
     /**

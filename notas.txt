@@ -18,6 +18,11 @@ COSAS PROBLEMÁTICAS:
     -- El problema viene de volver a recorrer el árbol
 2. Gestionar arrays
     -- Longitudes variables, operaciones con arrays...
-    -- Posibilidad: tener una variable junto al array que especifique la longitud. Cuando la longitud del array aumente más de lo especificado, guardarlo en otra posicion de memoria
-    -- Otra posibilidad: modificar la gramática y el semántico para que la longitud de los arrays no sea mutable. Irónicamente creo que esta podría ser la más fácil.
-3. 
+    -- Posibilidad: tener una variable junto al array que especifique la longitud.
+                    No permitir operaciones de concatenacion. Sorry habria estado guay pero es jodido
+
+                    
+generate(x);
+String t = newVariable();
+addInstruction([¿?], x.r, t);
+dec.r = t;
