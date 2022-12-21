@@ -2,7 +2,7 @@ Current level: 0
 
 Symbol Table: 
 a:
-	[Type: list (Basetype: int, Length: 2, Depth: 2)
+	[Type: int[7][2]
 	Constant: false
 	Declared level: 0]
 partition:
@@ -24,7 +24,7 @@ begin:
 	Value: 0
 	Declared level: 0]
 intArray:
-	[Type: list (Basetype: int, Length: 7, Depth: 1)
+	[Type: int[7]
 	Constant: false
 	Declared level: 0]
 

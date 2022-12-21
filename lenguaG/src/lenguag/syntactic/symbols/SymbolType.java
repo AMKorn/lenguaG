@@ -40,6 +40,10 @@ public class SymbolType extends SymbolBase {
         arrayDepth = 0;
     }
 
+    public boolean isType(int type){
+        return this.type == type;
+    }
+
     public int getArrayDepth(){
         return arrayDepth;
     }
@@ -48,6 +52,12 @@ public class SymbolType extends SymbolBase {
         return type;
     }
 
+    public void setBaseType(SymbolType baseType){
+        if(type != Constants.TYPE_ARRAY) throw new RuntimeException(" !! Compiler error");
+        this.baseType = baseType;
+        arrayDepth = baseType.arrayDepth + 1;
+    }
+    
     public SymbolType getBaseType(){
         return baseType;
     }
