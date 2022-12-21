@@ -65,7 +65,7 @@ public class Semantic {
          */
         String identifier = arg.identifier;
         SymbolType type = arg.getType();
-        if(type.getType() == Constants.TYPE_VOID) {
+        if(type.isType(Constants.TYPE_VOID)) {
             reportError("Function argument '" + identifier + "' cannot be of type void", arg.line, arg.column);
             return;
         }
@@ -107,7 +107,7 @@ public class Semantic {
             return;
         }
         manage(index);
-        if(index.type.getType() != Constants.TYPE_INTEGER){
+        if(!index.type.isType(Constants.TYPE_INTEGER)){
             reportError("Array must be indexed by an integer value", arrSuff.line, arrSuff.column);
             return;
         }
@@ -137,14 +137,14 @@ public class Semantic {
         }
         SymbolOperation rSide = assign.getRightSide();
         manage(rSide);
-        if(rSide.type.getType() != varDesc.getType()){
+        if(!rSide.type.isType(varDesc.getType())){
             // Different types
             reportError("Type incongruency with '" + var + "': "
             + rSide.type + " cannot be cast into " + Constants.getTypeName(varDesc.getType()), assign.line, assign.column);
             return;
         }
         // Array declaration
-        if(rSide.type.getType() == Constants.TYPE_ARRAY){
+        if(rSide.type.isType(Constants.TYPE_ARRAY)){
             if(!varDesc.getBaseType().equals(rSide.type.getBaseType())){
                 // Arrays, but from different base type or dimensions
                 reportError("Type incongruency with '" + var + "': lists of different base types or dimensions", assign.line, assign.column);
@@ -167,7 +167,7 @@ public class Semantic {
          */
         SymbolType type = dec.getType();
         // If type is void, error
-        if(type.getType() == Constants.TYPE_VOID){
+        if(type.isType(Constants.TYPE_VOID)){
             reportError("Tried to declare variable '" + dec.variableName + "' as type void", dec.line, dec.column);
             return;
         }
@@ -177,7 +177,7 @@ public class Semantic {
         if(value != null) {
             manage(value);
             // Incompatible types
-            if(type.getType() != value.type.getType()) {
+            if(!type.isType(value.type.getType())) {
                 // Two different types
                 reportError("Type incongruency with '" + dec.variableName + "': "
                 + value.type + " cannot be cast into " + type, dec.line, dec.column);
@@ -189,7 +189,7 @@ public class Semantic {
                 return;
             }
             // Array declaration
-            if(type.getType() == Constants.TYPE_ARRAY){
+            if(type.isType(Constants.TYPE_ARRAY)){
                 if(!type.getBaseType().equals(value.type.getBaseType())){
                     // Arrays, but from different base type or dimensions
                     reportError("Type incongruency with '" + dec.variableName + "': lists of different base types or dimensions", dec.line, dec.column);
@@ -278,7 +278,7 @@ public class Semantic {
 
         SymbolOperation cond = sFor.getCondition();
         manage(cond);
-        if(cond.type.getType() == Constants.TYPE_VOID || cond.type.getType() == Constants.TYPE_CHARACTER){
+        if(cond.type.isType(Constants.TYPE_VOID)|| cond.type.isType(Constants.TYPE_CHARACTER)){
             reportError("Condition can't be of type " + cond.type, sFor.line, sFor.column);
             // We don't return: we try to find errors in the instructions.
         }
@@ -363,7 +363,7 @@ public class Semantic {
         if(instrs != null) manage(instrs);
 
         // After managing the instructions, we check if a return was found.
-        if(!returnFound && type.getType() != Constants.TYPE_VOID){
+        if(!returnFound && !type.isType(Constants.TYPE_VOID)){
             reportError("Return for function " + name + " not found or inside branches which might not be accessed", func.line, func.column);
         }
         
@@ -425,7 +425,7 @@ public class Semantic {
 
         SymbolOperation cond = sIf.getCondition();
         manage(cond);
-        if(cond.type.getType() == Constants.TYPE_VOID || cond.type.getType() == Constants.TYPE_CHARACTER){
+        if(cond.type.isType(Constants.TYPE_VOID) || cond.type.isType(Constants.TYPE_CHARACTER)){
             reportError("Condition can't be of type " + cond.type, sIf.line, sIf.column);
             // We don't return: we try to find errors in the instructions.
         }
@@ -550,8 +550,8 @@ public class Semantic {
         SymbolList next = list.getNext();
         if(next != null && next.getValue() != null) {
             manage(next);
-            if(value.type.getType() != next.type.getBaseType().getType()){
-                reportError("Cannot declare an array with heterogeneous types.", list.line, list.column);
+            if(!value.type.isType(next.type.getBaseType().getType())){
+                reportError("Cannot declare an array with heterogeneous types", list.line, list.column);
             }
         }
         list.type = new SymbolType(Constants.TYPE_ARRAY, value.type);
@@ -567,7 +567,7 @@ public class Semantic {
         symbolTable.enterBlock();
         SymbolOperation cond = loop.getCondition();
         manage(cond);
-        if (cond.type.getType() == Constants.TYPE_VOID || cond.type.getType() == Constants.TYPE_CHARACTER) {
+        if (cond.type.isType(Constants.TYPE_VOID) || cond.type.isType(Constants.TYPE_CHARACTER)) {
             reportError("Condition can't be of type " + cond.type, loop.line, loop.column);
             // We don't return: we try to find errors in the instructions.
         }
@@ -676,14 +676,14 @@ public class Semantic {
             case Constants.ADD:
                 // Supported operations
                 // int + int
-                if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
+                if(((lValue.type.isType(Constants.TYPE_INTEGER)) && (rValue.type.isType(Constants.TYPE_INTEGER)))){
                     // We accept. Result is int (same type as lValue)
                     operation.type = lValue.type;
                     if(operation.isConstant) operation.setSemanticValue((Integer) lValue.getSemanticValue() + (Integer) rValue.getSemanticValue());
                     break; // Exit switch case
                 }
                 // list + an item of the list's subtype
-                if((lValue.type.getType() == Constants.TYPE_ARRAY) && (lValue.type.getBaseType().getType() == rValue.type.getType())) {
+                if((lValue.type.isType(Constants.TYPE_ARRAY)) && (lValue.type.getBaseType().isType(rValue.type.getType()))) {
                     // We accept. Result is same type as lValue, but the length is incremented by one.
                     // We create a different type so as to not modify the original type (reference)
                     operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
@@ -692,8 +692,8 @@ public class Semantic {
                     break;
                 }
                 // list + list of same baseType
-                if((lValue.type.getType() == Constants.TYPE_ARRAY) 
-                    && (rValue.type.getType() == Constants.TYPE_ARRAY)
+                if((lValue.type.isType(Constants.TYPE_ARRAY)) 
+                    && (rValue.type.isType(Constants.TYPE_ARRAY))
                     && (lValue.type.getBaseType() == rValue.type.getBaseType())) {
                         // We accept. Result is same type as either list.
                         operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
@@ -706,7 +706,7 @@ public class Semantic {
                 return;
             case Constants.OR:
                 // Only supported operation: bool or bool
-                if(((lValue.type.getType() == Constants.TYPE_BOOLEAN) && (rValue.type.getType() == Constants.TYPE_BOOLEAN))){
+                if(((lValue.type.isType(Constants.TYPE_BOOLEAN)) && (rValue.type.isType(Constants.TYPE_BOOLEAN)))){
                     // We accept. Result is boolean (same type as lValue)
                     operation.type = lValue.type;
                     if(operation.isConstant){
@@ -719,7 +719,7 @@ public class Semantic {
                 break;
             case Constants.AND:
                 // Only supported operation: bool (op) bool
-                if(((lValue.type.getType() == Constants.TYPE_BOOLEAN) && (rValue.type.getType() == Constants.TYPE_BOOLEAN))){
+                if(((lValue.type.isType(Constants.TYPE_BOOLEAN)) && (rValue.type.isType(Constants.TYPE_BOOLEAN)))){
                     // We accept. Result is boolean (same type as lValue)
                     operation.type = lValue.type;
                     if(operation.isConstant){
@@ -734,7 +734,7 @@ public class Semantic {
                 // Left to check: SUB, PROD, DIV, MOD. They follow the same rules, so they are here in order to recycle code and avoid making many comparisons.
                 if(!op.isRelational){
                     // Only supported operation: int (op) int
-                    if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
+                    if(((lValue.type.isType(Constants.TYPE_INTEGER)) && (rValue.type.isType(Constants.TYPE_INTEGER)))){
                         // We accept. Result is int (same type as lValue)
                         operation.type = lValue.type;
                         if(operation.isConstant){
@@ -758,7 +758,7 @@ public class Semantic {
                 } else {
                     // Relational operation
                     // Only supported operation: int (op_rel) int
-                    if(((lValue.type.getType() == Constants.TYPE_INTEGER) && (rValue.type.getType() == Constants.TYPE_INTEGER))){
+                    if(((lValue.type.isType(Constants.TYPE_INTEGER)) && (rValue.type.isType(Constants.TYPE_INTEGER)))){
                         // We accept. Result is boolean
                         operation.type = new SymbolType(Constants.TYPE_BOOLEAN);
                         if(operation.isConstant){
@@ -797,7 +797,7 @@ public class Semantic {
             return;
         }
         manage(value);
-        if(value.type.getType() == Constants.TYPE_VOID){
+        if(value.type.isType(Constants.TYPE_VOID)){
             reportError("Unsupported Operation: Parameter of out() cannot be void type", line,column);
         }
     }
@@ -834,7 +834,7 @@ public class Semantic {
         SymbolOperation value = sReturn.getValue();
 
         if(value == null){
-            if(currentFunction.getReturnType().getType() != Constants.TYPE_VOID){
+            if(!currentFunction.getReturnType().isType(Constants.TYPE_VOID)){
                 reportError("Function must return " + currentFunction.getReturnType(), sReturn.line, sReturn.column);
                 return;
             }
