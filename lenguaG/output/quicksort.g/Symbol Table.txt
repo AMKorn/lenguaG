@@ -5,6 +5,10 @@ a:
 	[Type: int[7][2]
 	Constant: false
 	Declared level: 0]
+c:
+	[Type: char
+	Constant: false
+	Declared level: 0]
 partition:
 	[Type: function (Returns: int, args:[int[] array, int begin, int end])
 	Constant: false

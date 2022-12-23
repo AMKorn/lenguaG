@@ -1,7 +1,6 @@
-	begin = 0
-	end = 6
-	t0 = null
-	t1 = null
+	t0 = 0
+	t1 = 6
+	t2 = 99
 	goto e0
 e0: skip
 	goto e1

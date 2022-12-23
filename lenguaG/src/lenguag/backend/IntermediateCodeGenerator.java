@@ -10,8 +10,10 @@ package lenguag.backend;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import lenguag.backend.Instruction.InstructionType;
+import lenguag.Constants;
 import lenguag.syntactic.symbols.*;
+import lenguag.syntactic.symbols.SymbolInstr.instructionType;
+import lenguag.backend.Instruction.InstructionType;
 
 public class IntermediateCodeGenerator {
 
@@ -21,11 +23,14 @@ public class IntermediateCodeGenerator {
     private Hashtable<String, ProcTableEntry> procedureTable;
     private Hashtable<String, Integer> eList;
     
+    private int depth;
     private int numE;
     private int numT;
    
     public IntermediateCodeGenerator(){
         c3a = new ArrayList<>();
+        variableTable = new Hashtable<>();
+        procedureTable = new Hashtable<>();
         numE = 0;
         numT = 0;
     }
@@ -76,15 +81,18 @@ public class IntermediateCodeGenerator {
      * @param dec
      */
     private void generate(SymbolDec dec){
+        String t;
         if(dec.isConstant){
-            addInstruction(InstructionType.copy, dec.getValue().getSemanticValue().toString(), dec.variableName);
+            t = newVariable();
+            addInstruction(InstructionType.copy, dec.getValue().getSemanticValue().toString(), t);
+            replaceVarTableKey(t, dec.variableName);
             return;
         }
         SymbolOperation value = dec.getValue();
         generate(value);
-        String t = newVariable();
-        addInstruction(InstructionType.copy, value.r, t);
-        dec.r = t;
+        t = value.reference;
+        // addInstruction(InstructionType.copy, value.reference, t);
+        dec.reference = t;
     }
 
     /**
@@ -171,7 +179,9 @@ public class IntermediateCodeGenerator {
      * @param list
      */
     private void generate(SymbolList list){
+        String t = newVariable();
         
+        list.reference = t;
     }
 
     private void generate(SymbolLoop loop){
@@ -191,26 +201,59 @@ public class IntermediateCodeGenerator {
      * @param operand
      */
     private void generate(SymbolOperand operand){
-        if(operand.isLeaf()) {
-            SymbolValue value = (SymbolValue) operand.getValue();
-            generate(value);
-            operand.type = value.type;
-            if(operand.isConstant = value.isConstant) {operand.setSemanticValue(value.getSemanticValue());}
-        } else {
+        String t = "";
+
+        Object value = operand.getValue();
+        System.out.println(value.toString());
+
+        if(!operand.isLeaf()){
             SymbolOperation operation = (SymbolOperation) operand.getValue();
             generate(operation);
-            operand.type = operation.type;
-            if(operand.isConstant = operation.isConstant) operand.setSemanticValue(operation.getSemanticValue());
+            t = operation.reference;
+        } else if(value instanceof SymbolValue){
+            SymbolValue sValue = (SymbolValue) operand.getValue();
+            generate(sValue);
+            t = sValue.reference;
+        } else if(value instanceof Integer){
+            t = newVariable();
+            addInstruction(InstructionType.copy, value.toString(), t);
+            variableTable.get(t).occupation = Constants.INTEGER_BYTES;
+        } else if(value instanceof Character){
+            t = newVariable();
+            char cVal = (Character) value;
+            addInstruction(InstructionType.copy, "" + (int) cVal, t);
+        } else if(value instanceof Boolean){
+            t = newVariable();
+            boolean bVal = (Boolean) value;
+            addInstruction(InstructionType.copy, "" + (bVal ? Constants.TRUE : Constants.FALSE), t);
         }
+
+        operand.reference = t;
+        // if(operand.isConstant) {
+        //     String t = newVariable();
+        //     addInstruction(InstructionType.copy, operand.getSemanticValue().toString(), t);
+        // }
+
+        // if(operand.isLeaf()) {
+        //     SymbolValue value = (SymbolValue) operand.getValue();
+        //     generate(value);
+        //     operand.type = value.type;
+        //     if(operand.isConstant = value.isConstant) {operand.setSemanticValue(value.getSemanticValue());}
+        // } else if(operand.getValue() instanceof SymbolOperation){
+        //     SymbolOperation operation = (SymbolOperation) operand.getValue();
+        //     generate(operation);
+        //     operand.type = operation.type;
+        //     if(operand.isConstant = operation.isConstant) operand.setSemanticValue(operation.getSemanticValue());
+        // }
         
-        if(operand.isConstant){
-            if(operand.isNegated()){
-                if(operand.getSemanticValue() instanceof Integer)
-                    operand.setSemanticValue(-(Integer) operand.getSemanticValue());
-                else if(operand.getSemanticValue() instanceof Boolean)
-                    operand.setSemanticValue(!(Boolean) operand.getSemanticValue());
-            }
-        }
+        // if(operand.isConstant){
+        //     if(operand.isNegated()){
+        //         if(operand.getSemanticValue() instanceof Integer)
+        //             operand.setSemanticValue(-(Integer) operand.getSemanticValue());
+        //         else if(operand.getSemanticValue() instanceof Boolean)
+        //             operand.setSemanticValue(!(Boolean) operand.getSemanticValue());
+        //     }
+        // }
     }
 
     /**
@@ -263,28 +306,49 @@ public class IntermediateCodeGenerator {
      * @param value
      */
     private void generate(SymbolValue value){
-        // TODO
-        // Object val = value.getSemanticValue();
-        // if(val instanceof SymbolVar) {
-        //     SymbolVar var = (SymbolVar) val;
-        //     manage(var);
-        //     value.type = var.type;
-        //     value.isConstant = var.isConstant;
-        //     if(value.isConstant) value.setSemanticValue(var.getSemanticValue());
-        // } else if(val instanceof SymbolFuncCall) {
-        //     SymbolFuncCall fcall = (SymbolFuncCall) val;
-        //     manage(fcall);
-        //     value.type = fcall.type;
-        //     value.isConstant = false;
-        // } else if(val instanceof SymbolList) {
-        //     SymbolList list = (SymbolList) val;
-        //     manage(list);
-        //     value.type = list.type;
-        //     value.type.arrayLength = list.getLength();
-        //     value.isConstant = false;
-        // } else if(val instanceof Integer) value.type = new SymbolType(Constants.TYPE_INTEGER);
-        // else if(val instanceof Boolean) value.type = new SymbolType(Constants.TYPE_BOOLEAN);
-        // else if(val instanceof Character) value.type = new SymbolType(Constants.TYPE_CHARACTER);
+        Object val = value.getSemanticValue();
+        String t = "";
+        if(val instanceof SymbolVar) {
+            SymbolVar var = (SymbolVar) val;
+            generate(var);
+            t = var.reference;
+        } else if(val instanceof SymbolFuncCall) {
+            SymbolFuncCall fcall = (SymbolFuncCall) val;
+            generate(fcall);
+            t = fcall.reference;
+        } else if(val instanceof SymbolList) {
+            SymbolList list = (SymbolList) val;
+            generate(list);
+            t = list.reference;
+            // We calculate the total occupation on this variable, starting by the first level's length
+            int occupation = list.type.arrayLength;
+            SymbolType subLevel = list.type.getBaseType();
+            // We go through each sublevel so that we can calculate the occupation accordingly.
+            while(subLevel.getArrayDepth() > 0){
+                occupation *= subLevel.arrayLength;
+                subLevel = subLevel.getBaseType();
+            }
+            // If the occupation of a single value is different to 1, we must multiply by the single value's occupation.
+            if(subLevel.isType(Constants.TYPE_INTEGER)){
+                occupation *= Constants.INTEGER_BYTES;
+            }
+            variableTable.get(t).occupation = occupation;
+        } else if(val instanceof Integer) {
+            int intValue = (Integer) val; 
+            t = newVariable();
+            addInstruction(InstructionType.copy, "" + intValue, t);
+            variableTable.get(t).occupation = Constants.INTEGER_BYTES;
+        } else if(val instanceof Boolean) {
+            boolean boolValue = (Boolean) val;
+            t = newVariable();
+            addInstruction(InstructionType.copy, "" + (boolValue ? Constants.TRUE : Constants.FALSE), t);
+            variableTable.get(t).occupation = Constants.BOOL_BYTES;
+        } else if(val instanceof Character) {
+            char cValue = (Character) val;
+            t = newVariable();
+            addInstruction(InstructionType.copy, "" + cValue, t);
+        }
+        value.reference = t;
     }
 
     /**
@@ -296,11 +360,20 @@ public class IntermediateCodeGenerator {
     }
 
     private String newVariable(){
-        return "t" + numT++;
+        String t = "t" + numT++;
+        VarTableEntry vte = new VarTableEntry(t);
+        variableTable.put(t, vte);
+        return t;
     }
 
     private String newTag(){
         return "e" + numE++;
+    }
+    
+    private void replaceVarTableKey(String oldKey, String newKey){
+        VarTableEntry vte = variableTable.get(oldKey);
+        variableTable.remove(oldKey);
+        variableTable.put(newKey, vte);
     }
 
     private void addInstruction(InstructionType instruction, String left, String right, String destination){

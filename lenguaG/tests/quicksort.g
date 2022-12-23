@@ -1,5 +1,6 @@
 val int begin = 0;
 val int end = 6;
+char c = 'c';
 int[] intArray = [5, 9, 4, 6, 5, 3, 9];
 int[][] a = [[5, 9, 4, 6, 5, 3, 9],
              [5, 9, 4, 6, 5, 3, 9]];
