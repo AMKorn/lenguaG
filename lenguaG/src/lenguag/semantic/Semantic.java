@@ -550,7 +550,8 @@ public class Semantic {
         SymbolList next = list.getNext();
         if(next != null && next.getValue() != null) {
             manage(next);
-            if(!value.type.isType(next.type.getBaseType().getType())){
+            // if(!value.type.isType(next.type.getBaseType().getType())){
+            if(!value.type.equals(next.type.getBaseType())){
                 reportError("Cannot declare an array with heterogeneous types", list.line, list.column);
             }
         }

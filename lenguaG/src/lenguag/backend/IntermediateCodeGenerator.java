@@ -56,7 +56,7 @@ public class IntermediateCodeGenerator {
 
         if(LenguaG.DEBUGGING) {
             for (String s : variableTable.keySet()) {
-            System.out.println(s + ": " + variableTable.get(s).tName);            
+                System.out.println(s + ": " + variableTable.get(s).tName);            
             }
         }
     }
@@ -66,6 +66,9 @@ public class IntermediateCodeGenerator {
      * @param arg
      */
     private void generate(SymbolArg arg){
+        String t = "";
+        
+        arg.reference = t;
     }
 
     /**
@@ -73,13 +76,20 @@ public class IntermediateCodeGenerator {
      * @param args
      */
     private void generate(SymbolArgs args){
+
     }
 
     /**
      * ArrSuff: getIndex(), getNext(), getDimensions()
      * @param arrSuff
+     * @param vte - Variable Table Entry to manage array dimensions
      */
-    private void generate(SymbolArrSuff arrSuff){
+    private void generate(SymbolArrSuff arrSuff, VarTableEntry vte, int i){
+        String t = newVariable();
+        System.out.println(vte.dimensions.get(i));
+        SymbolArrSuff next = arrSuff.getNext();
+        if(next != null) generate(arrSuff, vte, i+1);
+        arrSuff.reference = t;
     }
 
     /**
@@ -87,7 +97,9 @@ public class IntermediateCodeGenerator {
      * @param assign
      */
     private void generate(SymbolAssign assign){
+        String t = newVariable();
 
+        assign.reference = t;
     }
 
     /**
@@ -106,7 +118,7 @@ public class IntermediateCodeGenerator {
         SymbolOperation value = dec.getValue();
         if(value != null){
             generate(value);
-            t = value.reference;
+            if(!t.equals(value.reference)) addInstruction(InstructionType.copy, value.reference, t);
         }
         dec.reference = t;
         currentDec = null;
@@ -137,7 +149,7 @@ public class IntermediateCodeGenerator {
      * @param sElse
      */
     private void generate(SymbolElse sElse){
-        
+
     }
 
     /**
@@ -161,7 +173,9 @@ public class IntermediateCodeGenerator {
      * @param functionCall
      */
     private void generate(SymbolFuncCall functionCall){
-        
+        String t = newVariable();
+
+        functionCall.reference = t;
     }
 
     /**
@@ -173,7 +187,9 @@ public class IntermediateCodeGenerator {
     }
 
     private void generate(SymbolIn in){
-        
+        String t = newVariable();
+
+        in.reference = t;
     }
 
     /**
@@ -181,7 +197,9 @@ public class IntermediateCodeGenerator {
      * @param instruction
      */
     private void generate(SymbolInstr instruction){
-        
+        String t = newVariable();
+
+        instruction.reference = t;
     }
 
     /**
@@ -197,8 +215,19 @@ public class IntermediateCodeGenerator {
      * @param list
      */
     private void generate(SymbolList list){
-        String t = (currentDec == null)? newVariable() : getVar(currentDec).tName;
+        String t;
+        VarTableEntry vte = null;
+        // This is to deal with the indexing of the lists
+        if(currentDec != null){
+            vte = getVar(currentDec);
+            t = vte.tName;
+        } else  t = newVariable();
         String right = "";
+
+        int length = list.type.arrayLength;
+        if(vte != null && length != Constants.UNKNOWN){
+            vte.dimensions.add(length);
+        }
 
         SymbolOperation value = list.getValue();
         if(!value.isConstant) { 
@@ -289,20 +318,108 @@ public class IntermediateCodeGenerator {
      * @param operation
     */
     private void generate(SymbolOperation operation){
-        {String t;
+        String t;
 
         SymbolOperand lValue = operation.getLValue();
         generate(lValue);
         t = lValue.reference;
         SymbolOp op = operation.getOperation();
         SymbolOperand rValue = operation.getRValue();
-        if(op != null && rValue != null) {
-            generate(rValue);
-            t = newVariable();
-            // TODO
+        
+        // If nothing else is needed we don't keep going.
+        if(op == null || rValue == null){
+            operation.reference = t;
+            return;
         }
 
-        operation.reference = t;}
+        generate(rValue);
+        t = newVariable();
+        String eTrue, eFalse;
+        switch (op.operation) {
+            case Constants.ADD:
+                addInstruction(InstructionType.add, lValue.reference, rValue.reference, t);
+                break;
+            case Constants.SUB:
+                addInstruction(InstructionType.sub, lValue.reference, rValue.reference, t);
+                break;
+            case Constants.PROD:
+                addInstruction(InstructionType.prod, lValue.reference, rValue.reference, t);
+                break;
+            case Constants.DIV:
+                addInstruction(InstructionType.div, lValue.reference, rValue.reference, t);
+                break;
+            case Constants.MOD:
+                addInstruction(InstructionType.mod, lValue.reference, rValue.reference, t);
+                break;
+            case Constants.OR:
+                addInstruction(InstructionType.or, lValue.reference, rValue.reference, t);
+                break;
+            case Constants.AND:    
+                addInstruction(InstructionType.and, lValue.reference, rValue.reference, t);
+                break;
+            case Constants.IS_EQUAL:
+                eTrue = newTag();
+                eFalse = newTag();
+                addInstruction(InstructionType.if_EQ, lValue.reference, rValue.reference, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.FALSE, t);
+                addInstruction(InstructionType.go_to, eFalse);
+                addInstruction(InstructionType.skip, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.TRUE, t);
+                addInstruction(InstructionType.skip, eFalse);
+                break;
+            case Constants.BIGGER:
+                eTrue = newTag();
+                eFalse = newTag();
+                addInstruction(InstructionType.if_GT, lValue.reference, rValue.reference, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.FALSE, t);
+                addInstruction(InstructionType.go_to, eFalse);
+                addInstruction(InstructionType.skip, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.TRUE, t);
+                addInstruction(InstructionType.skip, eFalse);
+                break;
+            case Constants.BEQ:
+                eTrue = newTag();
+                eFalse = newTag();
+                addInstruction(InstructionType.if_GE, lValue.reference, rValue.reference, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.FALSE, t);
+                addInstruction(InstructionType.go_to, eFalse);
+                addInstruction(InstructionType.skip, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.TRUE, t);
+                addInstruction(InstructionType.skip, eFalse);
+                break;
+            case Constants.LESSER:
+                eTrue = newTag();
+                eFalse = newTag();
+                addInstruction(InstructionType.if_LT, lValue.reference, rValue.reference, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.FALSE, t);
+                addInstruction(InstructionType.go_to, eFalse);
+                addInstruction(InstructionType.skip, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.TRUE, t);
+                addInstruction(InstructionType.skip, eFalse);
+                break;
+            case Constants.LEQ:
+                eTrue = newTag();
+                eFalse = newTag();
+                addInstruction(InstructionType.if_LE, lValue.reference, rValue.reference, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.FALSE, t);
+                addInstruction(InstructionType.go_to, eFalse);
+                addInstruction(InstructionType.skip, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.TRUE, t);
+                addInstruction(InstructionType.skip, eFalse);
+                break;
+            case Constants.NEQ:
+                eTrue = newTag();
+                eFalse = newTag();
+                addInstruction(InstructionType.if_NE, lValue.reference, rValue.reference, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.FALSE, t);
+                addInstruction(InstructionType.go_to, eFalse);
+                addInstruction(InstructionType.skip, eTrue);
+                addInstruction(InstructionType.copy, ""+Constants.TRUE, t);
+                addInstruction(InstructionType.skip, eFalse);
+                break;
+        }
+
+        operation.reference = t;
     }
 
     /**
@@ -394,7 +511,32 @@ public class IntermediateCodeGenerator {
      * @param var
     */
     private void generate(SymbolVar var){
-        
+        VarTableEntry vte = getVar(var.getId());
+        String t = vte.tName;
+
+        SymbolArrSuff arrSuff = var.getArrSuff();
+        if(arrSuff != null){
+            generate(arrSuff, vte, 0);
+            String tSuffix = arrSuff.reference;
+            int nBytes = 1;
+            if(vte.type == Constants.TYPE_INTEGER){
+                nBytes = Constants.INTEGER_BYTES;
+            }
+            // Here should go 
+            // tn = tm - b 
+            // but b is always 0 in our language, as all arrays start with 0
+            // so we don't have to include it in this case.
+            // t' = tSuff * nbytes
+            // t'' = t[t']
+            // t <- t''
+            String tPrima = newVariable();
+            addInstruction(InstructionType.prod, tSuffix, "" + nBytes, tPrima);
+            String arrayOrigin = t;
+            t = newVariable();
+            addInstruction(InstructionType.ind_val, arrayOrigin, tPrima, t);
+        }
+
+        var.reference = t;
     }
 
     private String newVariable(){

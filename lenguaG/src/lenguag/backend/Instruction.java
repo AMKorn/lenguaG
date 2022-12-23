@@ -55,13 +55,13 @@ public class Instruction {
             case if_EQ:
                 return "\tif " + left + "=" + right + " goto " + destination;
             case if_GE:
-                return "\tif " + left + "<=" + right + " goto " + destination;
-            case if_GT:
-                return "\tif " + left + "<" + right + " goto " + destination;
-            case if_LE:
                 return "\tif " + left + ">=" + right + " goto " + destination;
-            case if_LT:
+            case if_GT:
                 return "\tif " + left + ">" + right + " goto " + destination;
+            case if_LE:
+                return "\tif " + left + "<=" + right + " goto " + destination;
+            case if_LT:
+                return "\tif " + left + "<" + right + " goto " + destination;
             case if_NE:
                 return "\tif " + left + "!=" + right + " goto " + destination;
             case ind_ass:

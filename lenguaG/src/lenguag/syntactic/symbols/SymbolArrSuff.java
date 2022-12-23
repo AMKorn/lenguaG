@@ -10,6 +10,9 @@ public class SymbolArrSuff extends SymbolBase {
     private SymbolArrSuff contSuff;
     private int nDims;
 
+    // Variable used for simplification of intermediate code generation
+    public int maxDim = 0;
+
     public SymbolArrSuff(SymbolOperation index, SymbolArrSuff contSuff, int line, int column){
         super("Array Suffix", 0, line, column);
         this.index = index;
