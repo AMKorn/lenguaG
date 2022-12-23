@@ -27,6 +27,7 @@ public class IntermediateCodeGenerator {
     
     private String currentDec; // Variable used in array declaration
     private int currentDecLength;
+    private ArrayList<Integer> dimensionsToCheck;
 
     private int numE;
     private int numT;
@@ -84,11 +85,33 @@ public class IntermediateCodeGenerator {
      * @param arrSuff
      * @param vte - Variable Table Entry to manage array dimensions
      */
-    private void generate(SymbolArrSuff arrSuff, VarTableEntry vte, int i){
+    private void generate(SymbolArrSuff arrSuff){
+        // TODO 
         String t = newVariable();
-        System.out.println(vte.dimensions.get(i));
+        int dimensions = dimensionsToCheck.get(0);
+
+        SymbolOperation index = arrSuff.getIndex();
+        if(index.reference == null) generate(index);
+        String ti = index.reference;
+
+        dimensionsToCheck.remove(0);
+        addInstruction(InstructionType.prod, ti, ""+dimensions, t);
+        String tPrima = t;
         SymbolArrSuff next = arrSuff.getNext();
-        if(next != null) generate(arrSuff, vte, i+1);
+        if(next != null) {
+            SymbolOperation nextIndex = next.getIndex();
+            // We do this in this order because each step except the first has the structure
+            // t' = Ii * D(i+1)
+            // t = t' + I(i+1)
+            if(nextIndex != null) {
+                generate(nextIndex);
+                ti = nextIndex.reference;
+                t = newVariable();
+                addInstruction(InstructionType.add, tPrima, ti, t);
+            }
+            generate(next);
+        }
+
         arrSuff.reference = t;
     }
 
@@ -225,8 +248,11 @@ public class IntermediateCodeGenerator {
         String right = "";
 
         int length = list.type.arrayLength;
+        // We store the dimensions of the list inside of the variable table
         if(vte != null && length != Constants.UNKNOWN){
-            vte.dimensions.add(length);
+            if(vte.dimensions.size() <= list.type.getArrayDepth()){
+                vte.dimensions.add(length);
+            }
         }
 
         SymbolOperation value = list.getValue();
@@ -516,7 +542,8 @@ public class IntermediateCodeGenerator {
 
         SymbolArrSuff arrSuff = var.getArrSuff();
         if(arrSuff != null){
-            generate(arrSuff, vte, 0);
+            dimensionsToCheck = vte.cloneDimensions();
+            generate(arrSuff);
             String tSuffix = arrSuff.reference;
             int nBytes = 1;
             if(vte.type == Constants.TYPE_INTEGER){

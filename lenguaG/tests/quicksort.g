@@ -1,9 +1,9 @@
-val int begin = 0;
-int end = 6;
-// char c = 'c';
-bool t = begin < end;
-int[] intArray = [begin, 1, 2, 3, 4, end+1];
-int endValue = intArray[end];
+// val int begin = 0;
+// int end = 6;
+// // char c = 'c';
+// bool t = begin < end;
+// int[] intArray = [begin, 1, 2, 3, 4, end+1];
+// int endValue = intArray[end];
 // int[] intArray = [5+end, 9, 4, 6, 5, 3, 9];
 int[][] a = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
              [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]];

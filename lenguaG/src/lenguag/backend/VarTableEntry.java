@@ -18,4 +18,12 @@ public class VarTableEntry {
         subyacentType = Constants.TYPE_INTEGER;
         dimensions = new ArrayList<>();
     }
+
+    public ArrayList<Integer> cloneDimensions(){
+        ArrayList<Integer> i = new ArrayList<>();
+        for (Integer d : dimensions) {
+            i.add(d);
+        }
+        return i;
+    }
 }

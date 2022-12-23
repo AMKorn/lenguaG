@@ -5,29 +5,8 @@ a:
 	[Type: int[10][2]
 	Constant: false
 	Declared level: 0]
-t:
-	[Type: bool
-	Constant: false
-	Declared level: 0]
-endValue:
-	[Type: int
-	Constant: false
-	Declared level: 0]
 aEnd:
 	[Type: int
-	Constant: false
-	Declared level: 0]
-end:
-	[Type: int
-	Constant: false
-	Declared level: 0]
-begin:
-	[Type: int
-	Constant: true
-	Value: 0
-	Declared level: 0]
-intArray:
-	[Type: int[6]
 	Constant: false
 	Declared level: 0]
 
