@@ -11,25 +11,23 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import lenguag.backend.Instruction.InstructionType;
-import lenguag.semantic.SymbolDescription;
-import lenguag.semantic.SymbolTable;
 import lenguag.syntactic.symbols.*;
 
 public class IntermediateCodeGenerator {
 
     private ArrayList<Instruction> c3a;
-    private Hashtable<String, Integer> eList;
 
-    private SymbolTable symbolTable;
+    private Hashtable<String, VarTableEntry> variableTable;
+    private Hashtable<String, ProcTableEntry> procedureTable;
+    private Hashtable<String, Integer> eList;
     
     private int numE;
     private int numT;
    
-    public IntermediateCodeGenerator(SymbolTable symbolTable){
+    public IntermediateCodeGenerator(){
         c3a = new ArrayList<>();
         numE = 0;
         numT = 0;
-        this.symbolTable = symbolTable;
     }
 
     /**

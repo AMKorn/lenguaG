@@ -17,9 +17,6 @@ public class SymbolOperand extends SymbolBase {
     public boolean isConstant = true;       // Set as true by default so that as soon as we find a variable component we will know that this is not constant.
     //public Object semanticValue;            // To set as a primitive object during semantic control if it's a constant
     
-    // Variables for code generation
-    public String r;
-
     public SymbolOperand(SymbolValue value, int line, int column){
         super("Operand", value, line, column);
         //this.value = value;

@@ -683,24 +683,25 @@ public class Semantic {
                     break; // Exit switch case
                 }
                 // list + an item of the list's subtype
-                if((lValue.type.isType(Constants.TYPE_ARRAY)) && (lValue.type.getBaseType().isType(rValue.type.getType()))) {
-                    // We accept. Result is same type as lValue, but the length is incremented by one.
-                    // We create a different type so as to not modify the original type (reference)
-                    operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
-                    operation.type.arrayLength++;
-                    //operation.type = lValue.type;
-                    break;
-                }
-                // list + list of same baseType
-                if((lValue.type.isType(Constants.TYPE_ARRAY)) 
-                    && (rValue.type.isType(Constants.TYPE_ARRAY))
-                    && (lValue.type.getBaseType() == rValue.type.getBaseType())) {
-                        // We accept. Result is same type as either list.
-                        operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
-                        operation.type.arrayLength++;
-                        // operation.type = lValue.type;
-                        break;
-                }
+                // TODO remove and fix all this
+                // if((lValue.type.isType(Constants.TYPE_ARRAY)) && (lValue.type.getBaseType().isType(rValue.type.getType()))) {
+                //     // We accept. Result is same type as lValue, but the length is incremented by one.
+                //     // We create a different type so as to not modify the original type (reference)
+                //     operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
+                //     operation.type.arrayLength++;
+                //     //operation.type = lValue.type;
+                //     break;
+                // }
+                // // list + list of same baseType
+                // if((lValue.type.isType(Constants.TYPE_ARRAY)) 
+                //     && (rValue.type.isType(Constants.TYPE_ARRAY))
+                //     && (lValue.type.getBaseType() == rValue.type.getBaseType())) {
+                //         // We accept. Result is same type as either list.
+                //         operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
+                //         operation.type.arrayLength++;
+                //         // operation.type = lValue.type;
+                //         break;
+                // }
                 // We do not accept.
                 reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
                 return;

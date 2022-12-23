@@ -7,6 +7,9 @@ public class SymbolBase extends ComplexSymbol {
     public int line;
     public int column;
 
+    // Intermediate code generation variable
+    public String r;
+
     public SymbolBase(String variable, Object value){
         super(variable, idSymbol++, value);
     }
