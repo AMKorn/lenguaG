@@ -623,7 +623,8 @@ public class Semantic {
             SymbolValue value = (SymbolValue) operand.getValue();
             manage(value);
             operand.type = value.type;
-            if(operand.isConstant = value.isConstant) {operand.setSemanticValue(value.getSemanticValue());}
+            // We set the constant state to the value's and set its semantic value if constant
+            if(operand.isConstant = value.isConstant) operand.setSemanticValue(value.getSemanticValue());
         } else {
             SymbolOperation operation = (SymbolOperation) operand.getValue();
             manage(operation);

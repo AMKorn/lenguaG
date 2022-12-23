@@ -2,7 +2,7 @@ Current level: 0
 
 Symbol Table: 
 a:
-	[Type: int[7][2]
+	[Type: int[10][2]
 	Constant: false
 	Declared level: 0]
 c:
@@ -13,10 +13,13 @@ partition:
 	[Type: function (Returns: int, args:[int[] array, int begin, int end])
 	Constant: false
 	Declared level: 0]
+t:
+	[Type: bool
+	Constant: false
+	Declared level: 0]
 end:
 	[Type: int
-	Constant: true
-	Value: 6
+	Constant: false
 	Declared level: 0]
 quickSort:
 	[Type: function (Returns: void, args:[int[] array, int begin, int end])

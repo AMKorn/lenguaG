@@ -79,7 +79,13 @@ public class LenguaG {
             if(DEBUGGING) System.out.println("Writing symbol table...");
             writeFile(outputPath, "Symbol Table.txt", sem.symbolTable.toString());
             IntermediateCodeGenerator c3a = new IntermediateCodeGenerator();
-            c3a.generate((SymbolBody) resultSyn);
+            try {
+                c3a.generate((SymbolBody) resultSyn);
+            } catch(NullPointerException TEMPORARY) {
+                // TODO remove
+                TEMPORARY.printStackTrace();
+                writeFile(outputPath, "c3a.txt", c3a.toString());
+            }
             if(DEBUGGING) System.out.println("Writing three address code...");
             writeFile(outputPath, "c3a.txt", c3a.toString());
             
@@ -93,7 +99,7 @@ public class LenguaG {
         } catch(SyntacticException se){
             // User error 
             System.err.println(se.getMessage());
-        } 
+        }
         
         catch (IOException e) {
             // !!! COMPILER ERROR !!!
