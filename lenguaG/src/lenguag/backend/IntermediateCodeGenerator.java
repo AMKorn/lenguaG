@@ -101,7 +101,6 @@ public class IntermediateCodeGenerator {
         String tn = arrSuff.reference == null ? "0" : arrSuff.reference; // Why tn is this symbol's reference is further explained in a few lines
         //String tn = index.reference;
         int dimensions = dimensionsToCheck.remove(0);
-        System.out.println(dimensions);
         String tn1 = newVariable();
         addInstruction(InstructionType.prod, tn, ""+dimensions, tn1); // tn1 = tn * d
         SymbolOperation index = arrSuff.getIndex();
@@ -129,7 +128,7 @@ public class IntermediateCodeGenerator {
      * @param assign
      */
     private void generate(SymbolAssign assign){
-        String t = newVariable();
+        String t = "";
 
         assign.reference = t;
     }
@@ -205,7 +204,7 @@ public class IntermediateCodeGenerator {
      * @param functionCall
      */
     private void generate(SymbolFuncCall functionCall){
-        String t = newVariable();
+        String t = "";
 
         functionCall.reference = t;
     }
@@ -219,7 +218,7 @@ public class IntermediateCodeGenerator {
     }
 
     private void generate(SymbolIn in){
-        String t = newVariable();
+        String t = "";
 
         in.reference = t;
     }
@@ -229,7 +228,7 @@ public class IntermediateCodeGenerator {
      * @param instruction
      */
     private void generate(SymbolInstr instruction){
-        String t = newVariable();
+        String t = "";
 
         instruction.reference = t;
     }
@@ -308,7 +307,22 @@ public class IntermediateCodeGenerator {
      * @param main
      */
     private void generate(SymbolMain main){
-        
+        SymbolInstrs instrs = main.getInstructions();
+        if(instrs != null) {
+            // We prepare the procedure table and insert the info about the main procedure
+            currentFunction = "main.";
+            ProcTableEntry mainTableEntry = new ProcTableEntry();
+            mainTableEntry.depth = 1;
+            mainTableEntry.numParams = 0;
+            String eMain = newTag();
+            mainTableEntry.eStart = eMain;
+            procedureTable.put(currentFunction, mainTableEntry);
+
+            addInstruction(InstructionType.skip, eMain);
+            generate(instrs);
+            
+            currentFunction = "."; // Reset current function
+        }
     }
 
     /**
