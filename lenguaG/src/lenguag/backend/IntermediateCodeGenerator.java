@@ -86,33 +86,42 @@ public class IntermediateCodeGenerator {
      * @param vte - Variable Table Entry to manage array dimensions
      */
     private void generate(SymbolArrSuff arrSuff){
-        // TODO 
-        String t = newVariable();
-        int dimensions = dimensionsToCheck.get(0);
-
+        // if first 
+        //     t1 = i = arrSuff.reference = getIndex().reference;
+        // else 
+        //     t2 = t1 * d2 
+        //     t3 = t2 + i2
+        // end if
+        // Our grammar does not allow us to differentiate between the first and the middle array suffixes
+        // So we can generalize it by saying
+        // foreach n
+        //      t(n+1) = t(n) * d(n)
+        //      t(n+2) = t(n+1) + i(n)
+        // Where t(1) = 0. This is why if it's the first time calling this function, tn is 0
+        String tn = arrSuff.reference == null ? "0" : arrSuff.reference; // Why tn is this symbol's reference is further explained in a few lines
+        //String tn = index.reference;
+        int dimensions = dimensionsToCheck.remove(0);
+        System.out.println(dimensions);
+        String tn1 = newVariable();
+        addInstruction(InstructionType.prod, tn, ""+dimensions, tn1); // tn1 = tn * d
         SymbolOperation index = arrSuff.getIndex();
-        if(index.reference == null) generate(index);
-        String ti = index.reference;
-
-        dimensionsToCheck.remove(0);
-        addInstruction(InstructionType.prod, ti, ""+dimensions, t);
-        String tPrima = t;
+        generate(index);
+        String in = index.reference;
+        String tn2 = newVariable();
+        addInstruction(InstructionType.add, tn1, in, tn2); // tn2 = tn1 + in
+        
+        // Next iteration
         SymbolArrSuff next = arrSuff.getNext();
-        if(next != null) {
-            SymbolOperation nextIndex = next.getIndex();
-            // We do this in this order because each step except the first has the structure
-            // t' = Ii * D(i+1)
-            // t = t' + I(i+1)
-            if(nextIndex != null) {
-                generate(nextIndex);
-                ti = nextIndex.reference;
-                t = newVariable();
-                addInstruction(InstructionType.add, tPrima, ti, t);
-            }
+        if(next != null){
+            next.reference = tn2; // We pass tn2 as a reference. This is a "cheat" to allow communication between father and son, but is
+            // technically a devirtualization of the idea of the reference. 
+            // This is also the reason why at the start of this function we had to check if the reference was null or not, as only the first iteration
+            // should be null
             generate(next);
+            tn2 = next.reference;
         }
 
-        arrSuff.reference = t;
+        arrSuff.reference = tn2;
     }
 
     /**
