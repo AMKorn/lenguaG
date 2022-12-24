@@ -71,7 +71,11 @@ e1: skip
 	t26[15] = 110
 	t26[16] = 103
 	goto e2
-e2: skip
-	goto e3
 e3: skip
+	pmb partition
+e2: skip
+	goto e4
+e5: skip
+	pmb quickSort
 e4: skip
+e6: skip

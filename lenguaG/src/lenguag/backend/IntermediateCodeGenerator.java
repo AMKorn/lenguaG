@@ -24,6 +24,7 @@ public class IntermediateCodeGenerator {
     private Hashtable<String, Integer> eList;
     
     private String currentFunction;
+    private static final String DEF_FUNCTION = ".";
     
     private String currentDec; // Variable used in array declaration
     private int currentDecLength;
@@ -38,7 +39,7 @@ public class IntermediateCodeGenerator {
         procedureTable = new Hashtable<>();
         numE = 0;
         numT = 0;
-        currentFunction = "."; // We use the format function.variable to store and access the variable table
+        currentFunction = DEF_FUNCTION; // We use the format function.variable to store and access the variable table
         // This avoids the very real possibility of the user creating a variable of format tN (where N is a natural) 
         // which would cause undesired behaviour
         currentDecLength = -1;
@@ -56,8 +57,13 @@ public class IntermediateCodeGenerator {
         generate(main);
 
         if(LenguaG.DEBUGGING) {
+            System.out.println("\n\tc3@ Variables Table\n");
             for (String s : variableTable.keySet()) {
-                System.out.println(s + ": " + variableTable.get(s).tName);            
+                System.out.println(s + ": " + variableTable.get(s).tName);
+            }
+            System.out.println("\n\tc3@ Procedures Table\n");
+            for (String s : procedureTable.keySet()) {
+                System.out.println(s + ": " + procedureTable.get(s));
             }
         }
     }
@@ -196,7 +202,20 @@ public class IntermediateCodeGenerator {
      * @param func
      */
     private void generate(SymbolFunc func){
+        String name = func.getFunctionName();
+
+        currentFunction = createProcTableEntry(name);
+
+        SymbolArgs args = func.getArgs();
+        generate(args);
+        ProcTableEntry pte = procedureTable.get(currentFunction);
+        pte.numParams = args.getNArgs();
         
+        addInstruction(InstructionType.skip, pte.eStart);
+        addInstruction(InstructionType.pmb, name);
+        SymbolInstrs instrs = func.getInstructions();
+        generate(instrs);
+        currentFunction = DEF_FUNCTION;
     }
 
     /**
@@ -310,18 +329,13 @@ public class IntermediateCodeGenerator {
         SymbolInstrs instrs = main.getInstructions();
         if(instrs != null) {
             // We prepare the procedure table and insert the info about the main procedure
-            currentFunction = "main.";
-            ProcTableEntry mainTableEntry = new ProcTableEntry();
-            mainTableEntry.depth = 1;
-            mainTableEntry.numParams = 0;
-            String eMain = newTag();
-            mainTableEntry.eStart = eMain;
-            procedureTable.put(currentFunction, mainTableEntry);
+            currentFunction = createProcTableEntry("main");
+            String eMain = procedureTable.get(currentFunction).eStart;
 
             addInstruction(InstructionType.skip, eMain);
             generate(instrs);
             
-            currentFunction = "."; // Reset current function
+            currentFunction = DEF_FUNCTION; // Reset current function
         }
     }
 
@@ -601,18 +615,21 @@ public class IntermediateCodeGenerator {
     }
 
     private VarTableEntry getVar(String t){
-        if(LenguaG.DEBUGGING){
-            System.out.println("getting " + currentFunction + t);
-            System.out.println("No problem getting " + variableTable.get(currentFunction + t).tName);
-        }
         return variableTable.get(currentFunction + t);
     }
     
     private void replaceVarTableKey(String oldKey, String newKey){
         VarTableEntry vte = getVar(oldKey);
         variableTable.remove(oldKey);
-        if(LenguaG.DEBUGGING) System.out.println("\tReplacing " + currentFunction + oldKey + " with " + newKey);
         variableTable.put(currentFunction + newKey, vte);
+    }
+
+    private String createProcTableEntry(String procName){
+        String internalFunctionName = procName + DEF_FUNCTION;
+        ProcTableEntry pte = new ProcTableEntry();
+        pte.eStart = newTag();
+        procedureTable.put(internalFunctionName, pte);
+        return internalFunctionName;
     }
 
     private void addInstruction(InstructionType instruction, String left, String right, String destination){
