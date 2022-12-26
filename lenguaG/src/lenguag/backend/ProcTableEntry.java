@@ -5,6 +5,7 @@ public class ProcTableEntry {
     public String eStart;
     public int numParams;
     public int localVarsOccup;
+    public String tReturn;
 
     public ProcTableEntry(){
         // default values

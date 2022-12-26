@@ -1,0 +1,24 @@
+	goto e0
+e1: skip
+	pmb foo
+	t2 = 1
+	t1 = t2
+	t4 = 2
+	t3 = t4
+	t6 = t1 + t3
+	t5 = t6
+	t0 = 0
+	rtn foo
+e0: skip
+	goto e2
+e3: skip
+	pmb bar
+	t9 = 0
+	t8 = t9
+	t7 = 0
+	rtn bar
+e2: skip
+e4: skip
+	call foo
+	t11 = t0
+	t10 = t11

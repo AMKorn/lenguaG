@@ -16,5 +16,6 @@ void bar(){
 }
 
 main {
+    // bar();
     int a = foo();
 }
