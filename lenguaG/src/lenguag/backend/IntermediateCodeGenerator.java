@@ -211,7 +211,6 @@ public class IntermediateCodeGenerator {
      * @param sFor
      */
     private void generate(SymbolFor sFor){
-        // We change the current function so as to denote that this is a different block, but we must restore it after.
         currentSublevel++;
         
         SymbolBase init = sFor.getInit();
@@ -232,6 +231,12 @@ public class IntermediateCodeGenerator {
 
         SymbolInstrs instrs = sFor.getInstructions();
         generate(instrs);
+
+        SymbolBase end = sFor.getFinal();
+        if(end instanceof SymbolDec) generate((SymbolDec) end);
+        else if(end instanceof SymbolAssign) generate((SymbolAssign) end);
+        else if(end instanceof SymbolSwap) generate((SymbolSwap) end);
+        else if(end instanceof SymbolFuncCall) generate((SymbolFuncCall) end);
 
         addInstruction(InstructionType.go_to, eStart);
         addInstruction(InstructionType.skip, eEnd);
@@ -310,9 +315,10 @@ public class IntermediateCodeGenerator {
     }
 
     private void generate(SymbolIn in){
-        String t = "";
-        // TODO
-        in.reference = t;
+        SymbolVar oper = in.getVar();
+        generate(oper);
+        String t = oper.reference;
+        addInstruction(InstructionType.in, t);
     }
 
     /**
@@ -377,7 +383,10 @@ public class IntermediateCodeGenerator {
         if(currentDec != null){
             vte = getVar(currentDec);
             t = vte.tName;
-        } else  t = newVariable();
+        } else  {
+            t = newVariable();
+            currentDec = t;
+        }
         String right = "";
 
         int length = list.type.arrayLength;
@@ -423,8 +432,30 @@ public class IntermediateCodeGenerator {
         list.reference = t;
     }
 
+    /**
+     * Loop: getCondition(), getInstructions()
+     * @param loop
+     */
     private void generate(SymbolLoop loop){
-        // TODO
+        currentSublevel++;
+
+        String eStart = newTag();
+        addInstruction(InstructionType.skip, eStart);
+
+        SymbolOperation cond = loop.getCondition();
+        generate(cond);
+        String tCond = cond.reference;
+
+        String eEnd = newTag();
+        addInstruction(InstructionType.if_EQ, tCond, "0", eEnd);
+
+        SymbolInstrs instrs = loop.getInstructions();
+        generate(instrs);
+
+        addInstruction(InstructionType.go_to, eStart);
+        addInstruction(InstructionType.skip, eEnd);
+
+        currentSublevel--;
     }
 
     /**
@@ -596,7 +627,10 @@ public class IntermediateCodeGenerator {
      * @param out
      */
     private void generate(SymbolOut out){
-        // TODO
+        SymbolOperation oper = out.getValue();
+        generate(oper);
+        String t = oper.reference;
+        addInstruction(InstructionType.out, t);
     }
 
     /**
@@ -620,7 +654,19 @@ public class IntermediateCodeGenerator {
      * @param swap
      */
     private void generate(SymbolSwap swap){
-        // TODO
+        SymbolVar var1 = swap.getVar1();
+        generate(var1);
+        String t1 = var1.reference;
+
+        String t = newVariable();
+        addInstruction(InstructionType.copy, t1, t);
+
+        SymbolVar var2 = swap.getVar2();
+        generate(var2);
+        String t2 = var2.reference;
+
+        addInstruction(InstructionType.copy, t2, t1);
+        addInstruction(InstructionType.copy, t, t2);
     }
 
     /**

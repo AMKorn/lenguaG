@@ -4,7 +4,7 @@ public class Instruction {
     public enum InstructionType {
         copy, add, sub, prod, div, mod, neg, and, or, not, ind_val, ind_ass, 
         skip, go_to, if_LT, if_LE, if_EQ, if_NE, if_GE, if_GT, pmb, call, rtn, 
-        param_s, param_c
+        param_s, param_c, in, out
     }
 
     public InstructionType instruction;
@@ -86,6 +86,10 @@ public class Instruction {
                 return "\trtn " + destination;
             case skip:
                 return destination + ": skip";
+            case in:
+                return "\tin: " + destination;
+            case out:
+                return "\tout: " + destination;
             default:
                 return null;
         }

@@ -21,4 +21,13 @@ main {
         out(i);
     }
     //int a = foo();
+    int a; int b;
+    in(a);
+    in(b);
+    // int a = 1;
+    // int b = 2;
+    a <<>> b;
+    out("Swapped:");
+    out(a);
+    out(b);
 }

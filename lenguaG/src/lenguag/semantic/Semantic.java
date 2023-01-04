@@ -476,7 +476,7 @@ public class Semantic {
             return;
         }
         int type = var.type.getType();
-        if(type != Constants.TYPE_INTEGER || type != Constants.TYPE_CHARACTER){
+        if(type != Constants.TYPE_INTEGER && type != Constants.TYPE_CHARACTER){
             reportError("Unsupported parameter type: "+ var.type, line, column);
             return;
         }
@@ -558,6 +558,10 @@ public class Semantic {
         list.type = new SymbolType(Constants.TYPE_ARRAY, value.type);
     }
 
+    /**
+     * Loop: getCondition(), getInstructions()
+     * @param loop
+     */
     private void manage(SymbolLoop loop){
         /*
          * Possible errors:
