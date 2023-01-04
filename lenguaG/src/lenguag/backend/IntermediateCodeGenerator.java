@@ -140,9 +140,15 @@ public class IntermediateCodeGenerator {
      * @param assign
      */
     private void generate(SymbolAssign assign){
-        String t = "";
+        SymbolVar var = assign.getVariable();
+        generate(var);
+        String t = var.reference;
 
-        assign.reference = t;
+        SymbolOperation rSide = assign.getRightSide();
+        generate(rSide);
+        String t1 = rSide.reference;
+
+        addInstruction(InstructionType.copy, t1, t);
     }
 
     /**
@@ -192,7 +198,12 @@ public class IntermediateCodeGenerator {
      * @param sElse
      */
     private void generate(SymbolElse sElse){
-
+        SymbolIf nextIf = sElse.getIf();
+        SymbolInstrs instrs = sElse.getInstructions();
+        if(nextIf != null) generate(nextIf);
+        else if(instrs != null) {
+            generate(instrs);
+        }
     }
 
     /**
@@ -200,7 +211,32 @@ public class IntermediateCodeGenerator {
      * @param sFor
      */
     private void generate(SymbolFor sFor){
+        // We change the current function so as to denote that this is a different block, but we must restore it after.
+        currentSublevel++;
         
+        SymbolBase init = sFor.getInit();
+        if(init instanceof SymbolDec) generate((SymbolDec) init);
+        else if(init instanceof SymbolAssign) generate((SymbolAssign) init);
+        else if(init instanceof SymbolSwap) generate((SymbolSwap) init);
+        else if(init instanceof SymbolFuncCall) generate((SymbolFuncCall) init);
+
+        String eStart = newTag();
+        addInstruction(InstructionType.skip, eStart);
+
+        SymbolOperation cond = sFor.getCondition();
+        generate(cond);
+        String tCond = cond.reference;
+
+        String eEnd = newTag();
+        addInstruction(InstructionType.if_EQ, tCond, "0", eEnd);
+
+        SymbolInstrs instrs = sFor.getInstructions();
+        generate(instrs);
+
+        addInstruction(InstructionType.go_to, eStart);
+        addInstruction(InstructionType.skip, eEnd);
+
+        currentSublevel--;
     }
 
     /**
@@ -253,12 +289,29 @@ public class IntermediateCodeGenerator {
      * @param sIf
      */
     private void generate(SymbolIf sIf){
+        // We change the current function so as to denote that this is a different block, but we must restore it after.
+        currentSublevel++;
+
+        SymbolOperation cond = sIf.getCondition();
+        generate(cond);
+        String tCond = cond.reference;
+
+        String eElse = newTag();
+        addInstruction(InstructionType.if_EQ, tCond, "0", eElse);
+
+        SymbolInstrs instrs = sIf.getInstructions();
+        generate(instrs);
+
+        addInstruction(InstructionType.skip, eElse);
         
+        SymbolElse sElse = sIf.getElse();
+        if(sElse != null) generate(sElse);
+        currentSublevel--;
     }
 
     private void generate(SymbolIn in){
         String t = "";
-
+        // TODO
         in.reference = t;
     }
 
@@ -271,33 +324,33 @@ public class IntermediateCodeGenerator {
             case instDeclaration:
                 generate((SymbolDec) instruction);
                 return;
-            // case instAssignation:
-            //     generate((SymbolAssign) instruction);
-            //     return;
-            // case instSwap:
-            //     generate((SymbolSwap) instruction);
-            //     return;
+            case instAssignation:
+                generate((SymbolAssign) instruction);
+                return;
+            case instSwap:
+                generate((SymbolSwap) instruction);
+                return;
             case instFunctionCall:
                 generate((SymbolFuncCall) instruction);
                 return;
-            // case instReturn:
-            //     generate((SymbolReturn) instruction);
-            //     return;
-            // case instIf:
-            //     generate((SymbolIf) instruction);
-            //     return;
-            // case instLoop:
-            //     generate((SymbolLoop) instruction);
-            //     return;
-            // case instFor:
-            //     generate((SymbolFor) instruction);
-            //     return;
-            // case instIn:
-            //     generate((SymbolIn) instruction);
-            //     return;
-            // case instOut:
-            //     generate((SymbolOut) instruction);
-            //     return;
+            case instReturn:
+                generate((SymbolReturn) instruction);
+                return;
+            case instIf:
+                generate((SymbolIf) instruction);
+                return;
+            case instLoop:
+                generate((SymbolLoop) instruction);
+                return;
+            case instFor:
+                generate((SymbolFor) instruction);
+                return;
+            case instIn:
+                generate((SymbolIn) instruction);
+                return;
+            case instOut:
+                generate((SymbolOut) instruction);
+                return;
             default:
                 // Nothing to do
         }
@@ -371,7 +424,7 @@ public class IntermediateCodeGenerator {
     }
 
     private void generate(SymbolLoop loop){
-        
+        // TODO
     }
 
     /**
@@ -543,7 +596,7 @@ public class IntermediateCodeGenerator {
      * @param out
      */
     private void generate(SymbolOut out){
-        
+        // TODO
     }
 
     /**
@@ -551,7 +604,7 @@ public class IntermediateCodeGenerator {
      * @param params
      */
     private void generate(SymbolParams params){
-        
+        // TODO
     }
 
     /**
@@ -559,7 +612,7 @@ public class IntermediateCodeGenerator {
      * @param sReturn
     */
     private void generate(SymbolReturn sReturn){
-        
+        // TODO
     }
 
     /**
@@ -567,7 +620,7 @@ public class IntermediateCodeGenerator {
      * @param swap
      */
     private void generate(SymbolSwap swap){
-        
+        // TODO
     }
 
     /**
@@ -668,12 +721,19 @@ public class IntermediateCodeGenerator {
     }
 
     private VarTableEntry getVar(String t){
+        if(LenguaG.DEBUGGING) System.out.println("Searching " + currentFunction + currentSublevel + t);
         VarTableEntry vte = variableTable.get(currentFunction + currentSublevel + t);
-        int i = currentSublevel;
-        while(vte == null && i > 0) variableTable.get(currentFunction + i-- + t);
-        if(vte == null) vte = variableTable.get(DEF_FUNCTION + 0 + t);
+        int i = currentSublevel-1;
+        while(vte == null && i >= 0) {
+            if(LenguaG.DEBUGGING) System.out.println("Searching " + currentFunction + i + t);
+            vte = variableTable.get(currentFunction + i-- + t);
+        }
+        if(vte == null) {
+            if(LenguaG.DEBUGGING) System.out.println("Searching " + DEF_FUNCTION + 0 + t);
+            vte = variableTable.get(DEF_FUNCTION + 0 + t);
+        }
+        if(LenguaG.DEBUGGING) System.out.println("Found: " + vte.tName);
         return vte;
-        //return variableTable.get(currentFunction + t);
     }
 
     private ProcTableEntry getProc(String procName){

@@ -5,20 +5,48 @@ e1: skip
 	t1 = t2
 	t4 = 2
 	t3 = t4
-	t6 = t1 + t3
-	t5 = t6
+	if t1<t3 goto e2
+	t5 = 0
+	goto e3
+e2: skip
+	t5 = -1
+e3: skip
+	if t5=0 goto e4
+e4: skip
+	if t1>t3 goto e5
+	t6 = 0
+	goto e6
+e5: skip
+	t6 = -1
+e6: skip
+	if t6=0 goto e7
+	t8 = t1 + t3
+	t7 = t8
+e7: skip
+	t10 = t1 + t3
+	t9 = t10
 	t0 = 0
 	rtn foo
 e0: skip
-	goto e2
-e3: skip
+	goto e8
+e9: skip
 	pmb bar
-	t9 = 0
-	t8 = t9
-	t7 = 0
+	t13 = 0
+	t12 = t13
+	t11 = 0
 	rtn bar
-e2: skip
-e4: skip
-	call foo
-	t11 = t0
-	t10 = t11
+e8: skip
+e10: skip
+	t15 = 0
+	t14 = t15
+e11: skip
+	t16 = 10
+	if t14<t16 goto e12
+	t17 = 0
+	goto e13
+e12: skip
+	t17 = -1
+e13: skip
+	if t17=0 goto e14
+	goto e11
+e14: skip

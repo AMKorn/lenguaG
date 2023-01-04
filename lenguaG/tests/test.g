@@ -4,8 +4,8 @@ int foo(){
     if(a<b){
         return 1;
     } else if(a>b) {
-        return 2;
         int c = a+b;
+        return c;
     }
     int c = a+b;
     return 0;
@@ -17,5 +17,8 @@ void bar(){
 
 main {
     // bar();
-    int a = foo();
+    for(int i = 0; i < 10; i = i+1){
+        out(i);
+    }
+    //int a = foo();
 }
