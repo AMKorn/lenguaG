@@ -646,7 +646,18 @@ public class IntermediateCodeGenerator {
      * @param sReturn
     */
     private void generate(SymbolReturn sReturn){
-        // TODO
+        String t;
+        SymbolOperation oper = sReturn.getValue();
+        if(oper != null){
+            generate(oper);
+            t = oper.reference;
+        } else t = "0";
+
+        ProcTableEntry pte = procedureTable.get(currentFunction);
+        addInstruction(InstructionType.copy, t, pte.tReturn);
+        
+        String name = currentFunction.replace(".", "");
+        addInstruction(InstructionType.rtn, name);
     }
 
     /**
