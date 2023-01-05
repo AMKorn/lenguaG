@@ -726,7 +726,10 @@ public class IntermediateCodeGenerator {
             t = fcall.reference;
         } else if(val instanceof SymbolList) {
             SymbolList list = (SymbolList) val;
+            // If a list is not declared (like as a parameter for out) then generate list will change currentDec, but not restore it afterwards.
+            String prevDec = currentDec; 
             generate(list);
+            currentDec = prevDec; // Which is why we restore it now
             t = list.reference;
             // We calculate the total occupation on this variable, starting by the first level's length
             int occupation = list.type.arrayLength;
