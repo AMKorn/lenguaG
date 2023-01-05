@@ -8,8 +8,10 @@ public class Constants {
     public static final int TYPE_ARRAY = Integer.MAX_VALUE;
     public static final int TYPE_FUNCTION = TYPE_ARRAY-1;
 
-    public static final int FALSE = 0;
-    public static final int TRUE = -1;
+    public static final int UNKNOWN = -1;
+
+    public static final byte FALSE = 0;
+    public static final byte TRUE = -1;
 
     public static final int INTEGER_BYTES = 4;
     public static final int CHAR_BYTES = 1;

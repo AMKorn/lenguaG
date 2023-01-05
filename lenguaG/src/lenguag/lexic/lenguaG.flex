@@ -1,8 +1,8 @@
 /**
  * Asignatura: 21780 - Compiladores
  * Miembros:
- * 	- Román Colom, Marc
  * 	- Korn, Andreas Manuel
+ * 	- Román Colom, Marc
  * 	- Vilella Candia, Joan 
  */
 // Si estás en Lexic.java, OJO! Este archivo no debe ser modificado manualmente: para hacer cambios hacerlo en lenguaG.flex 

@@ -11,3 +11,20 @@ Tabla de etiquetas, indexada por la etiqueta y apuntando al bloque basico que em
 De un bloque debemos poder encontrar el lider y el final y acceder a ellos desde el codigo 
 Ejemplo pg. 66 diapositivas
 
+
+
+COSAS PROBLEMÁTICAS:
+1. Cómo lidiar con las declaraciones tapadas sin la tabla de simbolos dinámica. 
+    -- El problema viene de volver a recorrer el árbol
+2. Gestionar arrays
+    -- Longitudes variables, operaciones con arrays...
+    -- Posibilidad: tener una variable junto al array que especifique la longitud.
+                    No permitir operaciones de concatenacion. Sorry habria estado guay pero es jodido
+
+                    
+generate(x);
+String t = newVariable();
+addInstruction([¿?], x.r, t);
+dec.r = t;
+
+TODO gestionar dimensiones de arrays, sin arrays de longitud variable es posible pero no es prioritario

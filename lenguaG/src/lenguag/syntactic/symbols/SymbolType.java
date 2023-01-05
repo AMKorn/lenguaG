@@ -1,11 +1,3 @@
-/**
- * Asignatura: 21780 - Compiladores
- * Miembros:
- * 	- Román Colom, Marc
- * 	- Korn, Andreas Manuel
- * 	- Vilella Candia, Joan 
- */
-
 package lenguag.syntactic.symbols;
 
 import lenguag.Constants;
@@ -25,7 +17,7 @@ public class SymbolType extends SymbolBase {
     private int arrayDepth;
 
     // Variables for semantic control
-    public int arrayLength; // The length of the current level of the array.
+    public int arrayLength = Constants.UNKNOWN; // The length of the current level of the array.
 
     public SymbolType(int type, SymbolType baseType){
         super("Type", 0);
@@ -48,6 +40,10 @@ public class SymbolType extends SymbolBase {
         arrayDepth = 0;
     }
 
+    public boolean isType(int type){
+        return this.type == type;
+    }
+
     public int getArrayDepth(){
         return arrayDepth;
     }
@@ -56,19 +52,27 @@ public class SymbolType extends SymbolBase {
         return type;
     }
 
+    public void setBaseType(SymbolType baseType){
+        if(type != Constants.TYPE_ARRAY) throw new RuntimeException(" !! Compiler error");
+        this.baseType = baseType;
+        arrayDepth = baseType.arrayDepth + 1;
+    }
+    
     public SymbolType getBaseType(){
         return baseType;
     }
 
     @Override
     public String toString(){
-        if(type == Constants.TYPE_ARRAY) return baseType + "[]";
+        if(type == Constants.TYPE_ARRAY) return baseType + "[" + (arrayLength!=Constants.UNKNOWN ? arrayLength : "") + "]";
         return Constants.getTypeName(type);
     }
 
     public boolean equals(SymbolType other){
         if(this.type != other.type) return false;
         if(this.arrayDepth != other.arrayDepth) return false;
+        // if(this.arrayLength != other.arrayLength) return false;
+        if(this.arrayLength != Constants.UNKNOWN && other.arrayLength != Constants.UNKNOWN && this.arrayLength != other.arrayLength) return false;
         if(arrayDepth > 1) return this.baseType.equals(other.baseType);
         return true;
     }
