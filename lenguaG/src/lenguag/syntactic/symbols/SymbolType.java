@@ -72,7 +72,7 @@ public class SymbolType extends SymbolBase {
         if(this.type != other.type) return false;
         if(this.arrayDepth != other.arrayDepth) return false;
         // if(this.arrayLength != other.arrayLength) return false;
-        if(this.arrayLength != Constants.UNKNOWN && this.arrayLength != other.arrayLength) return false;
+        if(this.arrayLength != Constants.UNKNOWN && other.arrayLength != Constants.UNKNOWN && this.arrayLength != other.arrayLength) return false;
         if(arrayDepth > 1) return this.baseType.equals(other.baseType);
         return true;
     }

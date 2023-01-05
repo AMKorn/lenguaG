@@ -77,9 +77,9 @@ public class Instruction {
             case or:
                 return "\t" + destination + " = " + left + " or " + right;
             case param_c:
-                return "\tparam_c " + destination + "[" + left + "]";
+                return "\tparam_c: " + destination + "[]";// + left + "]";
             case param_s:
-                return "\tparam_s " + destination;
+                return "\tparam_s: " + destination;
             case pmb:
                 return "\tpmb " + destination;
             case rtn:

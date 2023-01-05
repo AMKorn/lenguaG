@@ -21,7 +21,6 @@ public class IntermediateCodeGenerator {
 
     private Hashtable<String, VarTableEntry> variableTable;
     private Hashtable<String, ProcTableEntry> procedureTable;
-    private Hashtable<String, Integer> eList;
     
     private String currentFunction;
     private int currentSublevel;
@@ -29,7 +28,7 @@ public class IntermediateCodeGenerator {
     
     private String currentDec; // Variable used in array declaration
     private int currentDecLength;
-    private ArrayList<Integer> dimensionsToCheck;
+    private ArrayList<String> dimensionsToCheck;
 
     private int numE;
     private int numT;
@@ -76,8 +75,19 @@ public class IntermediateCodeGenerator {
      */
     private void generate(SymbolArg arg){
         String t = newVariable();
+        VarTableEntry vte = getVar(t);
         replaceVarTableKey(t, arg.identifier);
-        if(LenguaG.DEBUGGING) System.out.println("Parameter for " + currentFunction + ": " + arg.identifier + " -> " + t);
+
+        SymbolType type = arg.getType();
+        while(type.isType(Constants.TYPE_ARRAY)){
+            vte.dimensions.add(newVariable());
+            type = type.getBaseType();
+        }
+
+        if(LenguaG.DEBUGGING) {
+            System.out.println("Parameter for " + currentFunction + ": " + arg.identifier + " -> " + t);
+            System.out.println("Dimensions: " + vte.dimensions);
+        }
         arg.reference = t;
     }
 
@@ -112,7 +122,10 @@ public class IntermediateCodeGenerator {
         // Where t(1) = 0. This is why if it's the first time calling this function, tn is 0
         String tn = arrSuff.reference == null ? "0" : arrSuff.reference; // Why tn is this symbol's reference is further explained in a few lines
         //String tn = index.reference;
-        int dimensions = dimensionsToCheck.remove(0);
+        String dimensions = "0";
+        if(dimensionsToCheck.size() != 0) {
+            dimensions = dimensionsToCheck.remove(0);
+        }
         String tn1 = newVariable();
         addInstruction(InstructionType.prod, tn, ""+dimensions, tn1); // tn1 = tn * d
         SymbolOperation index = arrSuff.getIndex();
@@ -393,7 +406,7 @@ public class IntermediateCodeGenerator {
         // We store the dimensions of the list inside of the variable table
         if(vte != null && length != Constants.UNKNOWN){
             if(vte.dimensions.size() <= list.type.getArrayDepth()){
-                vte.dimensions.add(length);
+                vte.dimensions.add(""+length);
             }
         }
 
@@ -638,7 +651,23 @@ public class IntermediateCodeGenerator {
      * @param params
      */
     private void generate(SymbolParams params){
-        // TODO
+        SymbolOperation oper = params.getValue();
+        generate(oper);
+        String t = oper.reference;
+        
+        if(oper.type.isType(Constants.TYPE_ARRAY)){
+            addInstruction(InstructionType.param_c, t);
+            SymbolType type = oper.type;
+            // Since we need to know the dimensions of the arrays but parameters are not known in compilation time,
+            // we pass them as parameters which the function's preamble will take care of during assembly code generation.
+            while(type != null && type.arrayLength != Constants.UNKNOWN) {
+                addInstruction(InstructionType.param_s, ""+type.arrayLength);
+                type = type.getBaseType();
+            }
+        } else addInstruction(InstructionType.param_s, t);
+        
+        SymbolParams next = params.getNext();
+        if(next != null) generate(next);
     }
 
     /**
@@ -745,7 +774,7 @@ public class IntermediateCodeGenerator {
             dimensionsToCheck = vte.cloneDimensions();
             generate(arrSuff);
             String tSuffix = arrSuff.reference;
-            int nBytes = 1;
+            int nBytes = Constants.CHAR_BYTES;
             if(vte.type == Constants.TYPE_INTEGER){
                 nBytes = Constants.INTEGER_BYTES;
             }

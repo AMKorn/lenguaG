@@ -10,7 +10,7 @@ public class VarTableEntry {
     public int displacement;
     public int type;
     public int subyacentType;
-    public ArrayList<Integer> dimensions;
+    public ArrayList<String> dimensions;
 
     public VarTableEntry(String tName){
         this.tName = tName;
@@ -19,9 +19,9 @@ public class VarTableEntry {
         dimensions = new ArrayList<>();
     }
 
-    public ArrayList<Integer> cloneDimensions(){
-        ArrayList<Integer> i = new ArrayList<>();
-        for (Integer d : dimensions) {
+    public ArrayList<String> cloneDimensions(){
+        ArrayList<String> i = new ArrayList<>();
+        for (String d : dimensions) {
             i.add(d);
         }
         return i;

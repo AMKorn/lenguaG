@@ -9,6 +9,10 @@ int[][] a = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 int aEnd = a[1][9];
 char[] string = "Esto es un string";
 
+void foo(int[][] a){
+    out(a[1][1]);
+}
+
 int partition(int[] array, int begin, int end) {
     int pivot = array[end];
     int i = (begin-1);
@@ -37,6 +41,8 @@ void quickSort (int[] array, int begin, int end) {
 }
 
 main {
+    foo(a);
+    out("Hola");
     intArray = [5, 9, 4, 6, 5, 3];
     quickSort(intArray, begin, end);
     out("El array ordenado es: ");

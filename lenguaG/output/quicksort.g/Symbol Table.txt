@@ -9,20 +9,32 @@ c:
 	[Type: char
 	Constant: false
 	Declared level: 0]
-partition:
-	[Type: function (Returns: int, args:[int[] array, int begin, int end])
-	Constant: false
-	Declared level: 0]
-t:
-	[Type: bool
-	Constant: false
-	Declared level: 0]
 endValue:
 	[Type: int
 	Constant: false
 	Declared level: 0]
 string:
 	[Type: char[17]
+	Constant: false
+	Declared level: 0]
+foo:
+	[Type: function (Returns: void, args:[int[][] a])
+	Constant: false
+	Declared level: 0]
+quickSort:
+	[Type: function (Returns: void, args:[int[] array, int begin, int end])
+	Constant: false
+	Declared level: 0]
+intArray:
+	[Type: int[6]
+	Constant: false
+	Declared level: 0]
+partition:
+	[Type: function (Returns: int, args:[int[] array, int begin, int end])
+	Constant: false
+	Declared level: 0]
+t:
+	[Type: bool
 	Constant: false
 	Declared level: 0]
 aEnd:
@@ -33,18 +45,10 @@ end:
 	[Type: int
 	Constant: false
 	Declared level: 0]
-quickSort:
-	[Type: function (Returns: void, args:[int[] array, int begin, int end])
-	Constant: false
-	Declared level: 0]
 begin:
 	[Type: int
 	Constant: true
 	Value: 0
-	Declared level: 0]
-intArray:
-	[Type: int[6]
-	Constant: false
 	Declared level: 0]
 
 Ambit table:[0]

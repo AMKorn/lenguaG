@@ -958,6 +958,7 @@ public class Semantic {
         }
         if(desc.getType() == Constants.TYPE_ARRAY){
             var.type = new SymbolType(Constants.TYPE_ARRAY, desc.getBaseType());
+            var.type.arrayLength = desc.getLength();
             var.isConstant = false;
             return;
         }

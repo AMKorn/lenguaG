@@ -22,7 +22,7 @@ import lenguag.backend.IntermediateCodeGenerator;
  */
 public class LenguaG {
 
-    public static final boolean DEBUGGING = true;
+    public static final boolean DEBUGGING = false;
     public static final String OUTPUT_PATH = "../output/";
 
     public static String outputPath = OUTPUT_PATH;
@@ -81,7 +81,7 @@ public class LenguaG {
             IntermediateCodeGenerator c3a = new IntermediateCodeGenerator();
             try {
                 c3a.generate((SymbolBody) resultSyn);
-            } catch(NullPointerException TEMPORARY) {
+            } catch(Exception TEMPORARY) {
                 // TODO remove
                 TEMPORARY.printStackTrace();
                 writeFile(outputPath, "c3a.txt", c3a.toString());

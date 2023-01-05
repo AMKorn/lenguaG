@@ -72,8 +72,173 @@ e1: skip
 	t26[16] = 103
 	goto e2
 e3: skip
-	pmb partition
+	pmb foo
+	t31 = 0 * t28
+	t32 = 1
+	t33 = t31 + t32
+	t34 = t33 * t29
+	t35 = 1
+	t36 = t34 + t35
+	t37 = t36 * 4
+	t38 = t27[t37]
+	out: t38
+	t30 = 0
+	rtn foo
 e2: skip
 	goto e4
 e5: skip
+	pmb partition
+	t45 = 0 * t40
+	t46 = t45 + t42
+	t47 = t46 * 4
+	t48 = t39[t47]
+	t44 = t48
+	t50 = 1
+	t51 = t41 - t50
+	t49 = t51
+	t52 = t41
+e6: skip
+	if t52<t42 goto e7
+	t53 = 0
+	goto e8
+e7: skip
+	t53 = -1
+e8: skip
+	if t53=0 goto e9
+	t54 = 0 * t40
+	t55 = t54 + t52
+	t56 = t55 * 4
+	t57 = t39[t56]
+	if t57<=t44 goto e10
+	t58 = 0
+	goto e11
+e10: skip
+	t58 = -1
+e11: skip
+	if t58=0 goto e12
+	t59 = 1
+	t60 = t49 + t59
+	t49 = t60
+	t61 = 0 * t40
+	t62 = t61 + t49
+	t63 = t62 * 4
+	t64 = t39[t63]
+	t65 = t64
+	t66 = 0 * t40
+	t67 = t66 + t52
+	t68 = t67 * 4
+	t69 = t39[t68]
+	t64 = t69
+	t69 = t65
+e12: skip
+	t70 = 1
+	t71 = t52 + t70
+	t52 = t71
+	goto e6
+e9: skip
+	t72 = 0 * t40
+	t73 = 1
+	t74 = t49 + t73
+	t75 = t72 + t74
+	t76 = t75 * 4
+	t77 = t39[t76]
+	t78 = t77
+	t79 = 0 * t40
+	t80 = t79 + t42
+	t81 = t80 * 4
+	t82 = t39[t81]
+	t77 = t82
+	t82 = t78
+	t83 = 1
+	t84 = t49 + t83
+	t43 = t84
+	rtn partition
+	t43 = 0
+	rtn partition
+e4: skip
+	goto e13
+e14: skip
 	pmb quickSort
+	if t87<t88 goto e15
+	t90 = 0
+	goto e16
+e15: skip
+	t90 = -1
+e16: skip
+	if t90=0 goto e17
+	param_c: t85[]
+	param_s: t87
+	param_s: t88
+	call partition
+	t92 = t43
+	t91 = t92
+	param_c: t85[]
+	param_s: t87
+	t93 = 1
+	t94 = t91 - t93
+	param_s: t94
+	call quickSort
+	t95 = t89
+	param_c: t85[]
+	t96 = 1
+	t97 = t91 + t96
+	param_s: t97
+	param_s: t88
+	call quickSort
+	t98 = t89
+e17: skip
+	t89 = 0
+	rtn quickSort
+e13: skip
+e18: skip
+	param_c: t16[]
+	param_s: 2
+	param_s: 10
+	call foo
+	t99 = t30
+	t100[0] = 72
+	t100[1] = 111
+	t100[2] = 108
+	t100[3] = 97
+	out: t100
+	t100[16] = 5
+	t100[20] = 9
+	t100[24] = 4
+	t100[28] = 6
+	t100[32] = 5
+	t100[36] = 3
+	t8 = t100
+	param_c: t8[]
+	param_s: 6
+	t101 = 0
+	param_s: t101
+	param_s: t1
+	call quickSort
+	t102 = t89
+	t100[10] = 69
+	t100[11] = 108
+	t100[12] = 32
+	t100[13] = 97
+	t100[14] = 114
+	t100[15] = 114
+	t100[16] = 97
+	t100[17] = 121
+	t100[18] = 32
+	t100[19] = 111
+	t100[20] = 114
+	t100[21] = 100
+	t100[22] = 101
+	t100[23] = 110
+	t100[24] = 97
+	t100[25] = 100
+	t100[26] = 111
+	t100[27] = 32
+	t100[28] = 101
+	t100[29] = 115
+	t100[30] = 58
+	t100[31] = 32
+	out: t100
+	out: t8
+	t100[32] = 92
+	t100[33] = 110
+	out: t100
