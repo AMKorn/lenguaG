@@ -79,13 +79,12 @@ public class LenguaG {
             if(DEBUGGING) System.out.println("Writing symbol table...");
             writeFile(outputPath, "Symbol Table.txt", sem.symbolTable.toString());
             IntermediateCodeGenerator c3a = new IntermediateCodeGenerator();
-            try {
-                c3a.generate((SymbolBody) resultSyn);
-            } catch(Exception TEMPORARY) {
-                // TODO remove
-                TEMPORARY.printStackTrace();
-                writeFile(outputPath, "c3a.txt", c3a.toString());
-            }
+
+            // Intermediate code generation
+            c3a.generate((SymbolBody) resultSyn);
+
+            // Machine code generation
+            
             if(DEBUGGING) System.out.println("Writing three address code...");
             writeFile(outputPath, "c3a.txt", c3a.toString());
             

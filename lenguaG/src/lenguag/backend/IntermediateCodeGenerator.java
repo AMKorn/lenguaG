@@ -161,7 +161,9 @@ public class IntermediateCodeGenerator {
         generate(rSide);
         String t1 = rSide.reference;
 
-        addInstruction(InstructionType.copy, t1, t);
+        if(rSide.type.isType(Constants.TYPE_ARRAY)){
+            addInstruction(InstructionType.point, t1, t);
+        } else addInstruction(InstructionType.copy, t1, t);
     }
 
     /**
@@ -807,6 +809,14 @@ public class IntermediateCodeGenerator {
 
     private String newTag(){
         return "e" + numE++;
+    }
+
+    public Hashtable<String, VarTableEntry> getVariableTable(){
+        return variableTable;
+    }
+
+    public Hashtable<String, ProcTableEntry> getProcedureTable(){
+        return procedureTable;
     }
 
     private VarTableEntry getVar(String t){
