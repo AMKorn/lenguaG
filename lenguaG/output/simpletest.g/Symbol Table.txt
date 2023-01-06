@@ -1,0 +1,26 @@
+Current level: 0
+
+Symbol Table: 
+a:
+	[Type: int
+	Constant: false
+	Declared level: 0]
+b:
+	[Type: int
+	Constant: false
+	Declared level: 0]
+c:
+	[Type: int
+	Constant: false
+	Declared level: 0]
+d:
+	[Type: int[2]
+	Constant: false
+	Declared level: 0]
+codeAsk:
+	[Type: char[20]
+	Constant: false
+	Declared level: 0]
+
+Ambit table:[0]
+Expansion table:[]

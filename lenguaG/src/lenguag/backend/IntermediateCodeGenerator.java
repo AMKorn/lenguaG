@@ -72,7 +72,7 @@ public class IntermediateCodeGenerator {
         if(LenguaG.DEBUGGING) {
             System.out.println("\n\tc3@ Variables Table\n");
             for (String s : variableTable.keySet()) {
-                System.out.println(s + ": " + variableTable.get(s).tName);
+                System.out.println(s + ": \n\t" + variableTable.get(s));
             }
             System.out.println("\n\tc3@ Procedures Table\n");
             for (String s : procedureTable.keySet()) {
@@ -438,7 +438,7 @@ public class IntermediateCodeGenerator {
             right = "" + (bVal ? Constants.TRUE : Constants.FALSE);
         } else if(value.getSemanticValue() instanceof Integer){
             right = "" + (int) value.getSemanticValue();
-            getVar(t).occupation = Constants.INTEGER_BYTES;
+            //TODO getVar(t).occupation = Constants.INTEGER_BYTES;
         }
         
         // If the depth is 1 it means we are now on the "ground level" of the array and we can start to assign
@@ -523,7 +523,7 @@ public class IntermediateCodeGenerator {
         } else if(value instanceof Integer){
             t = newVariable();
             addInstruction(InstructionType.copy, value.toString(), t);
-            getVar(t).occupation = Constants.INTEGER_BYTES;
+            //getVar(t).occupation = Constants.INTEGER_BYTES;
         } else if(value instanceof Character){
             t = newVariable();
             char cVal = (Character) value;
@@ -757,22 +757,22 @@ public class IntermediateCodeGenerator {
             if(subLevel.isType(Constants.TYPE_INTEGER)){
                 occupation *= Constants.INTEGER_BYTES;
             }
-            getVar(t).occupation = occupation;
+            //getVar(t).occupation = occupation;
         } else if(val instanceof Integer) {
             int intValue = (Integer) val; 
             t = newVariable();
             addInstruction(InstructionType.copy, "" + intValue, t);
-            getVar(t).occupation = Constants.INTEGER_BYTES;
+            //getVar(t).occupation = Constants.INTEGER_BYTES;
         } else if(val instanceof Boolean) {
             boolean boolValue = (Boolean) val;
             t = newVariable();
             addInstruction(InstructionType.copy, "" + (boolValue ? Constants.TRUE : Constants.FALSE), t);
-            getVar(t).occupation = Constants.BOOL_BYTES;
+            //getVar(t).occupation = Constants.BOOL_BYTES;
         } else if(val instanceof Character) {
             char cValue = (Character) val;
             t = newVariable();
             addInstruction(InstructionType.copy, "" + cValue, t);
-            getVar(t).occupation = Constants.CHAR_BYTES;
+            //getVar(t).occupation = Constants.CHAR_BYTES;
             getVar(t).type = Constants.TYPE_CHARACTER;
         }
         value.reference = t;

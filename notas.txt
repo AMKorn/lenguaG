@@ -26,5 +26,3 @@ generate(x);
 String t = newVariable();
 addInstruction([¿?], x.r, t);
 dec.r = t;
-
-TODO gestionar dimensiones de arrays, sin arrays de longitud variable es posible pero no es prioritario
