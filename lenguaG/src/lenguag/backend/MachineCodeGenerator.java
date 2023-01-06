@@ -114,6 +114,19 @@ public class MachineCodeGenerator {
                 case if_NE:
                     break;
                 case in:
+                    scanUsed = true;
+
+                    // TODO differentiate ints and chars
+
+                    text.add("\tmov rsi,"+des);
+                    text.add("\tmov rdi,fmtInInt");
+                    text.add("\tmov al, 0");
+                    text.add("\tcall scanf");
+
+    //     text.add("    mov     rsi, int");
+    //     text.add("    mov     rdi, fmtin");
+    //     text.add("    mov     al, 0");
+    //     text.add("    call    scanf");
                     break;
                 case ind_ass:
                     break;
@@ -129,14 +142,13 @@ public class MachineCodeGenerator {
                     break;
                 case out:
                     printUsed = true;
+
+                    // TODO print characters and arrays
+
                     text.add("\tmov rdi,fmtOutInt");
                     text.add("\tmov rsi,[" + des + "]");
                     text.add("\tmov rax, 0");
                     text.add("\tcall printf");
-                        //     text.add("    mov	rdi,fmt");
-    //     text.add("    mov	rsi,[int]");
-    //     text.add("    mov	rax,0		; or can be  xor  rax,rax");
-    //     text.add("    call    printf		; Call C function");
                     break;
                 case param_c:
                     break;
@@ -170,6 +182,10 @@ public class MachineCodeGenerator {
             //     text.add("fmtin:  db \"%d\", 0");
             data.add("fmtOutInt: db \"%d\",10,0");
             data.add("fmtOutChar: db \"%s\",10,0");
+        }
+        if(scanUsed){
+            data.add("fmtInInt:  db \"%d\", 0");
+            data.add("fmtInChar:  db \"%s\", 0");
         }
     }
 
