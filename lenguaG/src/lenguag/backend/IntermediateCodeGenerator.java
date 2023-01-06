@@ -506,8 +506,9 @@ public class IntermediateCodeGenerator {
             String eMain = currentProcTable.eStart;
 
             addInstruction(InstructionType.skip, eMain);
+            addInstruction(InstructionType.pmb, "main");
             generate(instrs);
-            
+
             currentFunction = DEF_FUNCTION; // Reset current function
             currentProcTable = null;
         }

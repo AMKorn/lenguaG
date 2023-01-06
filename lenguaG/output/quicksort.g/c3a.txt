@@ -183,6 +183,7 @@ e17: skip
 	rtn quickSort
 e13: skip
 e18: skip
+	pmb main
 	t89[0] = 5
 	t89[4] = 9
 	t89[8] = 4

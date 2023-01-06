@@ -1,13 +1,48 @@
-     1                                  	section .data
-     2 00000000 00<rept>                t2: 	times 4 db 0
-     3 00000004 00<rept>                t0: 	times 4 db 0
-     4 00000008 00<rept>                t3: 	times 4 db 0
-     5 0000000C 00<rept>                t1: 	times 4 db 0
-     6 00000010 00<rept>                t4: 	times 4 db 0
-     7                                  	section .text
-     8                                  	global main
-     9                                  main:
-    10 00000000 55                      	push rbp
-    11 00000001 5D                      	pop rbp
-    12 00000002 B800000000              	mov rax,0
-    13 00000007 C3                      ret
+     1                                  	extern printf
+     2                                  	section .data
+     3 00000000 00<rept>                t2: 	times 4 db 0
+     4 00000004 00<rept>                t0: 	times 4 db 0
+     5 00000008 00<rept>                t3: 	times 4 db 0
+     6 0000000C 00<rept>                t1: 	times 4 db 0
+     7 00000010 00<rept>                t4: 	times 4 db 0
+     8 00000014 25640A00                fmtOutInt: db "%d",10,0
+     9 00000018 25730A00                fmtOutChar: db "%s",10,0
+    10                                  	section .text
+    11                                  	global main
+    12                                  main:
+    13 00000000 4889E5                  	mov rbp, rsp
+    14 00000003 55                      	push rbp
+    15                                  
+    16                                  	; 	t1 = 2
+    17 00000004 B802000000              	mov eax,2
+    18 00000009 890425[0C000000]        	mov [t1],eax
+    19                                  	; 	t0 = t1
+    20 00000010 8B0425[0C000000]        	mov eax,[t1]
+    21 00000017 890425[04000000]        	mov [t0],eax
+    22                                  	; 	t3 = 3
+    23 0000001E B803000000              	mov eax,3
+    24 00000023 890425[08000000]        	mov [t3],eax
+    25                                  	; 	t2 = t3
+    26 0000002A 8B0425[08000000]        	mov eax,[t3]
+    27 00000031 890425[00000000]        	mov [t2],eax
+    28                                  	; e0: skip
+    29                                  e0:
+    30                                  	; 	pmb main
+    31                                  	; 	t5 = t0 + t2
+    32 00000038 8B0425[04000000]        	mov eax,[t0]
+    33 0000003F 8B1C25[00000000]        	mov ebx,[t2]
+    34 00000046 01C3                    	add ebx,eax
+    35 00000048 895DFC                  	mov [rbp-4],ebx
+    36                                  	; 	t4 = t5
+    37 0000004B 8B45FC                  	mov eax,[rbp-4]
+    38 0000004E 890425[10000000]        	mov [t4],eax
+    39                                  	; 	out: t4
+    40 00000055 48BF-                   	mov rdi,fmtOutInt
+    40 00000057 [1400000000000000] 
+    41 0000005F 488B3425[10000000]      	mov rsi,[t4]
+    42 00000067 B800000000              	mov rax, 0
+    43 0000006C E8(00000000)            	call printf
+    44                                  
+    45 00000071 5D                      	pop rbp
+    46 00000072 B800000000              	mov rax,0
+    47 00000077 C3                      	ret

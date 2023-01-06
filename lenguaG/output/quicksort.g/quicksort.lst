@@ -1,36 +1,355 @@
      1                                  	section .data
-     2                                  
-     3 00000000 00<rept>                t1: 	times 4 db 0
-     4 00000004 00<rept>                t8: 	times 24 db 0
-     5 0000001C 00<rept>                t5: 	times 4 db 0
-     6 00000020 00<rept>                t17: 	times 4 db 0
-     7 00000024 00<rept>                t3: 	times 4 db 0
-     8 00000028 00<rept>                t16: 	times 80 db 0
-     9 00000078 00<rept>                t26: 	times 17 db 0
-    10 00000089 00<rept>                t11: 	times 4 db 0
-    11 0000008D 00<rept>                t25: 	times 4 db 0
-    12 00000091 00<rept>                t24: 	times 4 db 0
-    13 00000095 00<rept>                t23: 	times 4 db 0
-    14 00000099 00<rept>                t22: 	times 4 db 0
-    15 0000009D 00<rept>                t9: 	times 4 db 0
-    16 000000A1 00<rept>                t21: 	times 4 db 0
-    17 000000A5 00<rept>                t20: 	times 4 db 0
-    18 000000A9 00<rept>                t7: 	times 4 db 0
-    19 000000AD 00<rept>                t6: 	times 4 db 0
-    20 000000B1 00                      t4: 	times 1 db 0
-    21 000000B2 00<rept>                t2: 	times 4 db 0
-    22 000000B6 00<rept>                t0: 	times 4 db 0
-    23 000000BA 00<rept>                t19: 	times 4 db 0
-    24 000000BE 00<rept>                t18: 	times 4 db 0
-    25 000000C2 00<rept>                t15: 	times 4 db 0
-    26 000000C6 00<rept>                t14: 	times 4 db 0
-    27 000000CA 00<rept>                t13: 	times 4 db 0
-    28 000000CE 00<rept>                t12: 	times 4 db 0
-    29 000000D2 00<rept>                t10: 	times 4 db 0
-    30                                  	section .text
-    31                                  	global main
-    32                                  main:
-    33 00000000 55                      	push rbp
-    34 00000001 5D                      	pop rbp
-    35 00000002 B800000000              	mov rax,0
-    36 00000007 C3                      ret
+     2 00000000 00<rept>                t1: 	times 4 db 0
+     3 00000004 00<rept>                t8: 	times 24 db 0
+     4 0000001C 00<rept>                t5: 	times 4 db 0
+     5 00000020 00<rept>                t17: 	times 4 db 0
+     6 00000024 00<rept>                t3: 	times 4 db 0
+     7 00000028 00<rept>                t16: 	times 80 db 0
+     8 00000078 00<rept>                t26: 	times 17 db 0
+     9 00000089 00<rept>                t11: 	times 4 db 0
+    10 0000008D 00<rept>                t25: 	times 4 db 0
+    11 00000091 00<rept>                t24: 	times 4 db 0
+    12 00000095 00<rept>                t23: 	times 4 db 0
+    13 00000099 00<rept>                t22: 	times 4 db 0
+    14 0000009D 00<rept>                t9: 	times 4 db 0
+    15 000000A1 00<rept>                t21: 	times 4 db 0
+    16 000000A5 00<rept>                t20: 	times 4 db 0
+    17 000000A9 00<rept>                t7: 	times 4 db 0
+    18 000000AD 00<rept>                t6: 	times 4 db 0
+    19 000000B1 00                      t4: 	times 1 db 0
+    20 000000B2 00<rept>                t2: 	times 4 db 0
+    21 000000B6 00<rept>                t0: 	times 4 db 0
+    22 000000BA 00<rept>                t19: 	times 4 db 0
+    23 000000BE 00<rept>                t18: 	times 4 db 0
+    24 000000C2 00<rept>                t15: 	times 4 db 0
+    25 000000C6 00<rept>                t14: 	times 4 db 0
+    26 000000CA 00<rept>                t13: 	times 4 db 0
+    27 000000CE 00<rept>                t12: 	times 4 db 0
+    28 000000D2 00<rept>                t10: 	times 4 db 0
+    29                                  	section .text
+    30                                  	global main
+    31                                  main:
+    32 00000000 55                      	push rbp
+    33                                  
+    34                                  	; 	t0 = 0
+    35 00000001 B800000000              	mov eax,0
+    36                                  	; 	t2 = 6
+    37 00000006 B806000000              	mov eax,6
+    38                                  	; 	t1 = t2
+    39 0000000B 8B0425[B2000000]        	mov eax,[t2]
+    40                                  	; 	t4 = 99
+    41 00000012 B863000000              	mov eax,99
+    42                                  	; 	t3 = t4
+    43 00000017 8B0425[B1000000]        	mov eax,[t4]
+    44                                  	; 	t6 = 0
+    45 0000001E B800000000              	mov eax,0
+    46                                  	; 	if t6<t1 goto e0
+    47                                  	; 	t7 = 0
+    48 00000023 B800000000              	mov eax,0
+    49                                  	; 	goto e1
+    50                                  	; e0: skip
+    51                                  e0:
+    52                                  	; 	t7 = -1
+    53 00000028 B8FFFFFFFF              	mov eax,-1
+    54                                  	; e1: skip
+    55                                  e1:
+    56                                  	; 	t5 = t7
+    57 0000002D 8B0425[A9000000]        	mov eax,[t7]
+    58                                  	; 	t8[0] = 0
+    59                                  	; 	t8[4] = 1
+    60                                  	; 	t8[8] = 2
+    61                                  	; 	t8[12] = 3
+    62                                  	; 	t8[16] = 4
+    63                                  	; 	t9 = 1
+    64 00000034 B801000000              	mov eax,1
+    65                                  	; 	t10 = t1 + t9
+    66 00000039 8B0425[00000000]        	mov eax,[t1]
+    67 00000040 8B1C25[9D000000]        	mov ebx,[t9]
+    68 00000047 01C3                    	add ebx,eax
+    69 00000049 891C25[D2000000]        	mov [t10],ebx
+    70                                  	; 	t8[20] = t10
+    71                                  	; 	t12 = 0 * 6
+    72                                  	; 	t13 = t12 + t1
+    73 00000050 8B0425[CE000000]        	mov eax,[t12]
+    74 00000057 8B1C25[00000000]        	mov ebx,[t1]
+    75 0000005E 01C3                    	add ebx,eax
+    76 00000060 891C25[CA000000]        	mov [t13],ebx
+    77                                  	; 	t14 = t13 * 4
+    78                                  	; 	t15 = t8[t14]
+    79                                  	; 	t11 = t15
+    80 00000067 8B0425[C2000000]        	mov eax,[t15]
+    81                                  	; 	t16[0] = 0
+    82                                  	; 	t16[4] = 1
+    83                                  	; 	t16[8] = 2
+    84                                  	; 	t16[12] = 3
+    85                                  	; 	t16[16] = 4
+    86                                  	; 	t16[20] = 5
+    87                                  	; 	t16[24] = 6
+    88                                  	; 	t16[28] = 7
+    89                                  	; 	t16[32] = 8
+    90                                  	; 	t16[36] = 9
+    91                                  	; 	t16[40] = 10
+    92                                  	; 	t16[44] = 11
+    93                                  	; 	t16[48] = 12
+    94                                  	; 	t16[52] = 13
+    95                                  	; 	t16[56] = 14
+    96                                  	; 	t16[60] = 15
+    97                                  	; 	t16[64] = 16
+    98                                  	; 	t16[68] = 17
+    99                                  	; 	t16[72] = 18
+   100                                  	; 	t16[76] = 19
+   101                                  	; 	t18 = 0 * 2
+   102                                  	; 	t19 = 1
+   103 0000006E B801000000              	mov eax,1
+   104                                  	; 	t20 = t18 + t19
+   105 00000073 8B0425[BE000000]        	mov eax,[t18]
+   106 0000007A 8B1C25[BA000000]        	mov ebx,[t19]
+   107 00000081 01C3                    	add ebx,eax
+   108 00000083 891C25[A5000000]        	mov [t20],ebx
+   109                                  	; 	t21 = t20 * 10
+   110                                  	; 	t22 = 9
+   111 0000008A B809000000              	mov eax,9
+   112                                  	; 	t23 = t21 + t22
+   113 0000008F 8B0425[A1000000]        	mov eax,[t21]
+   114 00000096 8B1C25[99000000]        	mov ebx,[t22]
+   115 0000009D 01C3                    	add ebx,eax
+   116 0000009F 891C25[95000000]        	mov [t23],ebx
+   117                                  	; 	t24 = t23 * 4
+   118                                  	; 	t25 = t16[t24]
+   119                                  	; 	t17 = t25
+   120 000000A6 8B0425[8D000000]        	mov eax,[t25]
+   121                                  	; 	t26[0] = 69
+   122                                  	; 	t26[1] = 115
+   123                                  	; 	t26[2] = 116
+   124                                  	; 	t26[3] = 111
+   125                                  	; 	t26[4] = 32
+   126                                  	; 	t26[5] = 101
+   127                                  	; 	t26[6] = 115
+   128                                  	; 	t26[7] = 32
+   129                                  	; 	t26[8] = 117
+   130                                  	; 	t26[9] = 110
+   131                                  	; 	t26[10] = 32
+   132                                  	; 	t26[11] = 115
+   133                                  	; 	t26[12] = 116
+   134                                  	; 	t26[13] = 114
+   135                                  	; 	t26[14] = 105
+   136                                  	; 	t26[15] = 110
+   137                                  	; 	t26[16] = 103
+   138                                  	; 	goto e2
+   139                                  	; e3: skip
+   140                                  e3:
+   141                                  	; 	pmb foo
+   142                                  	; 	out: t27
+   143                                  	; 	t28 = 0
+   144 000000AD B800000000              	mov eax,0
+   145                                  	; 	rtn foo
+   146                                  	; e2: skip
+   147                                  e2:
+   148                                  	; 	goto e4
+   149                                  	; e5: skip
+   150                                  e5:
+   151                                  	; 	pmb partition
+   152                                  	; 	t35 = 0 * t30
+   153                                  	; 	t36 = t35 + t32
+   154 000000B2 678B451C                	mov eax,[ebp+28]
+   155 000000B6 678B5D34                	mov ebx,[ebp+52]
+   156 000000BA 01C3                    	add ebx,eax
+   157 000000BC 67895D14                	mov [ebp+20],ebx
+   158                                  	; 	t37 = t36 * 4
+   159                                  	; 	t38 = t29[t37]
+   160                                  	; 	t34 = t38
+   161 000000C0 678B4504                	mov eax,[ebp+4]
+   162                                  	; 	t40 = 1
+   163 000000C4 B801000000              	mov eax,1
+   164                                  	; 	t41 = t31 - t40
+   165                                  	; 	t39 = t41
+   166 000000C9 678B85A0000000          	mov eax,[ebp+160]
+   167                                  	; 	t42 = t31
+   168 000000D0 678B4538                	mov eax,[ebp+56]
+   169                                  	; e6: skip
+   170                                  e6:
+   171                                  	; 	if t42<t32 goto e7
+   172                                  	; 	t43 = 0
+   173 000000D4 B800000000              	mov eax,0
+   174                                  	; 	goto e8
+   175                                  	; e7: skip
+   176                                  e7:
+   177                                  	; 	t43 = -1
+   178 000000D9 B8FFFFFFFF              	mov eax,-1
+   179                                  	; e8: skip
+   180                                  e8:
+   181                                  	; 	if t43=0 goto e9
+   182                                  	; 	t44 = 0 * t30
+   183                                  	; 	t45 = t44 + t42
+   184 000000DE 678B8594000000          	mov eax,[ebp+148]
+   185 000000E5 678B5D4C                	mov ebx,[ebp+76]
+   186 000000E9 01C3                    	add ebx,eax
+   187 000000EB 67899D90000000          	mov [ebp+144],ebx
+   188                                  	; 	t46 = t45 * 4
+   189                                  	; 	t47 = t29[t46]
+   190                                  	; 	if t47<=t34 goto e10
+   191                                  	; 	t48 = 0
+   192 000000F2 B800000000              	mov eax,0
+   193                                  	; 	goto e11
+   194                                  	; e10: skip
+   195                                  e10:
+   196                                  	; 	t48 = -1
+   197 000000F7 B8FFFFFFFF              	mov eax,-1
+   198                                  	; e11: skip
+   199                                  e11:
+   200                                  	; 	if t48=0 goto e12
+   201                                  	; 	t49 = 1
+   202 000000FC B801000000              	mov eax,1
+   203                                  	; 	t50 = t39 + t49
+   204 00000101 678B4500                	mov eax,[ebp+0]
+   205 00000105 678B5D78                	mov ebx,[ebp+120]
+   206 00000109 01C3                    	add ebx,eax
+   207 0000010B 67895D74                	mov [ebp+116],ebx
+   208                                  	; 	t39 = t50
+   209 0000010F 678B4574                	mov eax,[ebp+116]
+   210                                  	; 	t51 = 0 * t30
+   211                                  	; 	t52 = t51 + t39
+   212 00000113 678B4570                	mov eax,[ebp+112]
+   213 00000117 678B5D00                	mov ebx,[ebp+0]
+   214 0000011B 01C3                    	add ebx,eax
+   215 0000011D 67895D6C                	mov [ebp+108],ebx
+   216                                  	; 	t53 = t52 * 4
+   217                                  	; 	t54 = t29[t53]
+   218                                  	; 	t55 = t54
+   219 00000121 678B4564                	mov eax,[ebp+100]
+   220                                  	; 	t56 = 0 * t30
+   221                                  	; 	t57 = t56 + t42
+   222 00000125 678B455C                	mov eax,[ebp+92]
+   223 00000129 678B5D4C                	mov ebx,[ebp+76]
+   224 0000012D 01C3                    	add ebx,eax
+   225 0000012F 67895D58                	mov [ebp+88],ebx
+   226                                  	; 	t58 = t57 * 4
+   227                                  	; 	t59 = t29[t58]
+   228                                  	; 	t54 = t59
+   229 00000133 678B4550                	mov eax,[ebp+80]
+   230                                  	; 	t59 = t55
+   231 00000137 678B4560                	mov eax,[ebp+96]
+   232                                  	; e12: skip
+   233                                  e12:
+   234                                  	; 	t60 = 1
+   235 0000013B B801000000              	mov eax,1
+   236                                  	; 	t61 = t42 + t60
+   237 00000140 678B454C                	mov eax,[ebp+76]
+   238 00000144 678B9D88000000          	mov ebx,[ebp+136]
+   239 0000014B 01C3                    	add ebx,eax
+   240 0000014D 67899D80000000          	mov [ebp+128],ebx
+   241                                  	; 	t42 = t61
+   242 00000154 678B8580000000          	mov eax,[ebp+128]
+   243                                  	; 	goto e6
+   244                                  	; e9: skip
+   245                                  e9:
+   246                                  	; 	t62 = 0 * t30
+   247                                  	; 	t63 = 1
+   248 0000015B B801000000              	mov eax,1
+   249                                  	; 	t64 = t39 + t63
+   250 00000160 678B4500                	mov eax,[ebp+0]
+   251 00000164 678B5D3C                	mov ebx,[ebp+60]
+   252 00000168 01C3                    	add ebx,eax
+   253 0000016A 67895D30                	mov [ebp+48],ebx
+   254                                  	; 	t65 = t62 + t64
+   255 0000016E 678B4544                	mov eax,[ebp+68]
+   256 00000172 678B5D30                	mov ebx,[ebp+48]
+   257 00000176 01C3                    	add ebx,eax
+   258 00000178 67895D28                	mov [ebp+40],ebx
+   259                                  	; 	t66 = t65 * 4
+   260                                  	; 	t67 = t29[t66]
+   261                                  	; 	t68 = t67
+   262 0000017C 678B4518                	mov eax,[ebp+24]
+   263                                  	; 	t69 = 0 * t30
+   264                                  	; 	t70 = t69 + t32
+   265 00000180 678B4508                	mov eax,[ebp+8]
+   266 00000184 678B5D34                	mov ebx,[ebp+52]
+   267 00000188 01C3                    	add ebx,eax
+   268 0000018A 67899DB0000000          	mov [ebp+176],ebx
+   269                                  	; 	t71 = t70 * 4
+   270                                  	; 	t72 = t29[t71]
+   271                                  	; 	t67 = t72
+   272 00000191 678B85A4000000          	mov eax,[ebp+164]
+   273                                  	; 	t72 = t68
+   274 00000198 678B4510                	mov eax,[ebp+16]
+   275                                  	; 	t73 = 1
+   276 0000019C B801000000              	mov eax,1
+   277                                  	; 	t74 = t39 + t73
+   278 000001A1 678B4500                	mov eax,[ebp+0]
+   279 000001A5 678B9D9C000000          	mov ebx,[ebp+156]
+   280 000001AC 01C3                    	add ebx,eax
+   281 000001AE 67899D98000000          	mov [ebp+152],ebx
+   282                                  	; 	t33 = t74
+   283 000001B5 678B8598000000          	mov eax,[ebp+152]
+   284                                  	; 	rtn partition
+   285                                  	; 	t33 = 0
+   286 000001BC B800000000              	mov eax,0
+   287                                  	; 	rtn partition
+   288                                  	; e4: skip
+   289                                  e4:
+   290                                  	; 	goto e13
+   291                                  	; e14: skip
+   292                                  e14:
+   293                                  	; 	pmb quickSort
+   294                                  	; 	if t77<t78 goto e15
+   295                                  	; 	t80 = 0
+   296 000001C1 B800000000              	mov eax,0
+   297                                  	; 	goto e16
+   298                                  	; e15: skip
+   299                                  e15:
+   300                                  	; 	t80 = -1
+   301 000001C6 B8FFFFFFFF              	mov eax,-1
+   302                                  	; e16: skip
+   303                                  e16:
+   304                                  	; 	if t80=0 goto e17
+   305                                  	; 	param_c: t75[]
+   306                                  	; 	param_s: t77
+   307                                  	; 	param_s: t78
+   308                                  	; 	call partition
+   309                                  	; 	t82 = t33
+   310 000001CB 678B452C                	mov eax,[ebp+44]
+   311                                  	; 	t81 = t82
+   312 000001CF 678B4528                	mov eax,[ebp+40]
+   313                                  	; 	param_c: t75[]
+   314                                  	; 	param_s: t77
+   315                                  	; 	t83 = 1
+   316 000001D3 B801000000              	mov eax,1
+   317                                  	; 	t84 = t81 - t83
+   318                                  	; 	param_s: t84
+   319                                  	; 	call quickSort
+   320                                  	; 	t85 = t79
+   321 000001D8 678B4500                	mov eax,[ebp+0]
+   322                                  	; 	param_c: t75[]
+   323                                  	; 	t86 = 1
+   324 000001DC B801000000              	mov eax,1
+   325                                  	; 	t87 = t81 + t86
+   326 000001E1 678B452C                	mov eax,[ebp+44]
+   327 000001E5 678B5D18                	mov ebx,[ebp+24]
+   328 000001E9 01C3                    	add ebx,eax
+   329 000001EB 67895D14                	mov [ebp+20],ebx
+   330                                  	; 	param_s: t87
+   331                                  	; 	param_s: t78
+   332                                  	; 	call quickSort
+   333                                  	; 	t88 = t79
+   334 000001EF 678B4500                	mov eax,[ebp+0]
+   335                                  	; e17: skip
+   336                                  e17:
+   337                                  	; 	t79 = 0
+   338 000001F3 B800000000              	mov eax,0
+   339                                  	; 	rtn quickSort
+   340                                  	; e13: skip
+   341                                  e13:
+   342                                  	; e18: skip
+   343                                  e18:
+   344                                  	; 	pmb main
+   345                                  	; 	t89[0] = 5
+   346                                  	; 	t89[4] = 9
+   347                                  	; 	t89[8] = 4
+   348                                  	; 	t89[12] = 6
+   349                                  	; 	t89[16] = 5
+   350                                  	; 	t89[20] = 3
+   351                                  	; 	t8 => t89
+   352                                  
+   353 000001F8 5D                      	pop rbp
+   354 000001F9 B800000000              	mov rax,0
+   355 000001FE C3                      ret
