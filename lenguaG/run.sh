@@ -3,8 +3,9 @@ usage="Unexpected format. Expected format:
         -f: Jflex compilation
         -c: CUP compilation
         -j: Recompile java classes
-        -i: Input expected. Will try to run the program.
+        -i: Input expected. Will try to run the compilation process.
             Requires input file.
+        -r: Compile machine code and run it. Requires input file.
 
 "
 
@@ -18,8 +19,9 @@ flex=0
 cup=0
 java=0
 input=0
+run=0
 
-while getopts fcji flag
+while getopts fcjir flag
 do
     flagged=1;
     case "${flag}" in
@@ -29,6 +31,9 @@ do
         i) input=1;
             input_file=$2;
             output_file=$3;;
+        r) run=1;
+            input_file=$2;
+            output_file=$3;;
     esac
 done
 
@@ -36,6 +41,11 @@ if [[ ! -n $flagged ]]
 then
     input_file=$1
     output_file=$2
+fi
+
+if [[ -n $input_file ]] && [[ ! -n $output_file ]]
+then
+    output_file=$input_file
 fi
 
 cd src/
@@ -68,12 +78,38 @@ then
 fi
 if [[ -n $input_file ]]
 then
-    echo "
-    **** Program output ****
-    "
-    java -cp .:lenguag/syntactic/java-cup-11b-runtime.jar lenguag.LenguaG ../$input_file $output_file
-elif [[ $input == 1 ]]
+    if [[ $input == 0 ]] && [[ $run == 0 ]]
+    then
+        input=1
+    fi
+    if [[ $input == 1 ]]
+    then
+        echo "
+        **** Compiler output ****
+        "
+        java -cp .:lenguag/syntactic/java-cup-11b-runtime.jar lenguag.LenguaG ../$input_file $output_file
+    fi
+    if [[ $run == 1 ]]
+    then
+        echo "
+        **** Running propgram ****
+        "
+        # Currently in /src
+        cd ../output/
+        file=${output_file##*/}
+        cd $file
+
+        file=${file%%.*}
+
+        nasm -f elf64 -l $file.lst mc.asm
+        gcc -no-pie -o $file mc.o
+        ./$file
+        
+        cd ../../src
+    fi
+elif [[ $input == 1 ]] || [[ $run == 1 ]]
 then
     echo "$usage" | grep -B 1 'input file'
 fi
+
 cd ..

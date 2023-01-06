@@ -1,0 +1,41 @@
+     1                                  ; hello_64.asm    print a string using printf
+     2                                  ; Assemble:	  nasm -f elf64 -l hello_64.lst  hello_64.asm
+     3                                  ; Link:		  gcc --no-pie -o hello_64  hello_64.o
+     4                                  ; Run:		  ./hello_64 > hello_64.out
+     5                                  ; Output:	  cat hello_64.out
+     6                                  ; Equivalent C code
+     7                                  ; // hello.c
+     8                                  ; #include <stdio.h>
+     9                                  ; int main()
+    10                                  ; {
+    11                                  ;   char msg[] = "Hello world\n";
+    12                                  ;   printf("%s\n",msg);
+    13                                  ;   return 0;
+    14                                  ; }
+    15                                  ; Declare needed C  functions
+    16                                      extern	printf		; the C function, to be called
+    17                                      extern  scanf
+    18                                      section .data		; Data section, initialized variables
+    19 00000000 48656C6C6F20776F72-     msg:	db "Hello world", 0	; C string needs 0
+    19 00000009 6C6400             
+    20 0000000C 25640A00                fmt:    db "%d", 10, 0       ; The printf format, "\n",'0'
+    21 00000010 00<rept>                int:    times 4 db 0
+    22 00000014 256400                  fmtin:  db "%d", 0
+    23                                      section .text         ; Code section.
+    24                                      global main		; the standard gcc entry point
+    25                                  main:				; the program label for the entry point
+    26 00000000 55                          push    rbp		; set up stack frame, must be alligned
+    27 00000001 48BE-                       mov     rsi, int
+    27 00000003 [1000000000000000] 
+    28 0000000B 48BF-                       mov     rdi, fmtin
+    28 0000000D [1400000000000000] 
+    29 00000015 B000                        mov     al, 0
+    30 00000017 E8(00000000)                call    scanf
+    31 0000001C 48BF-                       mov	rdi,fmt
+    31 0000001E [0C00000000000000] 
+    32 00000026 488B3425[10000000]          mov	rsi,[int]
+    33 0000002E B800000000                  mov	rax,0		; or can be  xor  rax,rax
+    34 00000033 E8(00000000)                call    printf		; Call C function
+    35 00000038 5D                          pop	rbp		; restore stack
+    36 00000039 B800000000                  mov	rax,0		; normal, no error, return value
+    37 0000003E C3                          ret			; return
