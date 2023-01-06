@@ -1,7 +1,17 @@
 val int begin = 0;
-val int end = 6;
-int[] intArray = [5, 9, 4, 6, 5, 3, 9];
+int end = 6;
+char c = 'c';
+bool t = begin < end;
+int[] intArray = [begin, 1, 2, 3, 4, end+1];
+int endValue = intArray[end];
+int[][] a = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+             [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]];
+int aEnd = a[1][9];
 char[] string = "Esto es un string";
+
+void foo(int[][] a){
+    out(a[1][1]);
+}
 
 int partition(int[] array, int begin, int end) {
     int pivot = array[end];
@@ -31,8 +41,11 @@ void quickSort (int[] array, int begin, int end) {
 }
 
 main {
-    quickSort(intArray, begin, end);
-    out("El array ordenado es: ");
-    out(intArray);
-    out("\n");
+    // foo(a);
+    // out("Hola");
+    intArray = [5, 9, 4, 6, 5, 3];
+    // quickSort(intArray, begin, end);
+    // out("El array ordenado es: ");
+    // out(intArray);
+    // out("\n");
 }

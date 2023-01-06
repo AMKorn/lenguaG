@@ -1,10 +1,3 @@
-/**
- * Asignatura: 21780 - Compiladores
- * Miembros:
- * 	- Román Colom, Marc
- * 	- Korn, Andreas Manuel
- * 	- Vilella Candia, Joan 
- */
 package lenguag.syntactic.symbols;
 
 /**
@@ -17,9 +10,6 @@ public class SymbolDec extends SymbolInstr {
 
     private SymbolType type;
     private SymbolOperation value;
-
-    // Intermediate code generation variable
-    public String r;
     
     public SymbolDec(SymbolDecCont contDeclaration, int line, int column) {
         super("Declaration", 0, instructionType.instDeclaration, line, column);

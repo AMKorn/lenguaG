@@ -1,0 +1,9 @@
+     1                                  	section .data
+     2                                  
+     3                                  	section .text
+     4                                  	global main
+     5                                  main:
+     6 00000000 55                      	push rbp
+     7 00000001 5D                      	pop rbp
+     8 00000002 B800000000              	mov rax,0
+     9 00000007 C3                      ret

@@ -1,8 +1,8 @@
 /**
  * Asignatura: 21780 - Compiladores
  * Miembros:
- * 	- Román Colom, Marc
  * 	- Korn, Andreas Manuel
+ * 	- Román Colom, Marc
  * 	- Vilella Candía, Joan 
  */
 package lenguag;
@@ -15,6 +15,7 @@ import lenguag.syntactic.symbols.*;
 import lenguag.semantic.*;
 import lenguag.LenguaGException.*;
 import lenguag.backend.IntermediateCodeGenerator;
+import lenguag.backend.MachineCodeGenerator;
 
 /**
  *
@@ -22,7 +23,7 @@ import lenguag.backend.IntermediateCodeGenerator;
  */
 public class LenguaG {
 
-    public static final boolean DEBUGGING = false;
+    public static final boolean DEBUGGING = true;
     public static final String OUTPUT_PATH = "../output/";
 
     public static String outputPath = OUTPUT_PATH;
@@ -78,10 +79,20 @@ public class LenguaG {
             }
             if(DEBUGGING) System.out.println("Writing symbol table...");
             writeFile(outputPath, "Symbol Table.txt", sem.symbolTable.toString());
-            IntermediateCodeGenerator c3a = new IntermediateCodeGenerator(sem.symbolTable);
+            IntermediateCodeGenerator c3a = new IntermediateCodeGenerator();
+
+            // Intermediate code generation
             c3a.generate((SymbolBody) resultSyn);
+            
             if(DEBUGGING) System.out.println("Writing three address code...");
             writeFile(outputPath, "c3a.txt", c3a.toString());
+
+            // Machine code generation
+            MachineCodeGenerator mcg = new MachineCodeGenerator(c3a);
+            mcg.generateCode();
+
+            if(DEBUGGING) System.out.println("Writing machine code...");
+            writeFile(outputPath, "mc.asm", mcg.toString());
             
         } catch (FileNotFoundException fnf) {
             // User error
@@ -93,7 +104,7 @@ public class LenguaG {
         } catch(SyntacticException se){
             // User error 
             System.err.println(se.getMessage());
-        } 
+        }
         
         catch (IOException e) {
             // !!! COMPILER ERROR !!!

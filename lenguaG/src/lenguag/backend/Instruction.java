@@ -4,7 +4,7 @@ public class Instruction {
     public enum InstructionType {
         copy, add, sub, prod, div, mod, neg, and, or, not, ind_val, ind_ass, 
         skip, go_to, if_LT, if_LE, if_EQ, if_NE, if_GE, if_GT, pmb, call, rtn, 
-        param_s, param_c
+        param_s, param_c, in, out, point
     }
 
     public InstructionType instruction;
@@ -55,13 +55,13 @@ public class Instruction {
             case if_EQ:
                 return "\tif " + left + "=" + right + " goto " + destination;
             case if_GE:
-                return "\tif " + left + "<=" + right + " goto " + destination;
-            case if_GT:
-                return "\tif " + left + "<" + right + " goto " + destination;
-            case if_LE:
                 return "\tif " + left + ">=" + right + " goto " + destination;
-            case if_LT:
+            case if_GT:
                 return "\tif " + left + ">" + right + " goto " + destination;
+            case if_LE:
+                return "\tif " + left + "<=" + right + " goto " + destination;
+            case if_LT:
+                return "\tif " + left + "<" + right + " goto " + destination;
             case if_NE:
                 return "\tif " + left + "!=" + right + " goto " + destination;
             case ind_ass:
@@ -77,15 +77,21 @@ public class Instruction {
             case or:
                 return "\t" + destination + " = " + left + " or " + right;
             case param_c:
-                return "\tparam_c " + destination + "[" + left + "]";
+                return "\tparam_c: " + destination + "[]";// + left + "]";
             case param_s:
-                return "\tparam_s " + destination;
+                return "\tparam_s: " + destination;
             case pmb:
                 return "\tpmb " + destination;
             case rtn:
                 return "\trtn " + destination;
             case skip:
                 return destination + ": skip";
+            case in:
+                return "\tin: " + destination;
+            case out:
+                return "\tout: " + destination;
+            case point:
+                return "\t" + destination + " => " + left;
             default:
                 return null;
         }
