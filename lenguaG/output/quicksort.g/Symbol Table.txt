@@ -18,7 +18,7 @@ string:
 	Constant: false
 	Declared level: 0]
 foo:
-	[Type: function (Returns: void, args:[int[][] a])
+	[Type: function (Returns: void, args:[int a])
 	Constant: false
 	Declared level: 0]
 quickSort:

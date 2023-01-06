@@ -6,7 +6,6 @@ import lenguag.Constants;
 
 public class VarTableEntry {
     public String tName;
-    private int occupation;
     public int displacement;
     public int type;
     public int subyacentType;
@@ -28,6 +27,7 @@ public class VarTableEntry {
     }
 
     public int getOccupation(){
+        int occupation;
         if(type == Constants.TYPE_INTEGER){
             occupation = Constants.INTEGER_BYTES;
         }

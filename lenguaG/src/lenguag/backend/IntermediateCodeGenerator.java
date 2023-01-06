@@ -22,6 +22,7 @@ public class IntermediateCodeGenerator {
     private Hashtable<String, VarTableEntry> variableTable;
     private Hashtable<String, ProcTableEntry> procedureTable;
     
+    private ProcTableEntry currentProcTable;
     private String currentFunction;
     private int currentSublevel;
     private static final String DEF_FUNCTION = ".";
@@ -282,6 +283,8 @@ public class IntermediateCodeGenerator {
 
         SymbolArgs args = func.getArgs();
         ProcTableEntry pte = procedureTable.get(currentFunction);
+        currentProcTable = pte;
+
         if(args != null) {
             generate(args);
             pte.numParams = args.getNArgs();
@@ -296,7 +299,9 @@ public class IntermediateCodeGenerator {
         // If no return was found, we must put it at the end
         addInstruction(InstructionType.copy, "0", pte.tReturn);
         addInstruction(InstructionType.rtn, name);
+
         currentFunction = DEF_FUNCTION;
+        currentProcTable = null;
     }
 
     /**
@@ -494,12 +499,14 @@ public class IntermediateCodeGenerator {
         if(instrs != null) {
             // We prepare the procedure table and insert the info about the main procedure
             currentFunction = createProcTableEntry("main");
-            String eMain = procedureTable.get(currentFunction).eStart;
+            currentProcTable = procedureTable.get(currentFunction);
+            String eMain = currentProcTable.eStart;
 
             addInstruction(InstructionType.skip, eMain);
             generate(instrs);
             
             currentFunction = DEF_FUNCTION; // Reset current function
+            currentProcTable = null;
         }
     }
 
@@ -745,19 +752,16 @@ public class IntermediateCodeGenerator {
             generate(list);
             currentDec = prevDec; // Which is why we restore it now
             t = list.reference;
-            // We calculate the total occupation on this variable, starting by the first level's length
-            int occupation = list.type.arrayLength;
-            SymbolType subLevel = list.type.getBaseType();
+            // We calculate the total dimensions on this variable, starting by the first level's length
+            VarTableEntry vte = getVar(t);
+            SymbolType subLevel = list.type;
             // We go through each sublevel so that we can calculate the occupation accordingly.
-            while(subLevel.getArrayDepth() > 0){
-                occupation *= subLevel.arrayLength;
+            while(subLevel.getArrayDepth() > vte.dimensions.size()){
+                // System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+subLevel.getArrayDepth());
+                vte.dimensions.add(""+subLevel.arrayLength);
+                // // occupation *= subLevel.arrayLength;
                 subLevel = subLevel.getBaseType();
             }
-            // If the occupation of a single value is different to 1, we must multiply by the single value's occupation.
-            if(subLevel.isType(Constants.TYPE_INTEGER)){
-                occupation *= Constants.INTEGER_BYTES;
-            }
-            //getVar(t).occupation = occupation;
         } else if(val instanceof Integer) {
             int intValue = (Integer) val; 
             t = newVariable();
@@ -816,6 +820,7 @@ public class IntermediateCodeGenerator {
         String t = "t" + numT++;
         VarTableEntry vte = new VarTableEntry(t);
         variableTable.put(currentFunction + currentSublevel + t, vte);
+        if(currentProcTable != null) currentProcTable.variableTable.put(currentSublevel + t, vte);
         return t;
     }
 
