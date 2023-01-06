@@ -21,6 +21,7 @@
 	t4[18] = 111
 	t4[19] = 58
 e0: skip
+	pmb main
 	out: t4
 	in: t0
 	out: t4

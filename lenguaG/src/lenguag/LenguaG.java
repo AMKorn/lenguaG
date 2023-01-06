@@ -92,7 +92,7 @@ public class LenguaG {
             mcg.generateCode();
 
             if(DEBUGGING) System.out.println("Writing machine code...");
-            writeFile(outputPath, "mc.asm", mcg.toString());
+            writeFile(outputPath, "machineCode.asm", mcg.toString());
 
             System.out.println("Compilation completed! Files written in " + outputPath);
             

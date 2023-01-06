@@ -122,11 +122,6 @@ public class MachineCodeGenerator {
                     text.add("\tmov rdi,fmtInInt");
                     text.add("\tmov al, 0");
                     text.add("\tcall scanf");
-
-    //     text.add("    mov     rsi, int");
-    //     text.add("    mov     rdi, fmtin");
-    //     text.add("    mov     al, 0");
-    //     text.add("    call    scanf");
                     break;
                 case ind_ass:
                     break;

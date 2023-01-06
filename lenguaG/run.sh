@@ -101,8 +101,8 @@ then
 
         file=${file%%.*}
 
-        nasm -f elf64 -l $file.lst mc.asm
-        gcc -no-pie -o $file mc.o
+        nasm -f elf64 -l $file.lst machineCode.asm
+        gcc -no-pie -o $file machineCode.o
         ./$file
         
         cd ../../src
