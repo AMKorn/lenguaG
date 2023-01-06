@@ -255,7 +255,6 @@ TYPE ::= TYPE_INTEGER                                                   {: RESUL
        | TYPE_BOOLEAN                                                   {: RESULT = new SymbolType(ParserSym.TYPE_BOOLEAN); :}
        | TYPE_VOID                                                      {: RESULT = new SymbolType(ParserSym.TYPE_VOID); :}
        | TYPE:v L_BRACKET R_BRACKET                                     {: RESULT = new SymbolType(Constants.TYPE_ARRAY, v); :}
-       | TYPE:v1 L_BRACKET OPERATION:v2 R_BRACKET                       {: RESULT = new SymbolType(Constants.TYPE_ARRAY, v1, v2); :}
        ;
 
 LIST ::= L_BRACKET:b OPERATION:v1 CONT_LIST:v2                          {: RESULT = new SymbolList(v1, v2, bxleft.getLine(), bxleft.getColumn()); :}
