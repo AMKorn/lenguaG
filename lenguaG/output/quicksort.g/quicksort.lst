@@ -1,9 +1,36 @@
      1                                  	section .data
      2                                  
-     3                                  	section .text
-     4                                  	global main
-     5                                  main:
-     6 00000000 55                      	push rbp
-     7 00000001 5D                      	pop rbp
-     8 00000002 B800000000              	mov rax,0
-     9 00000007 C3                      ret
+     3 00000000 00<rept>                t1: 	times 4 db 0
+     4 00000004 00<rept>                t8: 	times 24 db 0
+     5 0000001C 00<rept>                t5: 	times 4 db 0
+     6 00000020 00<rept>                t17: 	times 4 db 0
+     7 00000024 00<rept>                t3: 	times 4 db 0
+     8 00000028 00<rept>                t16: 	times 80 db 0
+     9 00000078 00<rept>                t26: 	times 17 db 0
+    10 00000089 00<rept>                t11: 	times 4 db 0
+    11 0000008D 00<rept>                t25: 	times 4 db 0
+    12 00000091 00<rept>                t24: 	times 4 db 0
+    13 00000095 00<rept>                t23: 	times 4 db 0
+    14 00000099 00<rept>                t22: 	times 4 db 0
+    15 0000009D 00<rept>                t9: 	times 4 db 0
+    16 000000A1 00<rept>                t21: 	times 4 db 0
+    17 000000A5 00<rept>                t20: 	times 4 db 0
+    18 000000A9 00<rept>                t7: 	times 4 db 0
+    19 000000AD 00<rept>                t6: 	times 4 db 0
+    20 000000B1 00                      t4: 	times 1 db 0
+    21 000000B2 00<rept>                t2: 	times 4 db 0
+    22 000000B6 00<rept>                t0: 	times 4 db 0
+    23 000000BA 00<rept>                t19: 	times 4 db 0
+    24 000000BE 00<rept>                t18: 	times 4 db 0
+    25 000000C2 00<rept>                t15: 	times 4 db 0
+    26 000000C6 00<rept>                t14: 	times 4 db 0
+    27 000000CA 00<rept>                t13: 	times 4 db 0
+    28 000000CE 00<rept>                t12: 	times 4 db 0
+    29 000000D2 00<rept>                t10: 	times 4 db 0
+    30                                  	section .text
+    31                                  	global main
+    32                                  main:
+    33 00000000 55                      	push rbp
+    34 00000001 5D                      	pop rbp
+    35 00000002 B800000000              	mov rax,0
+    36 00000007 C3                      ret

@@ -1,9 +1,9 @@
      1                                  	section .data
-     2 00000000 00<rept>                t2: 	times 4 db 0
+     2 00000000 00<rept>                t1: 	times 4 db 0
      3 00000004 00<rept>                t0: 	times 4 db 0
-     4 00000008 00<rept>                t3: 	times 4 db 0
-     5 0000000C 00<rept>                t1: 	times 4 db 0
-     6 00000010 00<rept>                t4: 	times 4 db 0
+     4 00000008 00<rept>                t4: 	times 20 db 0
+     5 0000001C 00<rept>                t3: 	times 8 db 0
+     6 00000024 00<rept>                t2: 	times 4 db 0
      7                                  	section .text
      8                                  	global main
      9                                  main:

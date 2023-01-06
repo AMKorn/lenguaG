@@ -69,12 +69,12 @@ fi
 if [[ $java == 1 ]]
 then
     echo "
-    **** Compiling java classes ****"
+    **** Compiling java classes ****
+    "
     javac -cp .:lenguag/syntactic/java-cup-11b-runtime.jar */*.java
     javac -cp .:lenguag/syntactic/java-cup-11b-runtime.jar */*/*.java
     javac -cp .:lenguag/syntactic/java-cup-11b-runtime.jar */*/*/*.java
-    echo "
-    Done!"
+    echo "Done!"
 fi
 if [[ -n $input_file ]]
 then
@@ -85,14 +85,14 @@ then
     if [[ $input == 1 ]]
     then
         echo "
-        **** Compiler output ****
+    **** Compiler output ****
         "
         java -cp .:lenguag/syntactic/java-cup-11b-runtime.jar lenguag.LenguaG ../$input_file $output_file
     fi
     if [[ $run == 1 ]]
     then
         echo "
-        **** Running propgram ****
+    **** Running propgram ****
         "
         # Currently in /src
         cd ../output/

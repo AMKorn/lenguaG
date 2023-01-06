@@ -25,7 +25,7 @@ public class IntermediateCodeGenerator {
     private ProcTableEntry currentProcTable;
     private String currentFunction;
     private int currentSublevel;
-    private static final String DEF_FUNCTION = ".";
+    static final String DEF_FUNCTION = ".";
     
     private String currentDec; // Variable used in array declaration
     private int currentDecLength;
@@ -71,13 +71,17 @@ public class IntermediateCodeGenerator {
         generate(main);
 
         if(LenguaG.DEBUGGING) {
+            System.out.println("\n\tc3@ Procedures Table\n");
+        }
+        for (String s : procedureTable.keySet()) {
+            ProcTableEntry pte = procedureTable.get(s);
+            pte.calculateDisplacements();
+            if(LenguaG.DEBUGGING) System.out.println(s + ": " + pte);
+        }
+        if(LenguaG.DEBUGGING) {
             System.out.println("\n\tc3@ Variables Table\n");
             for (String s : variableTable.keySet()) {
                 System.out.println(s + ": \n\t" + variableTable.get(s));
-            }
-            System.out.println("\n\tc3@ Procedures Table\n");
-            for (String s : procedureTable.keySet()) {
-                System.out.println(s + ": " + procedureTable.get(s));
             }
         }
     }
@@ -436,14 +440,13 @@ public class IntermediateCodeGenerator {
         } else if(value.getSemanticValue() instanceof Character){
             char cVal = (Character) value.getSemanticValue();
             right = "" + (int) cVal; // We store ASCII value
-            getVar(t).type = Constants.TYPE_CHARACTER;
+            getVar(currentDec).type = Constants.TYPE_CHARACTER;
         } else if(value.getSemanticValue() instanceof Boolean){
             boolean bVal = (Boolean) value.getSemanticValue();
             // We store true or false in bits, not in Boolean
             right = "" + (bVal ? Constants.TRUE : Constants.FALSE);
         } else if(value.getSemanticValue() instanceof Integer){
             right = "" + (int) value.getSemanticValue();
-            //TODO getVar(t).occupation = Constants.INTEGER_BYTES;
         }
         
         // If the depth is 1 it means we are now on the "ground level" of the array and we can start to assign
@@ -453,7 +456,7 @@ public class IntermediateCodeGenerator {
             int size = Constants.CHAR_BYTES;
             if(value.type.isType(Constants.TYPE_INTEGER)) size = Constants.INTEGER_BYTES;
             int displacement = currentDecLength * size;
-            addInstruction(InstructionType.ind_ass, ""+displacement, right, getVar(t).tName);
+            addInstruction(InstructionType.ind_ass, ""+displacement, right, getVar(currentDec).tName);
         }
 
         SymbolList next = list.getNext();
@@ -750,33 +753,28 @@ public class IntermediateCodeGenerator {
             // If a list is not declared (like as a parameter for out) then generate list will change currentDec, but not restore it afterwards.
             String prevDec = currentDec; 
             generate(list);
-            currentDec = prevDec; // Which is why we restore it now
             t = list.reference;
             // We calculate the total dimensions on this variable, starting by the first level's length
-            VarTableEntry vte = getVar(t);
+            VarTableEntry vte = getVar(currentDec);
+            currentDec = prevDec; // We restore the previous value of currentDec
             SymbolType subLevel = list.type;
             // We go through each sublevel so that we can calculate the occupation accordingly.
             while(subLevel.getArrayDepth() > vte.dimensions.size()){
-                // System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+subLevel.getArrayDepth());
                 vte.dimensions.add(""+subLevel.arrayLength);
-                // // occupation *= subLevel.arrayLength;
                 subLevel = subLevel.getBaseType();
             }
         } else if(val instanceof Integer) {
             int intValue = (Integer) val; 
             t = newVariable();
             addInstruction(InstructionType.copy, "" + intValue, t);
-            //getVar(t).occupation = Constants.INTEGER_BYTES;
         } else if(val instanceof Boolean) {
             boolean boolValue = (Boolean) val;
             t = newVariable();
             addInstruction(InstructionType.copy, "" + (boolValue ? Constants.TRUE : Constants.FALSE), t);
-            //getVar(t).occupation = Constants.BOOL_BYTES;
         } else if(val instanceof Character) {
             char cValue = (Character) val;
             t = newVariable();
             addInstruction(InstructionType.copy, "" + cValue, t);
-            //getVar(t).occupation = Constants.CHAR_BYTES;
             getVar(t).type = Constants.TYPE_CHARACTER;
         }
         value.reference = t;
@@ -829,19 +827,26 @@ public class IntermediateCodeGenerator {
     }
 
     private VarTableEntry getVar(String t){
-        if(LenguaG.DEBUGGING) System.out.println("Searching " + currentFunction + currentSublevel + t);
         VarTableEntry vte = variableTable.get(currentFunction + currentSublevel + t);
         int i = currentSublevel-1;
         while(vte == null && i >= 0) {
-            if(LenguaG.DEBUGGING) System.out.println("Searching " + currentFunction + i + t);
             vte = variableTable.get(currentFunction + i-- + t);
         }
         if(vte == null) {
-            if(LenguaG.DEBUGGING) System.out.println("Searching " + DEF_FUNCTION + 0 + t);
             vte = variableTable.get(DEF_FUNCTION + 0 + t);
         }
-        if(LenguaG.DEBUGGING) System.out.println("Found: " + vte.tName);
         return vte;
+    }
+
+    private void removeVar(String t){
+        VarTableEntry vte = variableTable.remove(currentFunction + currentSublevel + t);
+        int i = currentSublevel-1;
+        while(vte == null && i >= 0) {
+            vte = variableTable.remove(currentFunction + i-- + t);
+        }
+        if(vte == null) {
+            vte = variableTable.remove(DEF_FUNCTION + 0 + t);
+        }
     }
 
     private ProcTableEntry getProc(String procName){
@@ -849,8 +854,10 @@ public class IntermediateCodeGenerator {
     }
     
     private void replaceVarTableKey(String oldKey, String newKey){
+
         VarTableEntry vte = getVar(oldKey);
-        variableTable.remove(oldKey);
+        removeVar(oldKey);
+        // variableTable.remove(oldKey);
         variableTable.put(currentFunction + currentSublevel + newKey, vte);
     }
 

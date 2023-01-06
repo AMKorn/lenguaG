@@ -28,7 +28,16 @@ public class MachineCodeGenerator {
 
     public void generateCode(){
         // Declarations initialization
-        data.add("\tsection .data\n");
+        data.add("\tsection .data");
+
+        for (String s : variableTable.keySet()) {
+            if(s.startsWith(IntermediateCodeGenerator.DEF_FUNCTION)){
+                VarTableEntry vte = variableTable.get(s);
+                String t = vte.tName;
+                int occupation = vte.getOccupation();
+                data.add(t + ": \t" + "times " + occupation + " db 0");
+            }
+        }
 
         text.add("\tsection .text\n"
                 + "\tglobal main\n"
@@ -40,10 +49,6 @@ public class MachineCodeGenerator {
         text.add("\tpop rbp\n"
                 + "\tmov rax,0\n"
                 + "ret");
-    }
-
-    private void cleanVars(){
-
     }
 
     /**

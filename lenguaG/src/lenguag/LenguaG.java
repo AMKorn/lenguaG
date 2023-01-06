@@ -93,6 +93,8 @@ public class LenguaG {
 
             if(DEBUGGING) System.out.println("Writing machine code...");
             writeFile(outputPath, "mc.asm", mcg.toString());
+
+            System.out.println("Compilation completed! Files written in " + outputPath);
             
         } catch (FileNotFoundException fnf) {
             // User error

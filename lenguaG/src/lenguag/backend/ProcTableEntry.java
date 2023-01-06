@@ -29,6 +29,19 @@ public class ProcTableEntry {
         return occupation;
     }
 
+    public void calculateDisplacements(){
+        int displacement = 0;
+        for (VarTableEntry vte : variableTable.values()) {
+            int occupation = vte.getOccupation();
+            if(occupation != Constants.UNKNOWN){
+                vte.displacement = displacement;
+                displacement += occupation;
+            } else {
+                vte.displacement = Constants.UNKNOWN;
+            }
+        }
+    }
+
     @Override
     public String toString(){
         return "[depth: " + depth + ", eStart: " + eStart + ", numParams: " + numParams + ", varsOccup: " + getVarsOccupation() + "]";
