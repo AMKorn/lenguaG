@@ -6,6 +6,7 @@ usage="Unexpected format. Expected format:
         -i: Input expected. Will try to run the compilation process.
             Requires input file.
         -r: Compile machine code and run it. Requires input file.
+        -d: Debug machine code using gdb. Does nothing if r is not set.
 
 "
 
@@ -20,8 +21,9 @@ cup=0
 java=0
 input=0
 run=0
+debug=0
 
-while getopts fcjir flag
+while getopts fcjird flag
 do
     flagged=1;
     case "${flag}" in
@@ -34,6 +36,7 @@ do
         r) run=1;
             input_file=$2;
             output_file=$3;;
+        d) debug=1;;
     esac
 done
 
@@ -101,9 +104,14 @@ then
 
         file=${file%%.*}
 
-        nasm -f elf64 -l $file.lst machineCode.asm
-        gcc -no-pie -o $file machineCode.o
-        ./$file
+        nasm -f elf64 -l $file.lst -g machineCode.asm
+        gcc -no-pie -g -o $file machineCode.o
+        if [[ $debug == 0 ]]
+        then
+            ./$file
+        else 
+            gdb $file
+        fi
         
         cd ../../src
     fi

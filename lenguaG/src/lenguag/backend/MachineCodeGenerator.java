@@ -10,20 +10,16 @@ public class MachineCodeGenerator {
     public ArrayList<String> data;
     public ArrayList<String> text;
 
-    private IntermediateCodeGenerator c3a;
     private ArrayList<Instruction> instructions;
 
     private Hashtable<String, VarTableEntry> variableTable;
     private Hashtable<String, String> variableDictionary;
     private Hashtable<String, ProcTableEntry> procedureTable;
 
-    private static final int DEFAULT_DISPLACEMENT = 4;
-
     private boolean printUsed = false;
     private boolean scanUsed = false;
 
     public MachineCodeGenerator(IntermediateCodeGenerator c3a){
-        this.c3a = c3a;
         instructions = c3a.getInstructions();
         variableTable = c3a.getVariableTable();
         procedureTable = c3a.getProcedureTable();
@@ -52,30 +48,37 @@ public class MachineCodeGenerator {
                 + "\tpush rbp\n");
 
         for (Instruction instruction : instructions) {
-            if (LenguaG.DEBUGGING) 
+            //if (LenguaG.DEBUGGING) 
                 text.add("\t; " + instruction);
             
             String des = instruction.destination;
             String left = instruction.left;
             String right = instruction.right;
             
+            // We check if the variables are local variables/parameters
             String stackVar = variableDictionary.get(des);
             if(stackVar != null) {
                 VarTableEntry vte = variableTable.get(stackVar);
-                des = "rbp-"+(vte.displacement + DEFAULT_DISPLACEMENT);
+                des = "rbp+"+(vte.displacement);
+                //if(LenguaG.DEBUGGING)
+                    text.add("\t; //" + instruction.destination + " -> " + des);
             }
             if(left != null){
                 stackVar = variableDictionary.get(left);
                 if(stackVar != null) {
                     VarTableEntry vte = variableTable.get(stackVar);
-                    left = "rbp-"+(vte.displacement + DEFAULT_DISPLACEMENT);
+                    left = "rbp+"+(vte.displacement);
+                    // if(LenguaG.DEBUGGING)
+                        text.add("\t; //" + instruction.left + " -> " + left);
                 }
             }
             if(right != null){
                 stackVar = variableDictionary.get(right);
                 if(stackVar != null) {
                     VarTableEntry vte = variableTable.get(stackVar);
-                    right = "rbp-"+(vte.displacement + DEFAULT_DISPLACEMENT);
+                    right = "rbp+"+(vte.displacement);
+                    // if(LenguaG.DEBUGGING)
+                        text.add("\t; //" + instruction.right + " -> " + right);
                 }
             }
             switch (instruction.instruction) {
@@ -150,6 +153,12 @@ public class MachineCodeGenerator {
                 case param_s:
                     break;
                 case pmb:
+                    // pmb: des
+                    // Where des is the name of the function. As such, we should be able to find it in procedureTable
+                    ProcTableEntry pte = procedureTable.get(des + IntermediateCodeGenerator.DEF_FUNCTION);
+                    
+                    // System.out.println(pte.tReturn);
+
                     break;
                 case point:
                     break;

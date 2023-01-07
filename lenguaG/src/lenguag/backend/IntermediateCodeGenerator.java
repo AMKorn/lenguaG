@@ -75,7 +75,7 @@ public class IntermediateCodeGenerator {
         }
         for (String s : procedureTable.keySet()) {
             ProcTableEntry pte = procedureTable.get(s);
-            pte.calculateDisplacements();
+            pte.prepareForMachineCode();
             if(LenguaG.DEBUGGING) System.out.println(s + ": " + pte);
         }
         if(LenguaG.DEBUGGING) {
@@ -113,10 +113,12 @@ public class IntermediateCodeGenerator {
      * @param args
      */
     private void generate(SymbolArgs args){
-        // SymbolArg 
+        // SymbolArg
+        currentSublevel = -1;
         generate(args.getArg());
         SymbolArgs next = args.getNext();
         if(next != null) generate(next);
+        currentSublevel = 0;
     }
 
     /**
@@ -303,7 +305,6 @@ public class IntermediateCodeGenerator {
         // If no return was found, we must put it at the end
         addInstruction(InstructionType.copy, "0", pte.tReturn);
         addInstruction(InstructionType.rtn, name);
-
         currentFunction = DEF_FUNCTION;
         currentProcTable = null;
     }
@@ -318,10 +319,10 @@ public class IntermediateCodeGenerator {
         SymbolParams params = functionCall.getParams();
         if(params != null) generate(params);
 
-        addInstruction(InstructionType.call, funcName);
         String t = newVariable();
-        addInstruction(InstructionType.copy, pte.tReturn, t);
-
+        addInstruction(InstructionType.call, funcName, t);
+        // String t = newVariable();
+        // addInstruction(InstructionType.copy, pte.tReturn, t);
         functionCall.reference = t;
     }
 
@@ -830,7 +831,9 @@ public class IntermediateCodeGenerator {
     private VarTableEntry getVar(String t){
         VarTableEntry vte = variableTable.get(currentFunction + currentSublevel + t);
         int i = currentSublevel-1;
-        while(vte == null && i >= 0) {
+
+        // We check up until -1 since parameters are in sublevel -1
+        while(vte == null && i >= -1) {
             vte = variableTable.get(currentFunction + i-- + t);
         }
         if(vte == null) {
@@ -855,10 +858,8 @@ public class IntermediateCodeGenerator {
     }
     
     private void replaceVarTableKey(String oldKey, String newKey){
-
         VarTableEntry vte = getVar(oldKey);
         removeVar(oldKey);
-        // variableTable.remove(oldKey);
         variableTable.put(currentFunction + currentSublevel + newKey, vte);
     }
 

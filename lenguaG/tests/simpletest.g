@@ -1,8 +1,17 @@
-int a = 2;
-int b = 3;
+int a = 1;
+int b = 2;
 int c;
 
+int foo(int a, int b){
+    // while(true){
+    //     int c = a+b;
+    //     return c;
+    // }
+    return a+b;
+}
+
 main {
-    c = a + b;
+    c = foo(a,b);
+    // c = a+b;
     out(c);
 }

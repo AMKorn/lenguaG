@@ -13,6 +13,10 @@ c:
 	[Type: int
 	Constant: false
 	Declared level: 0]
+foo:
+	[Type: function (Returns: int, args:[int a, int b])
+	Constant: false
+	Declared level: 0]
 
 Ambit table:[0]
 Expansion table:[]

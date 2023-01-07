@@ -1,9 +1,20 @@
-	t1 = 2
+	t1 = 1
 	t0 = t1
-	t3 = 3
+	t3 = 2
 	t2 = t3
+	goto e0
+e1: skip
+	pmb foo
+	t8 = t5 + t6
+	t7 = t8
+	rtn foo
+	t7 = 0
+	rtn foo
 e0: skip
+e2: skip
 	pmb main
-	t5 = t0 + t2
-	t4 = t5
+	param_s: t0
+	param_s: t2
+	t9 = call foo
+	t4 = t9
 	out: t4
