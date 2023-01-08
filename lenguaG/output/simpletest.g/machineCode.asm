@@ -30,16 +30,16 @@ main:
 	; e1: skip
 e1:
 	; 	pmb foo
-	; 	t8 = t5 + t6
-	; //t8 -> rsp+-4
+	; 	t7 = t5 + t6
+	; //t7 -> rsp+-4
 	; //t5 -> rsp+16
-	; //t6 -> rsp+12
+	; //t6 -> rsp+24
 	mov eax,[rsp+16]
 	mov ebx,[rsp+24]
 	add ebx,eax
 	mov [rsp+-4],ebx
-	; 	rtn foo: t8
-	; //t8 -> rsp+-4
+	; 	rtn foo: t7
+	; //t7 -> rsp+-4
 	mov eax,[rsp+-4]
 	mov [rsp+8],eax
 	ret
@@ -56,16 +56,16 @@ e2:
 	xor rax,rax
 	mov eax,[t0]
 	push rax
-	; 	t9 = call foo
-	; //t9 -> rsp+-4
+	; 	t8 = call foo
+	; //t8 -> rsp+-4
 	push rax
 	call e1
 	pop rbx
 	pop rax
 	pop rax
 	mov [rsp+-4],ebx
-	; 	t4 = t9
-	; //t9 -> rsp+-4
+	; 	t4 = t8
+	; //t8 -> rsp+-4
 	mov eax,[rsp+-4]
 	mov [t4],eax
 	; 	out: t4

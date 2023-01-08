@@ -49,8 +49,6 @@ public class ProcTableEntry {
         int paramDisplacement = Constants.REGISTER_SIZE * 2; // We reserve space for DISP and BP and for the return
         for(String s : params){
             vte = variableTable.get(s);
-            System.out.println(s);
-            System.out.println(variableTable);
             vte.displacement = paramDisplacement;
             paramDisplacement += Constants.REGISTER_SIZE;
         }
@@ -66,12 +64,10 @@ public class ProcTableEntry {
     }
 
     private void cleanVariables(){
-        System.out.println(eStart);
         Hashtable<String, VarTableEntry> cleanVariableTable = new Hashtable<>();
         for (String s : variableTable.keySet()) {
             VarTableEntry vte = variableTable.get(s);
             cleanVariableTable.put(vte.tName, vte);
-            System.out.println("Cleaning " + s + ": now " + vte.tName);
         }
         variableTable = cleanVariableTable;
     }
