@@ -2,29 +2,31 @@
 	t0 = t1
 	t3 = 2
 	t2 = t3
+	t6 = -1
+	t5 = t6
 	goto e0
 e1: skip
 	pmb foo
-	if t7=0 goto e2
-	t9 = t5 + t6
-	t8 = t9
-	rtn foo: t8
-e2: skip
-	t10 = 0
+	if t9=0 goto e2
+	t11 = t7 + t8
+	t10 = t11
 	rtn foo: t10
+e2: skip
+	t12 = t7 + t8
+	t12 = -t12
+	rtn foo: t12
 e3: skip
 e0: skip
 e4: skip
 	pmb main
-	t11 = -1
-	param_s: t11
+	param_s: t5
 	param_s: t2
 	param_s: t0
-	t12 = call foo
-	t4 = t12
+	t13 = call foo
+	t4 = t13
 	out: t4
-	t13 = 0
-	param_s: t13
+	t5 = not t5
+	param_s: t5
 	param_s: t2
 	param_s: t0
 	t14 = call foo

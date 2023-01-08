@@ -2,146 +2,145 @@
      2                                  	section .data
      3 00000000 00<rept>                t2: 	times 4 db 0
      4 00000004 00<rept>                t0: 	times 4 db 0
-     5 00000008 00<rept>                t3: 	times 4 db 0
-     6 0000000C 00<rept>                t1: 	times 4 db 0
-     7 00000010 00<rept>                t4: 	times 4 db 0
-     8 00000014 25640A00                fmtOutInt: db "%d",10,0
-     9 00000018 25730A00                fmtOutChar: db "%s",10,0
-    10                                  	section .text
-    11                                  	global main
-    12                                  main:
-    13 00000000 4889E5                  	mov rbp, rsp
-    14 00000003 55                      	push rbp
-    15                                  
-    16                                  	;;;; 	t1 = 1
-    17 00000004 B801000000              	mov eax,1
-    18 00000009 890425[0C000000]        	mov [t1],eax
-    19                                  	;;;; 	t0 = t1
-    20 00000010 8B0425[0C000000]        	mov eax,[t1]
-    21 00000017 890425[04000000]        	mov [t0],eax
-    22                                  	;;;; 	t3 = 2
-    23 0000001E B802000000              	mov eax,2
-    24 00000023 890425[08000000]        	mov [t3],eax
-    25                                  	;;;; 	t2 = t3
-    26 0000002A 8B0425[08000000]        	mov eax,[t3]
-    27 00000031 890425[00000000]        	mov [t2],eax
-    28                                  	;;;; 	goto e0
-    29 00000038 EB34                    	jmp e0
-    30                                  	;;;; e1: skip
-    31                                  e1:
-    32                                  	;;;; 	pmb foo
-    33                                  	;;;; 	if t7=0 goto e2
-    34                                  	; //t7 -> rsp+32
-    35                                  	;;;; 	t9 = t5 + t6
-    36                                  	; //t9 -> rsp+-8
-    37                                  	; //t5 -> rsp+16
-    38                                  	; //t6 -> rsp+24
-    39 0000003A 8B442410                	mov eax,[rsp+16]
-    40 0000003E 8B5C2418                	mov ebx,[rsp+24]
-    41 00000042 01C3                    	add ebx,eax
-    42 00000044 895C24F8                	mov [rsp+-8],ebx
-    43                                  	;;;; 	t8 = t9
-    44                                  	; //t8 -> rsp+-12
-    45                                  	; //t9 -> rsp+-8
-    46 00000048 8B4424F8                	mov eax,[rsp+-8]
-    47 0000004C 894424F4                	mov [rsp+-12],eax
-    48                                  	;;;; 	rtn foo: t8
-    49                                  	; //t8 -> rsp+-12
-    50 00000050 8B4424F4                	mov eax,[rsp+-12]
-    51 00000054 89442408                	mov [rsp+8],eax
-    52 00000058 EB13                    	jmp e3
-    53                                  	;;;; e2: skip
-    54                                  e2:
-    55                                  	;;;; 	t10 = 0
-    56                                  	; //t10 -> rsp+-4
-    57 0000005A B800000000              	mov eax,0
-    58 0000005F 894424FC                	mov [rsp+-4],eax
-    59                                  	;;;; 	rtn foo: t10
-    60                                  	; //t10 -> rsp+-4
-    61 00000063 8B4424FC                	mov eax,[rsp+-4]
-    62 00000067 89442408                	mov [rsp+8],eax
-    63 0000006B EB00                    	jmp e3
-    64                                  	;;;; e3: skip
-    65                                  e3:
-    66 0000006D C3                      	ret
-    67                                  	;;;; e0: skip
-    68                                  e0:
-    69                                  	;;;; e4: skip
-    70                                  e4:
-    71                                  	;;;; 	pmb main
-    72                                  	;;;; 	t11 = -1
-    73                                  	; //t11 -> rsp+-12
-    74 0000006E B8FFFFFFFF              	mov eax,-1
-    75 00000073 894424F4                	mov [rsp+-12],eax
-    76                                  	;;;; 	param_s: t11
-    77                                  	; //t11 -> rsp+-12
-    78 00000077 4831C0                  	xor rax,rax
-    79 0000007A 8B4424F4                	mov eax,[rsp+-12]
-    80 0000007E 50                      	push rax
-    81                                  	;;;; 	param_s: t2
-    82 0000007F 4831C0                  	xor rax,rax
-    83 00000082 8B0425[00000000]        	mov eax,[t2]
-    84 00000089 50                      	push rax
-    85                                  	;;;; 	param_s: t0
-    86 0000008A 4831C0                  	xor rax,rax
-    87 0000008D 8B0425[04000000]        	mov eax,[t0]
-    88 00000094 50                      	push rax
-    89                                  	;;;; 	t12 = call foo
-    90                                  	; //t12 -> rsp+-8
-    91 00000095 50                      	push rax
-    92 00000096 E89FFFFFFF              	call e1
-    93 0000009B 5B                      	pop rbx
-    94 0000009C 58                      	pop rax
-    95 0000009D 58                      	pop rax
-    96 0000009E 58                      	pop rax
-    97 0000009F 895C24F8                	mov [rsp+-8],ebx
-    98                                  	;;;; 	t4 = t12
-    99                                  	; //t12 -> rsp+-8
-   100 000000A3 8B4424F8                	mov eax,[rsp+-8]
-   101 000000A7 890425[10000000]        	mov [t4],eax
-   102                                  	;;;; 	out: t4
-   103 000000AE 48BF-                   	mov rdi,fmtOutInt
-   103 000000B0 [1400000000000000] 
-   104 000000B8 488B3425[10000000]      	mov rsi,[t4]
-   105 000000C0 B800000000              	mov rax, 0
-   106 000000C5 E8(00000000)            	call printf
-   107                                  	;;;; 	t13 = 0
-   108                                  	; //t13 -> rsp+-4
-   109 000000CA B800000000              	mov eax,0
-   110 000000CF 894424FC                	mov [rsp+-4],eax
-   111                                  	;;;; 	param_s: t13
-   112                                  	; //t13 -> rsp+-4
-   113 000000D3 4831C0                  	xor rax,rax
-   114 000000D6 8B4424FC                	mov eax,[rsp+-4]
-   115 000000DA 50                      	push rax
-   116                                  	;;;; 	param_s: t2
-   117 000000DB 4831C0                  	xor rax,rax
-   118 000000DE 8B0425[00000000]        	mov eax,[t2]
-   119 000000E5 50                      	push rax
-   120                                  	;;;; 	param_s: t0
-   121 000000E6 4831C0                  	xor rax,rax
-   122 000000E9 8B0425[04000000]        	mov eax,[t0]
-   123 000000F0 50                      	push rax
-   124                                  	;;;; 	t14 = call foo
-   125                                  	; //t14 -> rsp+-16
-   126 000000F1 50                      	push rax
-   127 000000F2 E843FFFFFF              	call e1
-   128 000000F7 5B                      	pop rbx
-   129 000000F8 58                      	pop rax
-   130 000000F9 58                      	pop rax
-   131 000000FA 58                      	pop rax
-   132 000000FB 895C24F0                	mov [rsp+-16],ebx
-   133                                  	;;;; 	t4 = t14
-   134                                  	; //t14 -> rsp+-16
-   135 000000FF 8B4424F0                	mov eax,[rsp+-16]
-   136 00000103 890425[10000000]        	mov [t4],eax
-   137                                  	;;;; 	out: t4
-   138 0000010A 48BF-                   	mov rdi,fmtOutInt
-   138 0000010C [1400000000000000] 
-   139 00000114 488B3425[10000000]      	mov rsi,[t4]
-   140 0000011C B800000000              	mov rax, 0
-   141 00000121 E8(00000000)            	call printf
-   142                                  
-   143 00000126 5D                      	pop rbp
-   144 00000127 B800000000              	mov rax,0
-   145 0000012C C3                      	ret
+     5 00000008 00<rept>                t5: 	times 4 db 0
+     6 0000000C 00<rept>                t6: 	times 4 db 0
+     7 00000010 00<rept>                t3: 	times 4 db 0
+     8 00000014 00<rept>                t1: 	times 4 db 0
+     9 00000018 00<rept>                t4: 	times 4 db 0
+    10 0000001C 25640A00                fmtOutInt: db "%d",10,0
+    11 00000020 25730A00                fmtOutChar: db "%s",10,0
+    12                                  	section .text
+    13                                  	global main
+    14                                  main:
+    15 00000000 4889E5                  	mov rbp, rsp
+    16 00000003 55                      	push rbp
+    17                                  
+    18                                  	; 	t1 = 1
+    19 00000004 B801000000              	mov eax,1
+    20 00000009 890425[14000000]        	mov [t1],eax
+    21                                  	; 	t0 = t1
+    22 00000010 8B0425[14000000]        	mov eax,[t1]
+    23 00000017 890425[04000000]        	mov [t0],eax
+    24                                  	; 	t3 = 2
+    25 0000001E B802000000              	mov eax,2
+    26 00000023 890425[10000000]        	mov [t3],eax
+    27                                  	; 	t2 = t3
+    28 0000002A 8B0425[10000000]        	mov eax,[t3]
+    29 00000031 890425[00000000]        	mov [t2],eax
+    30                                  	; 	t6 = -1
+    31 00000038 B8FFFFFFFF              	mov eax,-1
+    32 0000003D 890425[0C000000]        	mov [t6],eax
+    33                                  	; 	t5 = t6
+    34 00000044 8B0425[0C000000]        	mov eax,[t6]
+    35 0000004B 890425[08000000]        	mov [t5],eax
+    36                                  	; 	goto e0
+    37 00000052 EB50                    	jmp e0
+    38                                  	; e1: skip
+    39                                  e1:
+    40                                  	; 	pmb foo
+    41                                  	; 	if t9=0 goto e2
+    42 00000054 8B442420                	mov eax,[rsp+32]
+    43 00000058 BB00000000              	mov ebx,0
+    44 0000005D 39D8                    	cmp eax,ebx
+    45 0000005F 7420                    	je e2
+    46                                  	; 	t11 = t7 + t8
+    47 00000061 8B442410                	mov eax,[rsp+16]
+    48 00000065 8B5C2418                	mov ebx,[rsp+24]
+    49 00000069 01C3                    	add ebx,eax
+    50 0000006B 895C24F8                	mov [rsp+-8],ebx
+    51                                  	; 	t10 = t11
+    52 0000006F 8B4424F8                	mov eax,[rsp+-8]
+    53 00000073 894424F4                	mov [rsp+-12],eax
+    54                                  	; 	rtn foo: t10
+    55 00000077 8B4424F4                	mov eax,[rsp+-12]
+    56 0000007B 89442408                	mov [rsp+8],eax
+    57 0000007F EB22                    	jmp e3
+    58                                  	; e2: skip
+    59                                  e2:
+    60                                  	; 	t12 = t7 + t8
+    61 00000081 8B442410                	mov eax,[rsp+16]
+    62 00000085 8B5C2418                	mov ebx,[rsp+24]
+    63 00000089 01C3                    	add ebx,eax
+    64 0000008B 895C24FC                	mov [rsp+-4],ebx
+    65                                  	; 	t12 = -t12
+    66 0000008F 8B4424FC                	mov eax,[rsp+-4]
+    67 00000093 F7D8                    	neg eax
+    68 00000095 894424FC                	mov [rsp+-4],eax
+    69                                  	; 	rtn foo: t12
+    70 00000099 8B4424FC                	mov eax,[rsp+-4]
+    71 0000009D 89442408                	mov [rsp+8],eax
+    72 000000A1 EB00                    	jmp e3
+    73                                  	; e3: skip
+    74                                  e3:
+    75 000000A3 C3                      	ret
+    76                                  	; e0: skip
+    77                                  e0:
+    78                                  	; e4: skip
+    79                                  e4:
+    80                                  	; 	pmb main
+    81                                  	; 	param_s: t5
+    82 000000A4 4831C0                  	xor rax,rax
+    83 000000A7 8B0425[08000000]        	mov eax,[t5]
+    84 000000AE 50                      	push rax
+    85                                  	; 	param_s: t2
+    86 000000AF 4831C0                  	xor rax,rax
+    87 000000B2 8B0425[00000000]        	mov eax,[t2]
+    88 000000B9 50                      	push rax
+    89                                  	; 	param_s: t0
+    90 000000BA 4831C0                  	xor rax,rax
+    91 000000BD 8B0425[04000000]        	mov eax,[t0]
+    92 000000C4 50                      	push rax
+    93                                  	; 	t13 = call foo
+    94 000000C5 50                      	push rax
+    95 000000C6 E889FFFFFF              	call e1
+    96 000000CB 5B                      	pop rbx
+    97 000000CC 58                      	pop rax
+    98 000000CD 58                      	pop rax
+    99 000000CE 58                      	pop rax
+   100 000000CF 895C24FC                	mov [rsp+-4],ebx
+   101                                  	; 	t4 = t13
+   102 000000D3 8B4424FC                	mov eax,[rsp+-4]
+   103 000000D7 890425[18000000]        	mov [t4],eax
+   104                                  	; 	out: t4
+   105 000000DE 48BF-                   	mov rdi,fmtOutInt
+   105 000000E0 [1C00000000000000] 
+   106 000000E8 488B3425[18000000]      	mov rsi,[t4]
+   107 000000F0 B800000000              	mov rax, 0
+   108 000000F5 E8(00000000)            	call printf
+   109                                  	; 	t5 = not t5
+   110 000000FA 8B0425[08000000]        	mov eax,[t5]
+   111 00000101 F7D0                    	not eax
+   112 00000103 890425[08000000]        	mov [t5],eax
+   113                                  	; 	param_s: t5
+   114 0000010A 4831C0                  	xor rax,rax
+   115 0000010D 8B0425[08000000]        	mov eax,[t5]
+   116 00000114 50                      	push rax
+   117                                  	; 	param_s: t2
+   118 00000115 4831C0                  	xor rax,rax
+   119 00000118 8B0425[00000000]        	mov eax,[t2]
+   120 0000011F 50                      	push rax
+   121                                  	; 	param_s: t0
+   122 00000120 4831C0                  	xor rax,rax
+   123 00000123 8B0425[04000000]        	mov eax,[t0]
+   124 0000012A 50                      	push rax
+   125                                  	; 	t14 = call foo
+   126 0000012B 50                      	push rax
+   127 0000012C E823FFFFFF              	call e1
+   128 00000131 5B                      	pop rbx
+   129 00000132 58                      	pop rax
+   130 00000133 58                      	pop rax
+   131 00000134 58                      	pop rax
+   132 00000135 895C24F8                	mov [rsp+-8],ebx
+   133                                  	; 	t4 = t14
+   134 00000139 8B4424F8                	mov eax,[rsp+-8]
+   135 0000013D 890425[18000000]        	mov [t4],eax
+   136                                  	; 	out: t4
+   137 00000144 48BF-                   	mov rdi,fmtOutInt
+   137 00000146 [1C00000000000000] 
+   138 0000014E 488B3425[18000000]      	mov rsi,[t4]
+   139 00000156 B800000000              	mov rax, 0
+   140 0000015B E8(00000000)            	call printf
+   141                                  
+   142 00000160 5D                      	pop rbp
+   143 00000161 B800000000              	mov rax,0
+   144 00000166 C3                      	ret

@@ -11,6 +11,11 @@ b : IDENTIFIER
 int : TYPE_INTEGER
 c : IDENTIFIER
 ; : ENDLINE
+bool : TYPE_BOOLEAN
+cond : IDENTIFIER
+= : EQUAL
+true : BOOLEAN
+; : ENDLINE
 int : TYPE_INTEGER
 foo : IDENTIFIER
 ( : L_PAREN
@@ -41,7 +46,12 @@ c : IDENTIFIER
 ; : ENDLINE
 } : R_KEY
 return : RES_RETURN
-0 : INTEGER
+- : SUB
+( : L_PAREN
+a : IDENTIFIER
++ : ADD
+b : IDENTIFIER
+) : R_PAREN
 ; : ENDLINE
 } : R_KEY
 main : RES_MAIN
@@ -54,7 +64,7 @@ a : IDENTIFIER
 , : COMMA
 b : IDENTIFIER
 , : COMMA
-true : BOOLEAN
+cond : IDENTIFIER
 ) : R_PAREN
 ; : ENDLINE
 out : RES_OUT
@@ -70,7 +80,8 @@ a : IDENTIFIER
 , : COMMA
 b : IDENTIFIER
 , : COMMA
-false : BOOLEAN
+not : NOT
+cond : IDENTIFIER
 ) : R_PAREN
 ; : ENDLINE
 out : RES_OUT

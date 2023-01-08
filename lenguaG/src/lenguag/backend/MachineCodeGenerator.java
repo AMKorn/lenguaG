@@ -17,6 +17,7 @@ public class MachineCodeGenerator {
     private Hashtable<String, String> variableDictionary;
     private Hashtable<String, ProcTableEntry> procedureTable;
 
+    // Info from the current process
     private Stack<ProcTableEntry> pteStack;
     private ProcTableEntry currentPte;
 
@@ -55,7 +56,7 @@ public class MachineCodeGenerator {
 
         for (Instruction instruction : instructions) {
             //if (LenguaG.DEBUGGING) 
-                text.add("\t;;;; " + instruction);
+                text.add("\t; " + instruction);
             
             String des = instruction.destination;
             String left = instruction.left;
@@ -66,51 +67,57 @@ public class MachineCodeGenerator {
             if(stackVar != null) {
                 VarTableEntry vte = variableTable.get(stackVar);
                 des = "rsp+"+(vte.displacement);
-                //if(LenguaG.DEBUGGING)
+                if(LenguaG.DEBUGGING)
                     text.add("\t; //" + instruction.destination + " -> " + des);
             }
+            String aDes = des; // String that contains the address of des.
+            des = isNumber(des)? des : "[" + des + "]"; // des if it's a number, [des] if not. [des] mean the content of des
             if(left != null){
                 stackVar = variableDictionary.get(left);
                 if(stackVar != null) {
                     VarTableEntry vte = variableTable.get(stackVar);
                     left = "rsp+"+(vte.displacement);
-                    // if(LenguaG.DEBUGGING)
+                    if(LenguaG.DEBUGGING)
                         text.add("\t; //" + instruction.left + " -> " + left);
                 }
             }
+            String aLeft = left;
+            left = isNumber(left)? left : "[" + left + "]";
             if(right != null){
                 stackVar = variableDictionary.get(right);
                 if(stackVar != null) {
                     VarTableEntry vte = variableTable.get(stackVar);
                     right = "rsp+"+(vte.displacement);
-                    // if(LenguaG.DEBUGGING)
+                    if(LenguaG.DEBUGGING)
                         text.add("\t; //" + instruction.right + " -> " + right);
                 }
             }
+            String aRight = right;
+            right = isNumber(right)? right : "[" + right + "]";
+
+
             switch (instruction.instruction) {
                 case copy:
                     // copy: des = left
-                    if (isNumber(left)) {
-                        text.add("\tmov eax," + left);
-                    } else text.add("\tmov eax,[" + left + "]");
-                    text.add("\tmov [" + des + "],eax");
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov " + des + ",eax");
                     break;
                 case add:
                     // add: des = left + right
-                    text.add("\tmov eax,[" + left + "]");
-                    text.add("\tmov ebx,[" + right + "]");
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
                     text.add("\tadd ebx,eax");
-                    text.add("\tmov [" + des + "],ebx");
+                    text.add("\tmov " + des + ",ebx");
                     break;
                 case and:
                     // and: des = left and right
-                    text.add("\tmov eax,[" + left + "]");
-                    text.add("\tmov ebx,[" + right + "]");
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
                     text.add("\tand ebx,eax");
-                    text.add("\tmov [" + des + "],ebx");
+                    text.add("\tmov " + des + ",ebx");
                     break;
                 case call:
-                    pte = procedureTable.get(left + IntermediateCodeGenerator.DEF_FUNCTION);
+                    pte = procedureTable.get(aLeft + IntermediateCodeGenerator.DEF_FUNCTION);
                     text.add("\tpush rax");
                     text.add("\tcall " + pte.eStart);
                     text.add("\tpop rbx"); // We store return into rbx
@@ -119,20 +126,25 @@ public class MachineCodeGenerator {
                         text.add("\tpop rax");
                     }
 
-                    text.add("\tmov [" + des + "],ebx");
+                    text.add("\tmov " + des + ",ebx");
                     break;
                 case div:
                     // DIV does EDX:EAX / ECX. Result goes in EAX
-                    text.add("\tmov eax,[" + left + "]");
+                    text.add("\tmov eax," + left);
                     text.add("\tmov edx,0");
-                    text.add("\tmov ecx,[" + right + "]");
+                    text.add("\tmov ecx," + right);
                     text.add("\tdiv ecx");
-                    text.add("\tmov [" + des + "],eax");
+                    text.add("\tmov " + des + ",eax");
                     break;
                 case go_to:
-                    text.add("\tjmp " + des);
+                    text.add("\tjmp " + aDes);
                     break;
                 case if_EQ:
+                    // if left = right goto des
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
+                    text.add("\tcmp eax,ebx");
+                    text.add("\tje " + aDes);
                     break;
                 case if_GE:
                     break;
@@ -149,28 +161,45 @@ public class MachineCodeGenerator {
 
                     // TODO differentiate ints and chars
 
-                    text.add("\tmov rsi,"+des);
+                    text.add("\tmov rsi," + aDes);
                     text.add("\tmov rdi,fmtInInt");
                     text.add("\tmov al, 0");
                     text.add("\tcall scanf");
                     break;
                 case ind_ass:
+                    // des[left] = right
+                    
+                    
+
                     break;
                 case ind_val:
                     break;
                 case mod:
                     // DIV does EDX:EAX / ECX. Remainder goes in EDX
-                    text.add("\tmov eax,[" + left + "]");
+                    text.add("\tmov eax," + left);
                     text.add("\tmov edx,0");
-                    text.add("\tmov ecx,[" + right + "]");
+                    text.add("\tmov ecx," + right);
                     text.add("\tdiv ecx");
-                    text.add("\tmov [" + des + "],eax");
+                    text.add("\tmov " + des + ",eax");
                     break;
                 case neg:
+                    // and: des = - left
+                    text.add("\tmov eax," + left);
+                    text.add("\tneg eax");
+                    text.add("\tmov " + des + ",eax");
                     break;
                 case not:
+                    // and: des = not left
+                    text.add("\tmov eax," + left);
+                    text.add("\tnot eax");
+                    text.add("\tmov " + des + ",eax");
                     break;
                 case or:
+                    // and: des = left and right
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
+                    text.add("\tor ebx,eax");
+                    text.add("\tmov " + des + ",ebx");
                     break;
                 case out:
                     printUsed = true;
@@ -178,7 +207,7 @@ public class MachineCodeGenerator {
                     // TODO print characters and arrays
 
                     text.add("\tmov rdi,fmtOutInt");
-                    text.add("\tmov rsi,[" + des + "]");
+                    text.add("\tmov rsi," + des);
                     text.add("\tmov rax, 0");
                     text.add("\tcall printf");
                     break;
@@ -186,32 +215,37 @@ public class MachineCodeGenerator {
                     break;
                 case param_s:
                     text.add("\txor rax,rax");
-                    text.add("\tmov eax,[" + des + "]");
+                    text.add("\tmov eax," + des);
                     text.add("\tpush rax");
                     break;
                 case pmb:
                     // pmb: des
                     // Where des is the name of the function. As such, we should be able to find it in procedureTable
                     pteStack.push(currentPte);
-                    currentPte = procedureTable.get(des + IntermediateCodeGenerator.DEF_FUNCTION);
+                    currentPte = procedureTable.get(aDes + IntermediateCodeGenerator.DEF_FUNCTION);
                     
                     break;
                 case point:
                     break;
                 case prod:
+                    // the operation mul multiplies the specified location
+                    // (register or memory) with EAX. I use register because it
+                    // is a bit faster.
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ecx," + right);
+                    text.add("\tmul exc");
+                    text.add("mov " + des + ",eax");
                     break;
                 case rtn:
-
-                    if(isNumber(left)) text.add("\tmov eax," + left + "");
-                    else text.add("\tmov eax,[" + left + "]");
+                    text.add("\tmov eax," + left);
                     text.add("\tmov [rsp+8],eax");
                     text.add("\tjmp " + currentPte.eEnd);
-                    // text.add("\tret");
+                    // We jump to the return point. This was done to more easily deal with the current function
                     break;
                 case skip:
                     // des: skip
-                    text.add(des + ":");
-                    if(currentPte != null && des.equals(currentPte.eEnd)){
+                    text.add(aDes + ":");
+                    if(currentPte != null && aDes.equals(currentPte.eEnd)){
                         currentPte = pteStack.pop();
                         text.add("\tret");
                     }

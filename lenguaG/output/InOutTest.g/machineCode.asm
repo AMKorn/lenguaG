@@ -62,51 +62,32 @@ e0:
 	mov al, 0
 	call scanf
 	; 	t5[0] = 69
-	; //t5 -> rsp+-20
 	; 	t5[1] = 108
-	; //t5 -> rsp+-20
 	; 	t5[2] = 32
-	; //t5 -> rsp+-20
 	; 	t5[3] = 114
-	; //t5 -> rsp+-20
 	; 	t5[4] = 101
-	; //t5 -> rsp+-20
 	; 	t5[5] = 115
-	; //t5 -> rsp+-20
 	; 	t5[6] = 117
-	; //t5 -> rsp+-20
 	; 	t5[7] = 108
-	; //t5 -> rsp+-20
 	; 	t5[8] = 116
-	; //t5 -> rsp+-20
 	; 	t5[9] = 97
-	; //t5 -> rsp+-20
 	; 	t5[10] = 100
-	; //t5 -> rsp+-20
 	; 	t5[11] = 111
-	; //t5 -> rsp+-20
 	; 	t5[12] = 32
-	; //t5 -> rsp+-20
 	; 	t5[13] = 101
-	; //t5 -> rsp+-20
 	; 	t5[14] = 115
-	; //t5 -> rsp+-20
 	; 	t5[15] = 58
-	; //t5 -> rsp+-20
 	; 	out: t5
-	; //t5 -> rsp+-20
 	mov rdi,fmtOutInt
 	mov rsi,[rsp+-20]
 	mov rax, 0
 	call printf
 	; 	t6 = t0 + t1
-	; //t6 -> rsp+-4
 	mov eax,[t0]
 	mov ebx,[t1]
 	add ebx,eax
 	mov [rsp+-4],ebx
 	; 	t2 = t6
-	; //t6 -> rsp+-4
 	mov eax,[rsp+-4]
 	mov [t2],eax
 	; 	out: t2

@@ -554,6 +554,14 @@ public class IntermediateCodeGenerator {
             addInstruction(InstructionType.copy, "" + (bVal ? Constants.TRUE : Constants.FALSE), t);
         }
 
+        if(!operand.isConstant && operand.isNegated()){
+            if(operand.type.isType(Constants.TYPE_INTEGER)){
+                addInstruction(InstructionType.neg, t, t);
+
+            } else {
+                addInstruction(InstructionType.not, t, t);
+            }
+        }
         operand.reference = t;
     }
 
