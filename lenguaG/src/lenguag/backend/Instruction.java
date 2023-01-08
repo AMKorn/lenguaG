@@ -83,7 +83,7 @@ public class Instruction {
             case pmb:
                 return "\tpmb " + destination;
             case rtn:
-                return "\trtn " + destination;
+                return "\trtn " + destination + ": " + left;
             case skip:
                 return destination + ": skip";
             case in:

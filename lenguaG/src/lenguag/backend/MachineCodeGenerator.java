@@ -29,6 +29,7 @@ public class MachineCodeGenerator {
     }
 
     public void generateCode(){
+        ProcTableEntry pte;
         // Declarations initialization
         data.add("\tsection .data");
 
@@ -59,7 +60,7 @@ public class MachineCodeGenerator {
             String stackVar = variableDictionary.get(des);
             if(stackVar != null) {
                 VarTableEntry vte = variableTable.get(stackVar);
-                des = "rbp+"+(vte.displacement);
+                des = "rsp+"+(vte.displacement);
                 //if(LenguaG.DEBUGGING)
                     text.add("\t; //" + instruction.destination + " -> " + des);
             }
@@ -67,7 +68,7 @@ public class MachineCodeGenerator {
                 stackVar = variableDictionary.get(left);
                 if(stackVar != null) {
                     VarTableEntry vte = variableTable.get(stackVar);
-                    left = "rbp+"+(vte.displacement);
+                    left = "rsp+"+(vte.displacement);
                     // if(LenguaG.DEBUGGING)
                         text.add("\t; //" + instruction.left + " -> " + left);
                 }
@@ -76,7 +77,7 @@ public class MachineCodeGenerator {
                 stackVar = variableDictionary.get(right);
                 if(stackVar != null) {
                     VarTableEntry vte = variableTable.get(stackVar);
-                    right = "rbp+"+(vte.displacement);
+                    right = "rsp+"+(vte.displacement);
                     // if(LenguaG.DEBUGGING)
                         text.add("\t; //" + instruction.right + " -> " + right);
                 }
@@ -99,10 +100,19 @@ public class MachineCodeGenerator {
                 case and:
                     break;
                 case call:
+                    pte = procedureTable.get(left + IntermediateCodeGenerator.DEF_FUNCTION);
+                    text.add("\tpush rax");
+                    text.add("\tcall " + pte.eStart);
+                    text.add("\tpop rbx"); // We store return into rbx
+                    for(int i = 0; i < pte.numParams; i++){
+                        text.add("\tpop rax");
+                    }
+                    text.add("\tmov [" + des + "],ebx");
                     break;
                 case div:
                     break;
                 case go_to:
+                    text.add("\tjmp " + des);
                     break;
                 case if_EQ:
                     break;
@@ -151,11 +161,14 @@ public class MachineCodeGenerator {
                 case param_c:
                     break;
                 case param_s:
+                    text.add("\txor rax,rax");
+                    text.add("\tmov eax,[" + des + "]");
+                    text.add("\tpush rax");
                     break;
                 case pmb:
                     // pmb: des
                     // Where des is the name of the function. As such, we should be able to find it in procedureTable
-                    ProcTableEntry pte = procedureTable.get(des + IntermediateCodeGenerator.DEF_FUNCTION);
+                    pte = procedureTable.get(des + IntermediateCodeGenerator.DEF_FUNCTION);
                     
                     // System.out.println(pte.tReturn);
 
@@ -165,6 +178,15 @@ public class MachineCodeGenerator {
                 case prod:
                     break;
                 case rtn:
+                /*
+	mov eax,[rsp+-4]
+	mov [rsp+8],eax
+	; 	rtn foo
+    ret*/
+                    if(isNumber(left)) text.add("\tmov eax," + left + "");
+                    else text.add("\tmov eax,[" + left + "]");
+                    text.add("\tmov [rsp+8],eax");
+                    text.add("\tret");
                     break;
                 case skip:
                     // des: skip

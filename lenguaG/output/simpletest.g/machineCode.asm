@@ -26,40 +26,47 @@ main:
 	mov eax,[t3]
 	mov [t2],eax
 	; 	goto e0
+	jmp e0
 	; e1: skip
 e1:
 	; 	pmb foo
 	; 	t8 = t5 + t6
-	; //t8 -> rbp+-4
-	; //t5 -> rbp+16
-	; //t6 -> rbp+12
-	mov eax,[rbp+16]
-	mov ebx,[rbp+12]
+	; //t8 -> rsp+-4
+	; //t5 -> rsp+28
+	; //t6 -> rsp+20
+	mov eax,[rsp+28]
+	mov ebx,[rsp+20]
 	add ebx,eax
-	mov [rbp+-4],ebx
-	; 	t7 = t8
-	; //t7 -> rbp+-8
-	; //t8 -> rbp+-4
-	mov eax,[rbp+-4]
-	mov [rbp+-8],eax
-	; 	rtn foo
-	; 	t7 = 0
-	; //t7 -> rbp+-8
-	mov eax,0
-	mov [rbp+-8],eax
-	; 	rtn foo
+	mov [rsp+-4],ebx
+	; 	rtn foo: t8
+	; //t8 -> rsp+-4
+	mov eax,[rsp+-4]
+	mov [rsp+8],eax
+	ret
 	; e0: skip
 e0:
 	; e2: skip
 e2:
 	; 	pmb main
-	; 	param_s: t0
 	; 	param_s: t2
+	xor rax,rax
+	mov eax,[t2]
+	push rax
+	; 	param_s: t0
+	xor rax,rax
+	mov eax,[t0]
+	push rax
 	; 	t9 = call foo
-	; //t9 -> rbp+-4
+	; //t9 -> rsp+-4
+	push rax
+	call e1
+	pop rbx
+	pop rax
+	pop rax
+	mov [rsp+-4],ebx
 	; 	t4 = t9
-	; //t9 -> rbp+-4
-	mov eax,[rbp+-4]
+	; //t9 -> rsp+-4
+	mov eax,[rsp+-4]
 	mov [t4],eax
 	; 	out: t4
 	mov rdi,fmtOutInt

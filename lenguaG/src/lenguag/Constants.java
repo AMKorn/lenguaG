@@ -37,6 +37,8 @@ public class Constants {
     public static final int LEQ = ParserSym.LEQ;
     public static final int NEQ = ParserSym.NEQ;
 
+    public static final int REGISTER_SIZE = 8; // Registers are 64 bits, 8 bytes
+
     public static String getTypeName(int type){
         switch(type){
             case TYPE_INTEGER:

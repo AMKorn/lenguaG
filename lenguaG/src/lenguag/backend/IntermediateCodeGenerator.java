@@ -303,8 +303,9 @@ public class IntermediateCodeGenerator {
         if(instrs != null) generate(instrs);
 
         // If no return was found, we must put it at the end
-        addInstruction(InstructionType.copy, "0", pte.tReturn);
-        addInstruction(InstructionType.rtn, name);
+        // addInstruction(InstructionType.rtn, "0", name);
+        if(func.getType().isType(Constants.TYPE_VOID)) 
+            addInstruction(InstructionType.rtn, "0", name);
         currentFunction = DEF_FUNCTION;
         currentProcTable = null;
     }
@@ -677,6 +678,9 @@ public class IntermediateCodeGenerator {
      * @param params
      */
     private void generate(SymbolParams params){
+        SymbolParams next = params.getNext();
+        if(next != null) generate(next);
+
         SymbolOperation oper = params.getValue();
         generate(oper);
         String t = oper.reference;
@@ -691,9 +695,6 @@ public class IntermediateCodeGenerator {
                 type = type.getBaseType();
             }
         } else addInstruction(InstructionType.param_s, t);
-        
-        SymbolParams next = params.getNext();
-        if(next != null) generate(next);
     }
 
     /**
@@ -708,11 +709,11 @@ public class IntermediateCodeGenerator {
             t = oper.reference;
         } else t = "0";
 
-        ProcTableEntry pte = procedureTable.get(currentFunction);
-        addInstruction(InstructionType.copy, t, pte.tReturn);
+        // ProcTableEntry pte = procedureTable.get(currentFunction);
+        // addInstruction(InstructionType.copy, t, pte.tReturn);
         
         String name = currentFunction.replace(".", "");
-        addInstruction(InstructionType.rtn, name);
+        addInstruction(InstructionType.rtn, t, name);
     }
 
     /**

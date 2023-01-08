@@ -35,7 +35,7 @@ public class ProcTableEntry {
     }
 
     private void calculateDisplacements(){
-        int paramDisplacement = 8; // We reserve space for DISP and BP
+        int paramDisplacement = Constants.REGISTER_SIZE * 2; // We reserve space for DISP and BP and for the return
         int localVarDisplacement = -4;
         VarTableEntry vte;
         if(tReturn != null){
@@ -51,7 +51,7 @@ public class ProcTableEntry {
                     
                 } else {
                     vte.displacement = paramDisplacement;
-                    paramDisplacement += vte.getOccupation();
+                    paramDisplacement += Constants.REGISTER_SIZE;
                 }
             } else {
                 vte.displacement = localVarDisplacement;
