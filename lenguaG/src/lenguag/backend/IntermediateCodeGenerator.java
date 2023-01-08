@@ -94,6 +94,7 @@ public class IntermediateCodeGenerator {
         String t = newVariable();
         VarTableEntry vte = getVar(t);
         replaceVarTableKey(t, arg.identifier);
+        currentProcTable.params.add(t);
 
         SymbolType type = arg.getType();
         while(type.isType(Constants.TYPE_ARRAY)){
@@ -114,11 +115,11 @@ public class IntermediateCodeGenerator {
      */
     private void generate(SymbolArgs args){
         // SymbolArg
-        currentSublevel = -1;
+        // currentSublevel = -1;
         generate(args.getArg());
         SymbolArgs next = args.getNext();
         if(next != null) generate(next);
-        currentSublevel = 0;
+        // currentSublevel = 0;
     }
 
     /**
@@ -298,7 +299,7 @@ public class IntermediateCodeGenerator {
         
         addInstruction(InstructionType.skip, pte.eStart);
         addInstruction(InstructionType.pmb, name);
-        pte.tReturn = newVariable();
+        // pte.tReturn = newVariable();
         SymbolInstrs instrs = func.getInstructions();
         if(instrs != null) generate(instrs);
 

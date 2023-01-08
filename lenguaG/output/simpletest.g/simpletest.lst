@@ -30,16 +30,16 @@
     30                                  	; e1: skip
     31                                  e1:
     32                                  	; 	pmb foo
-    33                                  	; 	t8 = t5 + t6
-    34                                  	; //t8 -> rsp+-4
-    35                                  	; //t5 -> rsp+28
-    36                                  	; //t6 -> rsp+20
-    37 0000003A 8B44241C                	mov eax,[rsp+28]
-    38 0000003E 8B5C2414                	mov ebx,[rsp+20]
+    33                                  	; 	t7 = t5 + t6
+    34                                  	; //t7 -> rsp+-4
+    35                                  	; //t5 -> rsp+16
+    36                                  	; //t6 -> rsp+24
+    37 0000003A 8B442410                	mov eax,[rsp+16]
+    38 0000003E 8B5C2418                	mov ebx,[rsp+24]
     39 00000042 01C3                    	add ebx,eax
     40 00000044 895C24FC                	mov [rsp+-4],ebx
-    41                                  	; 	rtn foo: t8
-    42                                  	; //t8 -> rsp+-4
+    41                                  	; 	rtn foo: t7
+    42                                  	; //t7 -> rsp+-4
     43 00000048 8B4424FC                	mov eax,[rsp+-4]
     44 0000004C 89442408                	mov [rsp+8],eax
     45 00000050 C3                      	ret
@@ -56,16 +56,16 @@
     56 0000005C 4831C0                  	xor rax,rax
     57 0000005F 8B0425[04000000]        	mov eax,[t0]
     58 00000066 50                      	push rax
-    59                                  	; 	t9 = call foo
-    60                                  	; //t9 -> rsp+-4
+    59                                  	; 	t8 = call foo
+    60                                  	; //t8 -> rsp+-4
     61 00000067 50                      	push rax
     62 00000068 E8CDFFFFFF              	call e1
     63 0000006D 5B                      	pop rbx
     64 0000006E 58                      	pop rax
     65 0000006F 58                      	pop rax
     66 00000070 895C24FC                	mov [rsp+-4],ebx
-    67                                  	; 	t4 = t9
-    68                                  	; //t9 -> rsp+-4
+    67                                  	; 	t4 = t8
+    68                                  	; //t8 -> rsp+-4
     69 00000074 8B4424FC                	mov eax,[rsp+-4]
     70 00000078 890425[10000000]        	mov [t4],eax
     71                                  	; 	out: t4

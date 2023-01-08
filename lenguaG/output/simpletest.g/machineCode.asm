@@ -32,10 +32,10 @@ e1:
 	; 	pmb foo
 	; 	t8 = t5 + t6
 	; //t8 -> rsp+-4
-	; //t5 -> rsp+28
-	; //t6 -> rsp+20
-	mov eax,[rsp+28]
-	mov ebx,[rsp+20]
+	; //t5 -> rsp+16
+	; //t6 -> rsp+12
+	mov eax,[rsp+16]
+	mov ebx,[rsp+24]
 	add ebx,eax
 	mov [rsp+-4],ebx
 	; 	rtn foo: t8

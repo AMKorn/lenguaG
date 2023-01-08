@@ -1,5 +1,6 @@
 package lenguag.backend;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import lenguag.Constants;
@@ -9,7 +10,8 @@ public class ProcTableEntry {
     public String eStart;
     public int numParams;
     // private int localVarsOccup;
-    public String tReturn;
+    // public String tReturn;
+    public ArrayList<String> params; // Arraylist to have the parameters in order
     public Hashtable<String, VarTableEntry> variableTable;
 
     public ProcTableEntry(){
@@ -17,6 +19,7 @@ public class ProcTableEntry {
         depth = 1;
         numParams = 0;
         variableTable = new Hashtable<>();
+        params = new ArrayList<>();
     }
 
     public int getVarsOccupation(){
@@ -30,41 +33,45 @@ public class ProcTableEntry {
     }
 
     public void prepareForMachineCode(){
-        calculateDisplacements();
         cleanVariables();
+        calculateDisplacements();
     }
 
     private void calculateDisplacements(){
-        int paramDisplacement = Constants.REGISTER_SIZE * 2; // We reserve space for DISP and BP and for the return
-        int localVarDisplacement = -4;
         VarTableEntry vte;
-        if(tReturn != null){
-            vte = variableTable.get("0" + tReturn);
+        // if(tReturn != null){
+        //     vte = variableTable.get("0" + tReturn);
+        //     vte.displacement = paramDisplacement;
+        //     paramDisplacement += vte.getOccupation();
+        // }
+
+        // We calculate the displacements of the parameters. They are positive.
+        int paramDisplacement = Constants.REGISTER_SIZE * 2; // We reserve space for DISP and BP and for the return
+        for(String s : params){
+            vte = variableTable.get(s);
+            System.out.println(s);
+            System.out.println(variableTable);
             vte.displacement = paramDisplacement;
-            paramDisplacement += vte.getOccupation();
+            paramDisplacement += Constants.REGISTER_SIZE;
         }
+
+        int localVarDisplacement = 0;
         for (String s : variableTable.keySet()) {
             vte = variableTable.get(s);
-            if(s.startsWith("-")){
-                // It's a parameter
-                if(vte.getOccupation() == Constants.UNKNOWN) {
-                    
-                } else {
-                    vte.displacement = paramDisplacement;
-                    paramDisplacement += Constants.REGISTER_SIZE;
-                }
-            } else {
-                vte.displacement = localVarDisplacement;
+            if(vte.displacement == 0 && vte.getOccupation() != Constants.UNKNOWN){
                 localVarDisplacement -= vte.getOccupation();
+                vte.displacement = localVarDisplacement;
             }
         }
     }
 
     private void cleanVariables(){
+        System.out.println(eStart);
         Hashtable<String, VarTableEntry> cleanVariableTable = new Hashtable<>();
         for (String s : variableTable.keySet()) {
             VarTableEntry vte = variableTable.get(s);
             cleanVariableTable.put(vte.tName, vte);
+            System.out.println("Cleaning " + s + ": now " + vte.tName);
         }
         variableTable = cleanVariableTable;
     }
