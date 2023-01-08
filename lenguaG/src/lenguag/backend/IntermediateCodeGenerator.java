@@ -307,6 +307,9 @@ public class IntermediateCodeGenerator {
         // addInstruction(InstructionType.rtn, "0", name);
         if(func.getType().isType(Constants.TYPE_VOID)) 
             addInstruction(InstructionType.rtn, "0", name);
+        currentProcTable.eEnd = newTag();
+        addInstruction(InstructionType.skip, currentProcTable.eEnd);
+
         currentFunction = DEF_FUNCTION;
         currentProcTable = null;
     }

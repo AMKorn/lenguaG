@@ -8,6 +8,7 @@ import lenguag.Constants;
 public class ProcTableEntry {
     public int depth;
     public String eStart;
+    public String eEnd;
     public int numParams;
     // private int localVarsOccup;
     // public String tReturn;
@@ -74,6 +75,6 @@ public class ProcTableEntry {
 
     @Override
     public String toString(){
-        return "[depth: " + depth + ", eStart: " + eStart + ", numParams: " + numParams + ", varsOccup: " + getVarsOccupation() + "]";
+        return "[depth: " + depth + ", eStart: " + eStart + ", eEnd: " + eEnd + ", numParams: " + numParams + ", varsOccup: " + getVarsOccupation() + "]";
     }
 }

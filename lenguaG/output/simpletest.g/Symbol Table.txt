@@ -14,7 +14,7 @@ c:
 	Constant: false
 	Declared level: 0]
 foo:
-	[Type: function (Returns: int, args:[int a, int b])
+	[Type: function (Returns: int, args:[int a, int b, bool cond])
 	Constant: false
 	Declared level: 0]
 

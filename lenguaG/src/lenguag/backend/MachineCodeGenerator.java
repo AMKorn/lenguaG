@@ -2,6 +2,7 @@ package lenguag.backend;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Stack;
 
 import lenguag.LenguaG;
 
@@ -16,6 +17,9 @@ public class MachineCodeGenerator {
     private Hashtable<String, String> variableDictionary;
     private Hashtable<String, ProcTableEntry> procedureTable;
 
+    private Stack<ProcTableEntry> pteStack;
+    private ProcTableEntry currentPte;
+
     private boolean printUsed = false;
     private boolean scanUsed = false;
 
@@ -26,6 +30,7 @@ public class MachineCodeGenerator {
         variableDictionary = new Hashtable<>();
         data = new ArrayList<>();
         text = new ArrayList<>();
+        pteStack = new Stack<>();
     }
 
     public void generateCode(){
@@ -50,7 +55,7 @@ public class MachineCodeGenerator {
 
         for (Instruction instruction : instructions) {
             //if (LenguaG.DEBUGGING) 
-                text.add("\t; " + instruction);
+                text.add("\t;;;; " + instruction);
             
             String des = instruction.destination;
             String left = instruction.left;
@@ -92,24 +97,37 @@ public class MachineCodeGenerator {
                     break;
                 case add:
                     // add: des = left + right
-                    text.add("\tmov eax,[" + left + "]"
-                            + "\n\tmov ebx,[" + right + "]"
-                            + "\n\tadd ebx,eax"
-                            + "\n\tmov [" + des + "],ebx");
+                    text.add("\tmov eax,[" + left + "]");
+                    text.add("\tmov ebx,[" + right + "]");
+                    text.add("\tadd ebx,eax");
+                    text.add("\tmov [" + des + "],ebx");
                     break;
                 case and:
+                    // and: des = left and right
+                    text.add("\tmov eax,[" + left + "]");
+                    text.add("\tmov ebx,[" + right + "]");
+                    text.add("\tand ebx,eax");
+                    text.add("\tmov [" + des + "],ebx");
                     break;
                 case call:
                     pte = procedureTable.get(left + IntermediateCodeGenerator.DEF_FUNCTION);
                     text.add("\tpush rax");
                     text.add("\tcall " + pte.eStart);
                     text.add("\tpop rbx"); // We store return into rbx
+
                     for(int i = 0; i < pte.numParams; i++){
                         text.add("\tpop rax");
                     }
+
                     text.add("\tmov [" + des + "],ebx");
                     break;
                 case div:
+                    // DIV does EDX:EAX / ECX. Result goes in EAX
+                    text.add("\tmov eax,[" + left + "]");
+                    text.add("\tmov edx,0");
+                    text.add("\tmov ecx,[" + right + "]");
+                    text.add("\tdiv ecx");
+                    text.add("\tmov [" + des + "],eax");
                     break;
                 case go_to:
                     text.add("\tjmp " + des);
@@ -141,6 +159,12 @@ public class MachineCodeGenerator {
                 case ind_val:
                     break;
                 case mod:
+                    // DIV does EDX:EAX / ECX. Remainder goes in EDX
+                    text.add("\tmov eax,[" + left + "]");
+                    text.add("\tmov edx,0");
+                    text.add("\tmov ecx,[" + right + "]");
+                    text.add("\tdiv ecx");
+                    text.add("\tmov [" + des + "],eax");
                     break;
                 case neg:
                     break;
@@ -168,29 +192,29 @@ public class MachineCodeGenerator {
                 case pmb:
                     // pmb: des
                     // Where des is the name of the function. As such, we should be able to find it in procedureTable
-                    pte = procedureTable.get(des + IntermediateCodeGenerator.DEF_FUNCTION);
+                    pteStack.push(currentPte);
+                    currentPte = procedureTable.get(des + IntermediateCodeGenerator.DEF_FUNCTION);
                     
-                    // System.out.println(pte.tReturn);
-
                     break;
                 case point:
                     break;
                 case prod:
                     break;
                 case rtn:
-                /*
-	mov eax,[rsp+-4]
-	mov [rsp+8],eax
-	; 	rtn foo
-    ret*/
+
                     if(isNumber(left)) text.add("\tmov eax," + left + "");
                     else text.add("\tmov eax,[" + left + "]");
                     text.add("\tmov [rsp+8],eax");
-                    text.add("\tret");
+                    text.add("\tjmp " + currentPte.eEnd);
+                    // text.add("\tret");
                     break;
                 case skip:
                     // des: skip
                     text.add(des + ":");
+                    if(currentPte != null && des.equals(currentPte.eEnd)){
+                        currentPte = pteStack.pop();
+                        text.add("\tret");
+                    }
                     break;
                 case sub:
                     break;
