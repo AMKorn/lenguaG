@@ -146,33 +146,58 @@ public class MachineCodeGenerator {
                     text.add("\tcmp eax,ebx");
                     text.add("\tje " + aDes);
                     break;
-                case if_GE:
-                    break;
-                case if_GT:
-                    break;
-                case if_LE:
-                    break;
-                case if_LT:
-                    break;
-                case if_NE:
-                    break;
+                // case if_GE:
+                //      Not used
+                //     break;
+                // case if_GT:
+                //      Not used
+                //     break;
+                // case if_LE:
+                //      Not used
+                //     break;
+                // case if_LT:
+                //      Not used
+                //     break;
+                // case if_NE:
+                //      Not used
+                //     break;
                 case in:
                     scanUsed = true;
 
                     // TODO differentiate ints and chars
-
-                    text.add("\tmov rsi," + aDes);
+                    
+                    // This case is complex: we need the destionation's address into rsi instead of its contents
+                    System.out.println(des +": "+ aDes);
+                    text.add("\tmov rsi," + aDes); // FIXME
                     text.add("\tmov rdi,fmtInInt");
                     text.add("\tmov al, 0");
                     text.add("\tcall scanf");
                     break;
                 case ind_ass:
                     // des[left] = right
-                    
-                    
+
+                    // This case is complex: we need the destionation's address into eax instead of its contents, 
+                    System.out.println(des +": "+ aDes);
+                    if(aDes.contains("rsp")){
+                        String[] split = aDes.split("\\+");
+                        for (String s  : split) {
+                            System.out.println(s);
+                        }
+                        text.add("\tmov eax,[rsp]");
+                        text.add("\tadd eax," + split[1]);
+                    }
+                    else text.add("\tmov eax," + aDes); // FIXME
+                    text.add("\tadd eax," + left);
+                    text.add("\tmov ebx," + right);
+                    text.add("\tmov [eax],ebx");
 
                     break;
                 case ind_val:
+                    // des = left[right]
+                    text.add("\tmov eax," + aLeft); // FIXME
+                    text.add("\tadd eax," + right);
+                    text.add("\tmov eax,[eax]");
+                    text.add("\tmov " + des + ",eax");
                     break;
                 case mod:
                     // DIV does EDX:EAX / ECX. Remainder goes in EDX
@@ -206,7 +231,7 @@ public class MachineCodeGenerator {
 
                     // TODO print characters and arrays
 
-                    text.add("\tmov rdi,fmtOutInt");
+                    text.add("\tmov rdi,fmtOutChar");
                     text.add("\tmov rsi," + des);
                     text.add("\tmov rax, 0");
                     text.add("\tcall printf");
@@ -226,6 +251,7 @@ public class MachineCodeGenerator {
                     
                     break;
                 case point:
+                    // des -> left
                     break;
                 case prod:
                     // the operation mul multiplies the specified location
@@ -251,10 +277,14 @@ public class MachineCodeGenerator {
                     }
                     break;
                 case sub:
+                    // des = left - right
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
+                    text.add("\tsub eax,ebx");
+                    text.add("\tmov " + des + ",eax");
                     break;
                 default:
-                    break;
-                
+                    throw new RuntimeException("Operation not implemented: " + instruction);
             }
         }
 
