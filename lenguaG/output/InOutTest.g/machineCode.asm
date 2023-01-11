@@ -126,16 +126,15 @@ main:
 	add eax,19
 	mov ebx,58
 	mov [eax],ebx
-        ;
-        mov eax,t4
-        add eax,20
-        mov ebx,0
+
+        add eax,1
+        xor ebx,ebx
         mov [eax],ebx
 	; e0: skip
 e0:
 	; 	pmb main
 	; 	out: t4
-	mov rdi,fmtOutChar
+	mov rdi,fmtOutInt
 	mov rsi,[t4]
 	mov rax, 0
 	call printf
@@ -145,7 +144,7 @@ e0:
 	mov al, 0
 	call scanf
 	; 	out: t4
-	mov rdi,fmtOutChar
+	mov rdi,fmtOutInt
 	mov rsi,[t4]
 	mov rax, 0
 	call printf
@@ -251,7 +250,7 @@ e0:
 	mov ebx,58
 	mov [eax],ebx
 	; 	out: t5
-	mov rdi,fmtOutChar
+	mov rdi,fmtOutInt
 	mov rsi,[rsp+-20]
 	mov rax, 0
 	call printf
@@ -264,7 +263,7 @@ e0:
 	mov eax,[rsp+-4]
 	mov [t2],eax
 	; 	out: t2
-	mov rdi,fmtOutChar
+	mov rdi,fmtOutInt
 	mov rsi,[t2]
 	mov rax, 0
 	call printf

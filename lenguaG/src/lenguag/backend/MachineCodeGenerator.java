@@ -167,8 +167,12 @@ public class MachineCodeGenerator {
                     // TODO differentiate ints and chars
                     
                     // This case is complex: we need the destionation's address into rsi instead of its contents
-                    System.out.println(des +": "+ aDes);
-                    text.add("\tmov rsi," + aDes); // FIXME
+                    if(aDes.contains("rsp")){
+                        String[] split = aDes.split("\\+");
+                        text.add("\tmov rsi,[rsp]");
+                        text.add("\tadd rsi," + split[1]);
+                    }
+                    else text.add("\tmov rsi," + aDes);
                     text.add("\tmov rdi,fmtInInt");
                     text.add("\tmov al, 0");
                     text.add("\tcall scanf");
@@ -177,16 +181,12 @@ public class MachineCodeGenerator {
                     // des[left] = right
 
                     // This case is complex: we need the destionation's address into eax instead of its contents, 
-                    System.out.println(des +": "+ aDes);
                     if(aDes.contains("rsp")){
                         String[] split = aDes.split("\\+");
-                        for (String s  : split) {
-                            System.out.println(s);
-                        }
                         text.add("\tmov eax,[rsp]");
                         text.add("\tadd eax," + split[1]);
                     }
-                    else text.add("\tmov eax," + aDes); // FIXME
+                    else text.add("\tmov eax," + aDes);
                     text.add("\tadd eax," + left);
                     text.add("\tmov ebx," + right);
                     text.add("\tmov [eax],ebx");
@@ -194,7 +194,12 @@ public class MachineCodeGenerator {
                     break;
                 case ind_val:
                     // des = left[right]
-                    text.add("\tmov eax," + aLeft); // FIXME
+                    if(aLeft.contains("rsp")){
+                        String[] split = aLeft.split("\\+");
+                        text.add("\tmov eax,[rsp]");
+                        text.add("\tadd eax," + split[1]);
+                    }
+                    else text.add("\tmov eax," + aLeft); // FIXME
                     text.add("\tadd eax," + right);
                     text.add("\tmov eax,[eax]");
                     text.add("\tmov " + des + ",eax");
@@ -231,7 +236,7 @@ public class MachineCodeGenerator {
 
                     // TODO print characters and arrays
 
-                    text.add("\tmov rdi,fmtOutChar");
+                    text.add("\tmov rdi,fmtOutInt");
                     text.add("\tmov rsi," + des);
                     text.add("\tmov rax, 0");
                     text.add("\tcall printf");
