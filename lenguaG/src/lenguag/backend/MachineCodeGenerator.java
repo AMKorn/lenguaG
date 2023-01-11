@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Stack;
 
+import lenguag.Constants;
 import lenguag.LenguaG;
 
 public class MachineCodeGenerator {
@@ -36,15 +37,29 @@ public class MachineCodeGenerator {
 
     public void generateCode(){
         ProcTableEntry pte;
+        VarTableEntry vte;
         // Declarations initialization
         data.add("\tsection .data");
 
         for (String s : variableTable.keySet()) {
-            VarTableEntry vte = variableTable.get(s);
+            vte = variableTable.get(s);
             if(s.startsWith(IntermediateCodeGenerator.DEF_FUNCTION)){
                 String t = vte.tName;
-                int occupation = vte.getOccupation();
-                data.add(t + ": \t" + "times " + occupation + " db 0");
+                switch(vte.type){
+                    case Constants.TYPE_BOOLEAN:
+                        data.add(t + ":\tdb " + vte.initialValue);
+                        break;
+                    case Constants.TYPE_CHARACTER:
+                        if(vte.dimensions.size() > 0){
+                            data.add(t + ":\t times " + vte.getOccupation() + " db " + vte.initialValue);
+                            data.add("\tdb 10, 0");
+                        } else
+                        data.add(t + ":\tdb " + vte.initialValue);
+                        break;
+                    case Constants.TYPE_INTEGER:
+                        data.add(t + ":\tdd " + vte.initialValue);
+                        break;
+                }
             } else variableDictionary.put(vte.tName, s);
         }
 
@@ -59,13 +74,16 @@ public class MachineCodeGenerator {
                 text.add("\t; " + instruction);
             
             String des = instruction.destination;
+            int desType = 0;
             String left = instruction.left;
             String right = instruction.right;
             
             // We check if the variables are local variables/parameters
             String stackVar = variableDictionary.get(des);
+            vte = variableTable.get(des);
+            if(vte != null) desType = vte.type;
             if(stackVar != null) {
-                VarTableEntry vte = variableTable.get(stackVar);
+                vte = variableTable.get(stackVar);
                 des = "rsp+"+(vte.displacement);
                 if(LenguaG.DEBUGGING)
                     text.add("\t; //" + instruction.destination + " -> " + des);
@@ -75,7 +93,7 @@ public class MachineCodeGenerator {
             if(left != null){
                 stackVar = variableDictionary.get(left);
                 if(stackVar != null) {
-                    VarTableEntry vte = variableTable.get(stackVar);
+                    vte = variableTable.get(stackVar);
                     left = "rsp+"+(vte.displacement);
                     if(LenguaG.DEBUGGING)
                         text.add("\t; //" + instruction.left + " -> " + left);
@@ -86,7 +104,7 @@ public class MachineCodeGenerator {
             if(right != null){
                 stackVar = variableDictionary.get(right);
                 if(stackVar != null) {
-                    VarTableEntry vte = variableTable.get(stackVar);
+                    vte = variableTable.get(stackVar);
                     right = "rsp+"+(vte.displacement);
                     if(LenguaG.DEBUGGING)
                         text.add("\t; //" + instruction.right + " -> " + right);
@@ -235,8 +253,18 @@ public class MachineCodeGenerator {
                     printUsed = true;
 
                     // TODO print characters and arrays
-
-                    text.add("\tmov rdi,fmtOutInt");
+                    if(desType == Constants.TYPE_CHARACTER){
+                        text.add("\tmov rdi,fmtOutChar");
+                    } else {
+                        text.add("\tmov rdi,fmtOutInt");
+                    }
+                    // text.add("\tmov rdi,fmtOutChar");
+                    /*if(aDes.contains("rsp")){
+                        String[] split = aDes.split("\\+");
+                        text.add("\tmov rsi,[rsp]");
+                        text.add("\tadd rsi," + split[1]);
+                    }
+                    else */
                     text.add("\tmov rsi," + des);
                     text.add("\tmov rax, 0");
                     text.add("\tcall printf");
@@ -330,10 +358,10 @@ public class MachineCodeGenerator {
         String s = "";
         if(printUsed) s += "\textern printf\n";
         if(scanUsed) s += "\textern scanf\n";
-        for(String i : data){
+        for(String i : text){
             s += i + "\n";
         }
-        for(String i : text){
+        for(String i : data){
             s += i + "\n";
         }
         return s;

@@ -23,7 +23,7 @@ char : TYPE_CHARACTER
 ] : R_BRACKET
 numberAsk : IDENTIFIER
 = : EQUAL
-"Introduce un número:" : STRING
+"Introduce un numero:" : STRING
 ; : ENDLINE
 main : RES_MAIN
 { : L_KEY

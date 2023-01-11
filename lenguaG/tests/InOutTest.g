@@ -2,7 +2,7 @@ int a;
 int b;
 int c;
 int[] d = [1, 2];
-char[] numberAsk = "Introduce un número:";
+char[] numberAsk = "Introduce un numero:";
 
 main {
     out(numberAsk);

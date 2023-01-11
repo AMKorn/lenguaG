@@ -1,19 +1,9 @@
 	extern printf
 	extern scanf
-	section .data
-t1: 	times 4 db 0
-t0: 	times 4 db 0
-t4: 	times 20 db 0
-t3: 	times 8 db 0
-t2: 	times 4 db 0
-fmtOutInt: db "%d",10,0
-fmtOutChar: db "%s",10,0
-fmtInInt:  db "%d", 0
-fmtInChar:  db "%s", 0
 	section .text
 	global main
 main:
-	mov rbp, rsp
+	mov rbp,rsp
 	push rbp
 
 	; 	t3[0] = 1
@@ -96,10 +86,10 @@ main:
 	add rax,13
 	mov ebx,110
 	mov [rax],ebx
-	; 	t4[14] = 250
+	; 	t4[14] = 117
 	mov rax,t4
 	add rax,14
-	mov ebx,250
+	mov ebx,117
 	mov [rax],ebx
 	; 	t4[15] = 109
 	mov rax,t4
@@ -267,3 +257,14 @@ e0:
 	pop rbp
 	mov rax,0
 	ret
+	section .data
+t1:	dd 0
+t0:	dd 0
+t4:	 times 20 db 0
+	db 10, 0
+t3:	dd 0
+t2:	dd 0
+fmtOutInt: db "%d",10,0
+fmtOutChar: db "%s",10,0
+fmtInInt:  db "%d", 0
+fmtInChar:  db "%s", 0

@@ -125,7 +125,6 @@ public class IntermediateCodeGenerator {
     /**
      * ArrSuff: getIndex(), getNext(), getDimensions()
      * @param arrSuff
-     * @param vte - Variable Table Entry to generate array dimensions
      */
     private void generate(SymbolArrSuff arrSuff){
         // if first 
@@ -192,17 +191,25 @@ public class IntermediateCodeGenerator {
      */
     private void generate(SymbolDec dec){
         String t = newVariable();
+        VarTableEntry vte = getVar(t);
         currentDec = dec.variableName;
         if(dec.isConstant){
-            addInstruction(InstructionType.copy, dec.getValue().getSemanticValue().toString(), t);
+            // addInstruction(InstructionType.copy, dec.getValue().getSemanticValue().toString(), t);
+            vte.initialValue = dec.getValue().getSemanticValue().toString();
             replaceVarTableKey(t, dec.variableName);
             return;
         }
         replaceVarTableKey(t, dec.variableName);
         SymbolOperation value = dec.getValue();
         if(value != null){
-            generate(value);
-            if(!t.equals(value.reference)) addInstruction(InstructionType.copy, value.reference, t);
+            if(value.isConstant) {
+                Object v = value.getSemanticValue();
+                if(v instanceof Boolean) v = (Boolean) v ? Constants.TRUE : Constants.FALSE;
+                vte.initialValue = v.toString();
+            } else {
+                generate(value);
+                if(!t.equals(value.reference)) addInstruction(InstructionType.copy, value.reference, t);
+            }
         }
         dec.reference = t;
         currentDec = null;

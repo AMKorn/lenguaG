@@ -10,6 +10,7 @@ public class VarTableEntry {
     public int type;
     public int subyacentType;
     public ArrayList<String> dimensions;
+    public String initialValue = "0";
 
     public VarTableEntry(String tName){
         this.tName = tName;
