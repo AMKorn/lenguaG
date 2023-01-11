@@ -12,7 +12,7 @@
     12                                  	section .text
     13                                  	global main
     14                                  main:
-    15 00000000 4889E5                  	mov rbp, rsp
+    15 00000000 4889E5                  	mov rbp,rsp
     16 00000003 55                      	push rbp
     17                                  
     18                                  	; 	t1 = 1

@@ -17,119 +17,115 @@ main:
 	push rbp
 
 	; 	t3[0] = 1
-	mov eax,t3
-	add eax,0
+	mov rax,t3
+	add rax,0
 	mov ebx,1
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t3[4] = 2
-	mov eax,t3
-	add eax,4
+	mov rax,t3
+	add rax,4
 	mov ebx,2
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[0] = 73
-	mov eax,t4
-	add eax,0
+	mov rax,t4
+	add rax,0
 	mov ebx,73
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[1] = 110
-	mov eax,t4
-	add eax,1
+	mov rax,t4
+	add rax,1
 	mov ebx,110
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[2] = 116
-	mov eax,t4
-	add eax,2
+	mov rax,t4
+	add rax,2
 	mov ebx,116
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[3] = 114
-	mov eax,t4
-	add eax,3
+	mov rax,t4
+	add rax,3
 	mov ebx,114
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[4] = 111
-	mov eax,t4
-	add eax,4
+	mov rax,t4
+	add rax,4
 	mov ebx,111
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[5] = 100
-	mov eax,t4
-	add eax,5
+	mov rax,t4
+	add rax,5
 	mov ebx,100
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[6] = 117
-	mov eax,t4
-	add eax,6
+	mov rax,t4
+	add rax,6
 	mov ebx,117
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[7] = 99
-	mov eax,t4
-	add eax,7
+	mov rax,t4
+	add rax,7
 	mov ebx,99
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[8] = 101
-	mov eax,t4
-	add eax,8
+	mov rax,t4
+	add rax,8
 	mov ebx,101
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[9] = 32
-	mov eax,t4
-	add eax,9
+	mov rax,t4
+	add rax,9
 	mov ebx,32
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[10] = 117
-	mov eax,t4
-	add eax,10
+	mov rax,t4
+	add rax,10
 	mov ebx,117
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[11] = 110
-	mov eax,t4
-	add eax,11
+	mov rax,t4
+	add rax,11
 	mov ebx,110
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[12] = 32
-	mov eax,t4
-	add eax,12
+	mov rax,t4
+	add rax,12
 	mov ebx,32
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[13] = 110
-	mov eax,t4
-	add eax,13
+	mov rax,t4
+	add rax,13
 	mov ebx,110
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[14] = 250
-	mov eax,t4
-	add eax,14
+	mov rax,t4
+	add rax,14
 	mov ebx,250
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[15] = 109
-	mov eax,t4
-	add eax,15
+	mov rax,t4
+	add rax,15
 	mov ebx,109
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[16] = 101
-	mov eax,t4
-	add eax,16
+	mov rax,t4
+	add rax,16
 	mov ebx,101
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[17] = 114
-	mov eax,t4
-	add eax,17
+	mov rax,t4
+	add rax,17
 	mov ebx,114
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[18] = 111
-	mov eax,t4
-	add eax,18
+	mov rax,t4
+	add rax,18
 	mov ebx,111
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t4[19] = 58
-	mov eax,t4
-	add eax,19
+	mov rax,t4
+	add rax,19
 	mov ebx,58
-	mov [eax],ebx
-
-        add eax,1
-        xor ebx,ebx
-        mov [eax],ebx
+	mov [rax],ebx
 	; e0: skip
 e0:
 	; 	pmb main
@@ -154,101 +150,101 @@ e0:
 	mov al, 0
 	call scanf
 	; 	t5[0] = 69
-	mov eax,[rsp]
-	add eax,-20
-	add eax,0
+	mov rax,[rsp]
+	add rax,-20
+	add rax,0
 	mov ebx,69
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[1] = 108
-	mov eax,[rsp]
-	add eax,-20
-	add eax,1
+	mov rax,[rsp]
+	add rax,-20
+	add rax,1
 	mov ebx,108
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[2] = 32
-	mov eax,[rsp]
-	add eax,-20
-	add eax,2
+	mov rax,[rsp]
+	add rax,-20
+	add rax,2
 	mov ebx,32
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[3] = 114
-	mov eax,[rsp]
-	add eax,-20
-	add eax,3
+	mov rax,[rsp]
+	add rax,-20
+	add rax,3
 	mov ebx,114
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[4] = 101
-	mov eax,[rsp]
-	add eax,-20
-	add eax,4
+	mov rax,[rsp]
+	add rax,-20
+	add rax,4
 	mov ebx,101
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[5] = 115
-	mov eax,[rsp]
-	add eax,-20
-	add eax,5
+	mov rax,[rsp]
+	add rax,-20
+	add rax,5
 	mov ebx,115
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[6] = 117
-	mov eax,[rsp]
-	add eax,-20
-	add eax,6
+	mov rax,[rsp]
+	add rax,-20
+	add rax,6
 	mov ebx,117
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[7] = 108
-	mov eax,[rsp]
-	add eax,-20
-	add eax,7
+	mov rax,[rsp]
+	add rax,-20
+	add rax,7
 	mov ebx,108
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[8] = 116
-	mov eax,[rsp]
-	add eax,-20
-	add eax,8
+	mov rax,[rsp]
+	add rax,-20
+	add rax,8
 	mov ebx,116
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[9] = 97
-	mov eax,[rsp]
-	add eax,-20
-	add eax,9
+	mov rax,[rsp]
+	add rax,-20
+	add rax,9
 	mov ebx,97
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[10] = 100
-	mov eax,[rsp]
-	add eax,-20
-	add eax,10
+	mov rax,[rsp]
+	add rax,-20
+	add rax,10
 	mov ebx,100
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[11] = 111
-	mov eax,[rsp]
-	add eax,-20
-	add eax,11
+	mov rax,[rsp]
+	add rax,-20
+	add rax,11
 	mov ebx,111
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[12] = 32
-	mov eax,[rsp]
-	add eax,-20
-	add eax,12
+	mov rax,[rsp]
+	add rax,-20
+	add rax,12
 	mov ebx,32
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[13] = 101
-	mov eax,[rsp]
-	add eax,-20
-	add eax,13
+	mov rax,[rsp]
+	add rax,-20
+	add rax,13
 	mov ebx,101
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[14] = 115
-	mov eax,[rsp]
-	add eax,-20
-	add eax,14
+	mov rax,[rsp]
+	add rax,-20
+	add rax,14
 	mov ebx,115
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	t5[15] = 58
-	mov eax,[rsp]
-	add eax,-20
-	add eax,15
+	mov rax,[rsp]
+	add rax,-20
+	add rax,15
 	mov ebx,58
-	mov [eax],ebx
+	mov [rax],ebx
 	; 	out: t5
 	mov rdi,fmtOutInt
 	mov rsi,[rsp+-20]

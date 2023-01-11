@@ -12,7 +12,7 @@ fmtOutChar: db "%s",10,0
 	section .text
 	global main
 main:
-	mov rbp, rsp
+	mov rbp,rsp
 	push rbp
 
 	; 	t1 = 1

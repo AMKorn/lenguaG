@@ -51,7 +51,7 @@ public class MachineCodeGenerator {
         text.add("\tsection .text\n"
                 + "\tglobal main\n"
                 + "main:\n"
-                + "\tmov rbp, rsp\n"
+                + "\tmov rbp,rsp\n"
                 + "\tpush rbp\n");
 
         for (Instruction instruction : instructions) {
@@ -152,12 +152,12 @@ public class MachineCodeGenerator {
                 // case if_GT:
                 //      Not used
                 //     break;
-                // case if_LE:
-                //      Not used
-                //     break;
-                // case if_LT:
-                //      Not used
-                //     break;
+                case if_LE:
+                    
+                    break;
+                case if_LT:
+
+                    break;
                 // case if_NE:
                 //      Not used
                 //     break;
@@ -183,25 +183,25 @@ public class MachineCodeGenerator {
                     // This case is complex: we need the destionation's address into eax instead of its contents, 
                     if(aDes.contains("rsp")){
                         String[] split = aDes.split("\\+");
-                        text.add("\tmov eax,[rsp]");
-                        text.add("\tadd eax," + split[1]);
+                        text.add("\tmov rax,[rsp]");
+                        text.add("\tadd rax," + split[1]);
                     }
-                    else text.add("\tmov eax," + aDes);
-                    text.add("\tadd eax," + left);
+                    else text.add("\tmov rax," + aDes);
+                    text.add("\tadd rax," + left);
                     text.add("\tmov ebx," + right);
-                    text.add("\tmov [eax],ebx");
+                    text.add("\tmov [rax],ebx");
 
                     break;
                 case ind_val:
                     // des = left[right]
                     if(aLeft.contains("rsp")){
                         String[] split = aLeft.split("\\+");
-                        text.add("\tmov eax,[rsp]");
-                        text.add("\tadd eax," + split[1]);
+                        text.add("\tmov rax,[rsp]");
+                        text.add("\tadd rax," + split[1]);
                     }
-                    else text.add("\tmov eax," + aLeft); // FIXME
-                    text.add("\tadd eax," + right);
-                    text.add("\tmov eax,[eax]");
+                    else text.add("\tmov rax," + aLeft);
+                    text.add("\tadd rax," + right);
+                    text.add("\tmov eax,[rax]");
                     text.add("\tmov " + des + ",eax");
                     break;
                 case mod:
@@ -242,6 +242,7 @@ public class MachineCodeGenerator {
                     text.add("\tcall printf");
                     break;
                 case param_c:
+                    
                     break;
                 case param_s:
                     text.add("\txor rax,rax");
@@ -257,6 +258,13 @@ public class MachineCodeGenerator {
                     break;
                 case point:
                     // des -> left
+                    if(aLeft.contains("rsp")){
+                        String[] split = aLeft.split("\\+");
+                        text.add("\tmov rax,[rsp]");
+                        text.add("\tadd rax," + split[1]);
+                    }
+                    else text.add("\tmov rax," + aLeft);
+                    text.add("\tmov " + des + ",rax");
                     break;
                 case prod:
                     // the operation mul multiplies the specified location
@@ -264,8 +272,8 @@ public class MachineCodeGenerator {
                     // is a bit faster.
                     text.add("\tmov eax," + left);
                     text.add("\tmov ecx," + right);
-                    text.add("\tmul exc");
-                    text.add("mov " + des + ",eax");
+                    text.add("\tmul ecx");
+                    text.add("\tmov " + des + ",eax");
                     break;
                 case rtn:
                     text.add("\tmov eax," + left);
@@ -330,57 +338,4 @@ public class MachineCodeGenerator {
         }
         return s;
     }
-
-    /**
-     * This is a dummy code generation to test the correctness of the run.sh script and as a baseline for working code. 
-     * // TODO remove
-     */
-    // public void generateCode(){
-    //     text.add("; hello_64.asm    print a string using printf");
-    //     text.add("; Assemble:	  nasm -f elf64 -l hello_64.lst  hello_64.asm");
-    //     text.add("; Link:		  gcc --no-pie -o hello_64  hello_64.o");
-    //     text.add("; Run:		  ./hello_64 > hello_64.out");
-    //     text.add("; Output:	  cat hello_64.out");
-        
-    //     text.add("; Equivalent C code");
-    //     text.add("; // hello.c");
-    //     text.add("; #include <stdio.h>");
-    //     text.add("; int main()");
-    //     text.add("; {");
-    //     text.add(";   char msg[] = \"Hello world\\n\";");
-    //     text.add(";   printf(\"%s\\n\",msg);");
-    //     text.add(";   return 0;");
-    //     text.add("; }");
-            
-    //     text.add("; Declare needed C  functions");
-    //     text.add("    extern	printf		; the C function, to be called");
-    //     text.add("    extern  scanf");
-        
-    //     text.add("    section .data		; Data section, initialized variables");
-    //     text.add("msg:	db \"Hello world\", 0	; C string needs 0");
-    //     text.add("fmt:    db \"%d\", 10, 0       ; The printf format, \"\\n\",'0'");
-    //     text.add("int:    times 4 db 0");
-    //     text.add("fmtin:  db \"%d\", 0");
-        
-    //     text.add("    section .text         ; Code section.");
-        
-    //     text.add("    global main		; the standard gcc entry point");
-    //     text.add("main:				; the program label for the entry point");
-    //     text.add("    push    rbp		; set up stack frame, must be alligned");
-        
-    //     text.add("    mov     rsi, int");
-    //     text.add("    mov     rdi, fmtin");
-    //     text.add("    mov     al, 0");
-    //     text.add("    call    scanf");
-            
-    //     text.add("    mov	rdi,fmt");
-    //     text.add("    mov	rsi,[int]");
-    //     text.add("    mov	rax,0		; or can be  xor  rax,rax");
-    //     text.add("    call    printf		; Call C function");
-        
-    //     text.add("    pop	rbp		; restore stack");
-        
-    //     text.add("    mov	rax,0		; normal, no error, return value");
-    //     text.add("    ret			; return");
-    // }
 }
