@@ -47,13 +47,13 @@ hexadecimal		= 0x[0-9a-fA-F]+
 
 int_number		= {integer}
 				|{binary}|{octal}|{hexadecimal}
-character		= {quote}\\?.{quote}	// any character, which could be escaped
+// character		= {quote}?.{quote}
 boolean			= {resTrue}|{resFalse}	// either true or false
-string 			= {doubleQuotes}.*{doubleQuotes}
+// string 			= {doubleQuotes}.*{doubleQuotes}
 
 // Reserved words
 typeInt			= "int"
-typeChar		= "char"
+// typeChar		= "char"
 typeBool		= "bool"
 typeVoid		= "void"
 
@@ -200,7 +200,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {resOut} 			{ tokens.add(yytext() + " : RES_OUT"); return symbol(ParserSym.RES_OUT); }
 // Types
 {typeInt}			{ tokens.add(yytext() + " : TYPE_INTEGER"); return symbol(ParserSym.TYPE_INTEGER); }
-{typeChar}			{ tokens.add(yytext() + " : TYPE_CHARACTER"); return symbol(ParserSym.TYPE_CHARACTER); }
+// {typeChar}			{ tokens.add(yytext() + " : TYPE_CHARACTER"); return symbol(ParserSym.TYPE_CHARACTER); }
 {typeBool}			{ tokens.add(yytext() + " : TYPE_BOOLEAN"); return symbol(ParserSym.TYPE_BOOLEAN); }
 {typeVoid}			{ tokens.add(yytext() + " : TYPE_VOID"); return symbol(ParserSym.TYPE_VOID); }
 
@@ -230,7 +230,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 {swapSym} 			{ tokens.add(yytext() + " : OP_SWAP"); return symbol(ParserSym.OP_SWAP); }
 
 // Non-reserved words
-{character}			{ tokens.add(yytext() + " : CHARACTER"); return symbol(ParserSym.CHARACTER, yytext().charAt(1)); }
+// {character}			{ tokens.add(yytext() + " : CHARACTER"); return symbol(ParserSym.CHARACTER, yytext().charAt(1)); }
 {int_number}		{ 	try {
 							Integer value = parseNum(yytext()); 
 							tokens.add(yytext() + " : INTEGER"); 
@@ -241,7 +241,7 @@ comment			= {commentLine}.*				// Comment line symbol and any character except f
 						}
 					}
 {boolean}			{ tokens.add(yytext() + " : BOOLEAN"); return symbol(ParserSym.BOOLEAN, Boolean.parseBoolean(yytext())); }
-{string}			{ tokens.add(yytext() + " : STRING"); return symbol(ParserSym.STRING, yytext());}
+// {string}			{ tokens.add(yytext() + " : STRING"); return symbol(ParserSym.STRING, yytext());}
 
 {identifier}		{ tokens.add(yytext() + " : IDENTIFIER"); return symbol(ParserSym.IDENTIFIER, yytext()); }
 

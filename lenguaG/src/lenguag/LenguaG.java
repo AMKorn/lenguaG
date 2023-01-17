@@ -24,6 +24,8 @@ import lenguag.backend.MachineCodeGenerator;
 public class LenguaG {
 
     public static final boolean DEBUGGING = false;
+    public static final boolean SIMPLIFIED = true; // DO NOT CHANGE.
+
     public static final String OUTPUT_PATH = "../output/";
 
     public static String outputPath = OUTPUT_PATH;

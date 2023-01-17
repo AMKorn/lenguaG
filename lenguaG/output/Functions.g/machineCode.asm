@@ -1,11 +1,4 @@
 	extern printf
-	section .data
-t1:	dd 2
-t0:	dd 1
-t3:	dd -1
-t2:	dd 0
-fmtOutInt: db "%d",10,0
-fmtOutChar: db "%s",10,0
 	section .text
 	global main
 main:
@@ -121,3 +114,10 @@ e4:
 	pop rbp
 	mov rax,0
 	ret
+	section .data
+t1:	dd 2
+t0:	dd 1
+t3:	dd -1
+t2:	dd 0
+fmtOutInt: db "%d",10,0
+fmtOutChar: db "%s",10,0

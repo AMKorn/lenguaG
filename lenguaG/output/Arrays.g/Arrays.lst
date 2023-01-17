@@ -1,0 +1,72 @@
+     1                                  	extern printf
+     2                                  	section .text
+     3                                  	global main
+     4                                  main:
+     5 00000000 4889E5                  	mov rbp,rsp
+     6 00000003 55                      	push rbp
+     7                                  
+     8                                  	; 	t0[0] = 1
+     9 00000004 48B8-                   	mov rax,t0
+     9 00000006 [0000000000000000] 
+    10 0000000E 4883C000                	add rax,0
+    11 00000012 BB01000000              	mov ebx,1
+    12 00000017 8918                    	mov [rax],ebx
+    13                                  	; 	t0[4] = 2
+    14 00000019 48B8-                   	mov rax,t0
+    14 0000001B [0000000000000000] 
+    15 00000023 4883C004                	add rax,4
+    16 00000027 BB02000000              	mov ebx,2
+    17 0000002C 8918                    	mov [rax],ebx
+    18                                  	; 	t0[8] = 3
+    19 0000002E 48B8-                   	mov rax,t0
+    19 00000030 [0000000000000000] 
+    20 00000038 4883C008                	add rax,8
+    21 0000003C BB03000000              	mov ebx,3
+    22 00000041 8918                    	mov [rax],ebx
+    23                                  	; 	t0[12] = 4
+    24 00000043 48B8-                   	mov rax,t0
+    24 00000045 [0000000000000000] 
+    25 0000004D 4883C00C                	add rax,12
+    26 00000051 BB04000000              	mov ebx,4
+    27 00000056 8918                    	mov [rax],ebx
+    28                                  	; e0: skip
+    29                                  e0:
+    30                                  	; 	pmb main
+    31                                  	; 	t1 = 0 * 4
+    32 00000058 B800000000              	mov eax,0
+    33 0000005D B904000000              	mov ecx,4
+    34 00000062 F7E1                    	mul ecx
+    35 00000064 894424EC                	mov [rsp+-20],eax
+    36                                  	; 	t2 = 0
+    37 00000068 B800000000              	mov eax,0
+    38 0000006D 894424F0                	mov [rsp+-16],eax
+    39                                  	; 	t3 = t1 + t2
+    40 00000071 8B4424EC                	mov eax,[rsp+-20]
+    41 00000075 8B5C24F0                	mov ebx,[rsp+-16]
+    42 00000079 01C3                    	add ebx,eax
+    43 0000007B 895C24F4                	mov [rsp+-12],ebx
+    44                                  	; 	t4 = t3 * 4
+    45 0000007F 8B4424F4                	mov eax,[rsp+-12]
+    46 00000083 B904000000              	mov ecx,4
+    47 00000088 F7E1                    	mul ecx
+    48 0000008A 894424F8                	mov [rsp+-8],eax
+    49                                  	; 	t5 = t0[t4]
+    50 0000008E 48B8-                   	mov rax,t0
+    50 00000090 [0000000000000000] 
+    51 00000098 48034424F8              	add rax,[rsp+-8]
+    52 0000009D 8B00                    	mov eax,[rax]
+    53 0000009F 894424FC                	mov [rsp+-4],eax
+    54                                  	; 	out: t5
+    55 000000A3 48BF-                   	mov rdi,fmtOutInt
+    55 000000A5 [0400000000000000] 
+    56 000000AD 488B7424FC              	mov rsi,[rsp+-4]
+    57 000000B2 B800000000              	mov rax, 0
+    58 000000B7 E8(00000000)            	call printf
+    59                                  
+    60 000000BC 5D                      	pop rbp
+    61 000000BD B800000000              	mov rax,0
+    62 000000C2 C3                      	ret
+    63                                  	section .data
+    64 00000000 00000000                t0:	dd 0
+    65 00000004 25640A00                fmtOutInt: db "%d",10,0
+    66 00000008 25730A00                fmtOutChar: db "%s",10,0

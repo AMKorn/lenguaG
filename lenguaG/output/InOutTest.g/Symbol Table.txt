@@ -17,10 +17,6 @@ d:
 	[Type: int[2]
 	Constant: false
 	Declared level: 0]
-numberAsk:
-	[Type: char[20]
-	Constant: false
-	Declared level: 0]
 
 Ambit table:[0]
 Expansion table:[]

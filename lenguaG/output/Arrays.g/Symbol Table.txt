@@ -1,8 +1,8 @@
 Current level: 0
 
 Symbol Table: 
-a:
-	[Type: int[10][2]
+array:
+	[Type: int[4]
 	Constant: false
 	Declared level: 0]
 

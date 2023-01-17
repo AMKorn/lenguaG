@@ -95,7 +95,7 @@ then
     if [[ $run == 1 ]]
     then
         echo "
-    **** Running propgram ****
+    **** Running program ****
         "
         # Currently in /src
         cd ../output/
