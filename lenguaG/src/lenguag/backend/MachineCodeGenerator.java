@@ -164,21 +164,41 @@ public class MachineCodeGenerator {
                     text.add("\tcmp eax,ebx");
                     text.add("\tje " + aDes);
                     break;
-                // case if_GE:
-                //      Not used
-                //     break;
-                // case if_GT:
-                //      Not used
-                //     break;
+                case if_GE:
+                    // if left >= right goto des
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
+                    text.add("\tcmp eax,ebx");
+                    text.add("\tjge " + aDes);
+                    break;
+                case if_GT:
+                    // if left > right goto des
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
+                    text.add("\tcmp eax,ebx");
+                    text.add("\tjg " + aDes);
+                    break;
                 case if_LE:
-                    
+                    // if left <= right goto des
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
+                    text.add("\tcmp eax,ebx");
+                    text.add("\tjle " + aDes);
                     break;
                 case if_LT:
-
+                    // if left < right goto des
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
+                    text.add("\tcmp eax,ebx");
+                    text.add("\tjl " + aDes);
                     break;
-                // case if_NE:
-                //      Not used
-                //     break;
+                case if_NE:
+                    // if left != right goto des
+                    text.add("\tmov eax," + left);
+                    text.add("\tmov ebx," + right);
+                    text.add("\tcmp eax,ebx");
+                    text.add("\tjne " + aDes);
+                    break;
                 case in:
                     scanUsed = true;
 
