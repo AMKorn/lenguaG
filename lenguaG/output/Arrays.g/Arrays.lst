@@ -8,65 +8,120 @@
      8                                  	; 	t0[0] = 1
      9 00000004 48B8-                   	mov rax,t0
      9 00000006 [0000000000000000] 
-    10 0000000E 4883C000                	add rax,0
-    11 00000012 BB01000000              	mov ebx,1
-    12 00000017 8918                    	mov [rax],ebx
-    13                                  	; 	t0[4] = 2
-    14 00000019 48B8-                   	mov rax,t0
-    14 0000001B [0000000000000000] 
-    15 00000023 4883C004                	add rax,4
-    16 00000027 BB02000000              	mov ebx,2
-    17 0000002C 8918                    	mov [rax],ebx
-    18                                  	; 	t0[8] = 3
-    19 0000002E 48B8-                   	mov rax,t0
-    19 00000030 [0000000000000000] 
-    20 00000038 4883C008                	add rax,8
-    21 0000003C BB03000000              	mov ebx,3
-    22 00000041 8918                    	mov [rax],ebx
-    23                                  	; 	t0[12] = 4
-    24 00000043 48B8-                   	mov rax,t0
-    24 00000045 [0000000000000000] 
-    25 0000004D 4883C00C                	add rax,12
-    26 00000051 BB04000000              	mov ebx,4
-    27 00000056 8918                    	mov [rax],ebx
-    28                                  	; e0: skip
-    29                                  e0:
-    30                                  	; 	pmb main
-    31                                  	; 	t1 = 0 * 4
-    32 00000058 B800000000              	mov eax,0
-    33 0000005D B904000000              	mov ecx,4
-    34 00000062 F7E1                    	mul ecx
-    35 00000064 894424EC                	mov [rsp+-20],eax
-    36                                  	; 	t2 = 0
-    37 00000068 B800000000              	mov eax,0
-    38 0000006D 894424F0                	mov [rsp+-16],eax
-    39                                  	; 	t3 = t1 + t2
-    40 00000071 8B4424EC                	mov eax,[rsp+-20]
-    41 00000075 8B5C24F0                	mov ebx,[rsp+-16]
-    42 00000079 01C3                    	add ebx,eax
-    43 0000007B 895C24F4                	mov [rsp+-12],ebx
-    44                                  	; 	t4 = t3 * 4
-    45 0000007F 8B4424F4                	mov eax,[rsp+-12]
-    46 00000083 B904000000              	mov ecx,4
-    47 00000088 F7E1                    	mul ecx
-    48 0000008A 894424F8                	mov [rsp+-8],eax
-    49                                  	; 	t5 = t0[t4]
-    50 0000008E 48B8-                   	mov rax,t0
-    50 00000090 [0000000000000000] 
-    51 00000098 48034424F8              	add rax,[rsp+-8]
-    52 0000009D 8B00                    	mov eax,[rax]
-    53 0000009F 894424FC                	mov [rsp+-4],eax
-    54                                  	; 	out: t5
-    55 000000A3 48BF-                   	mov rdi,fmtOutInt
-    55 000000A5 [0400000000000000] 
-    56 000000AD 488B7424FC              	mov rsi,[rsp+-4]
-    57 000000B2 B800000000              	mov rax, 0
-    58 000000B7 E8(00000000)            	call printf
-    59                                  
-    60 000000BC 5D                      	pop rbp
-    61 000000BD B800000000              	mov rax,0
-    62 000000C2 C3                      	ret
-    63                                  	section .data
-    64 00000000 00000000                t0:	dd 0
-    65 00000004 25640A00                fmtOutInt: db "%d",10,0
-    66 00000008 25730A00                fmtOutChar: db "%s",10,0
+    10 0000000E 4831DB                  	xor rbx,rbx
+    11 00000011 BB00000000              	mov ebx,0
+    12 00000016 4801D8                  	add rax,rbx
+    13 00000019 BB01000000              	mov ebx,1
+    14 0000001E 8918                    	mov [rax],ebx
+    15                                  	; 	t0[4] = 2
+    16 00000020 48B8-                   	mov rax,t0
+    16 00000022 [0000000000000000] 
+    17 0000002A 4831DB                  	xor rbx,rbx
+    18 0000002D BB04000000              	mov ebx,4
+    19 00000032 4801D8                  	add rax,rbx
+    20 00000035 BB02000000              	mov ebx,2
+    21 0000003A 8918                    	mov [rax],ebx
+    22                                  	; 	t0[8] = 3
+    23 0000003C 48B8-                   	mov rax,t0
+    23 0000003E [0000000000000000] 
+    24 00000046 4831DB                  	xor rbx,rbx
+    25 00000049 BB08000000              	mov ebx,8
+    26 0000004E 4801D8                  	add rax,rbx
+    27 00000051 BB03000000              	mov ebx,3
+    28 00000056 8918                    	mov [rax],ebx
+    29                                  	; 	t0[12] = 4
+    30 00000058 48B8-                   	mov rax,t0
+    30 0000005A [0000000000000000] 
+    31 00000062 4831DB                  	xor rbx,rbx
+    32 00000065 BB0C000000              	mov ebx,12
+    33 0000006A 4801D8                  	add rax,rbx
+    34 0000006D BB04000000              	mov ebx,4
+    35 00000072 8918                    	mov [rax],ebx
+    36                                  	; 	t0[16] = 5
+    37 00000074 48B8-                   	mov rax,t0
+    37 00000076 [0000000000000000] 
+    38 0000007E 4831DB                  	xor rbx,rbx
+    39 00000081 BB10000000              	mov ebx,16
+    40 00000086 4801D8                  	add rax,rbx
+    41 00000089 BB05000000              	mov ebx,5
+    42 0000008E 8918                    	mov [rax],ebx
+    43                                  	; 	t0[20] = 6
+    44 00000090 48B8-                   	mov rax,t0
+    44 00000092 [0000000000000000] 
+    45 0000009A 4831DB                  	xor rbx,rbx
+    46 0000009D BB14000000              	mov ebx,20
+    47 000000A2 4801D8                  	add rax,rbx
+    48 000000A5 BB06000000              	mov ebx,6
+    49 000000AA 8918                    	mov [rax],ebx
+    50                                  	; 	t0[24] = 7
+    51 000000AC 48B8-                   	mov rax,t0
+    51 000000AE [0000000000000000] 
+    52 000000B6 4831DB                  	xor rbx,rbx
+    53 000000B9 BB18000000              	mov ebx,24
+    54 000000BE 4801D8                  	add rax,rbx
+    55 000000C1 BB07000000              	mov ebx,7
+    56 000000C6 8918                    	mov [rax],ebx
+    57                                  	; 	t0[28] = 8
+    58 000000C8 48B8-                   	mov rax,t0
+    58 000000CA [0000000000000000] 
+    59 000000D2 4831DB                  	xor rbx,rbx
+    60 000000D5 BB1C000000              	mov ebx,28
+    61 000000DA 4801D8                  	add rax,rbx
+    62 000000DD BB08000000              	mov ebx,8
+    63 000000E2 8918                    	mov [rax],ebx
+    64                                  	; e0: skip
+    65                                  e0:
+    66                                  	; 	pmb main
+    67                                  	; 	t1 = 0 * 2
+    68 000000E4 B800000000              	mov eax,0
+    69 000000E9 B902000000              	mov ecx,2
+    70 000000EE F7E1                    	mul ecx
+    71 000000F0 894424E4                	mov [rsp+-28],eax
+    72                                  	; 	t2 = 1
+    73 000000F4 B801000000              	mov eax,1
+    74 000000F9 894424E8                	mov [rsp+-24],eax
+    75                                  	; 	t3 = t1 + t2
+    76 000000FD 8B4424E4                	mov eax,[rsp+-28]
+    77 00000101 8B5C24E8                	mov ebx,[rsp+-24]
+    78 00000105 01C3                    	add ebx,eax
+    79 00000107 895C24EC                	mov [rsp+-20],ebx
+    80                                  	; 	t4 = t3 * 4
+    81 0000010B 8B4424EC                	mov eax,[rsp+-20]
+    82 0000010F B904000000              	mov ecx,4
+    83 00000114 F7E1                    	mul ecx
+    84 00000116 894424F0                	mov [rsp+-16],eax
+    85                                  	; 	t5 = 3
+    86 0000011A B803000000              	mov eax,3
+    87 0000011F 894424F4                	mov [rsp+-12],eax
+    88                                  	; 	t6 = t4 + t5
+    89 00000123 8B4424F0                	mov eax,[rsp+-16]
+    90 00000127 8B5C24F4                	mov ebx,[rsp+-12]
+    91 0000012B 01C3                    	add ebx,eax
+    92 0000012D 895C24F8                	mov [rsp+-8],ebx
+    93                                  	; 	t7 = t6 * 4
+    94 00000131 8B4424F8                	mov eax,[rsp+-8]
+    95 00000135 B904000000              	mov ecx,4
+    96 0000013A F7E1                    	mul ecx
+    97 0000013C 894424FC                	mov [rsp+-4],eax
+    98                                  	; 	t8 = t0[t7]
+    99 00000140 48B8-                   	mov rax,t0
+    99 00000142 [0000000000000000] 
+   100 0000014A 4831DB                  	xor rbx,rbx
+   101 0000014D 8B5C24FC                	mov ebx,[rsp+-4]
+   102 00000151 4801D8                  	add rax,rbx
+   103 00000154 8B00                    	mov eax,[rax]
+   104 00000156 894424E0                	mov [rsp+-32],eax
+   105                                  	; 	out: t8
+   106 0000015A 48BF-                   	mov rdi,fmtOutInt
+   106 0000015C [2000000000000000] 
+   107 00000164 488B7424E0              	mov rsi,[rsp+-32]
+   108 00000169 B800000000              	mov rax, 0
+   109 0000016E E8(00000000)            	call printf
+   110                                  
+   111 00000173 5D                      	pop rbp
+   112 00000174 B800000000              	mov rax,0
+   113 00000179 C3                      	ret
+   114                                  	section .data
+   115 00000000 00<rept>                t0:	 times 32 db 0
+   116 00000020 25640A00                fmtOutInt: db "%d",10,0
+   117 00000024 25730A00                fmtOutChar: db "%s",10,0

@@ -52,11 +52,14 @@ public class MachineCodeGenerator {
                     case Constants.TYPE_CHARACTER:
                         if(vte.dimensions.size() > 0){
                             data.add(t + ":\t times " + vte.getOccupation() + " db " + vte.initialValue);
-                            data.add("\tdb 10, 0");
+                            data.add("\tdb 0");
                         } else
                         data.add(t + ":\tdb " + vte.initialValue);
                         break;
                     case Constants.TYPE_INTEGER:
+                        if(vte.dimensions.size() > 0){
+                            data.add(t + ":\t times " + vte.getOccupation() + " db " + vte.initialValue);
+                        } else
                         data.add(t + ":\tdd " + vte.initialValue);
                         break;
                 }
@@ -225,7 +228,9 @@ public class MachineCodeGenerator {
                         text.add("\tadd rax," + split[1]);
                     }
                     else text.add("\tmov rax," + aDes);
-                    text.add("\tadd rax," + left);
+                    text.add("\txor rbx,rbx");
+                    text.add("\tmov ebx," + left);
+                    text.add("\tadd rax,rbx");
                     text.add("\tmov ebx," + right);
                     text.add("\tmov [rax],ebx");
 
@@ -238,7 +243,9 @@ public class MachineCodeGenerator {
                         text.add("\tadd rax," + split[1]);
                     }
                     else text.add("\tmov rax," + aLeft);
-                    text.add("\tadd rax," + right);
+                    text.add("\txor rbx,rbx");
+                    text.add("\tmov ebx," + right);
+                    text.add("\tadd rax,rbx");
                     text.add("\tmov eax,[rax]");
                     text.add("\tmov " + des + ",eax");
                     break;

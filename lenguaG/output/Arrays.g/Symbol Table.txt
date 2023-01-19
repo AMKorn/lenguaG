@@ -2,7 +2,7 @@ Current level: 0
 
 Symbol Table: 
 array:
-	[Type: int[4]
+	[Type: int[4][2]
 	Constant: false
 	Declared level: 0]
 
