@@ -124,4 +124,3 @@
    114                                  	section .data
    115 00000000 00<rept>                t0:	 times 32 db 0
    116 00000020 25640A00                fmtOutInt: db "%d",10,0
-   117 00000024 25730A00                fmtOutChar: db "%s",10,0

@@ -120,4 +120,3 @@ t0:	dd 1
 t3:	dd -1
 t2:	dd 0
 fmtOutInt: db "%d",10,0
-fmtOutChar: db "%s",10,0

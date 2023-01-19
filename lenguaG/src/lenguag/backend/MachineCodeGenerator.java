@@ -77,14 +77,12 @@ public class MachineCodeGenerator {
                 text.add("\t; " + instruction);
             
             String des = instruction.destination;
-            int desType = 0;
             String left = instruction.left;
             String right = instruction.right;
             
             // We check if the variables are local variables/parameters
             String stackVar = variableDictionary.get(des);
             vte = variableTable.get(des);
-            if(vte != null) desType = vte.type;
             if(stackVar != null) {
                 vte = variableTable.get(stackVar);
                 des = "rsp+"+(vte.displacement);
@@ -113,7 +111,6 @@ public class MachineCodeGenerator {
                         text.add("\t; //" + instruction.right + " -> " + right);
                 }
             }
-            String aRight = right;
             right = isNumber(right)? right : "[" + right + "]";
 
 
@@ -204,8 +201,6 @@ public class MachineCodeGenerator {
                     break;
                 case in:
                     scanUsed = true;
-
-                    // TODO differentiate ints and chars
                     
                     // This case is complex: we need the destionation's address into rsi instead of its contents
                     if(aDes.contains("rsp")){
@@ -279,19 +274,7 @@ public class MachineCodeGenerator {
                 case out:
                     printUsed = true;
 
-                    // TODO print characters and arrays
-                    if(desType == Constants.TYPE_CHARACTER){
-                        text.add("\tmov rdi,fmtOutChar");
-                    } else {
-                        text.add("\tmov rdi,fmtOutInt");
-                    }
-                    // text.add("\tmov rdi,fmtOutChar");
-                    /*if(aDes.contains("rsp")){
-                        String[] split = aDes.split("\\+");
-                        text.add("\tmov rsi,[rsp]");
-                        text.add("\tadd rsi," + split[1]);
-                    }
-                    else */
+                    text.add("\tmov rdi,fmtOutInt");
                     text.add("\tmov rsi," + des);
                     text.add("\tmov rax, 0");
                     text.add("\tcall printf");
@@ -361,13 +344,12 @@ public class MachineCodeGenerator {
                 + "\tret");
 
         if(printUsed){
-            //     text.add("fmtin:  db \"%d\", 0");
             data.add("fmtOutInt: db \"%d\",10,0");
-            data.add("fmtOutChar: db \"%s\",10,0");
+            // data.add("fmtOutChar: db \"%s\",10,0");
         }
         if(scanUsed){
             data.add("fmtInInt:  db \"%d\", 0");
-            data.add("fmtInChar:  db \"%s\", 0");
+            // data.add("fmtInChar:  db \"%s\", 0");
         }
     }
 

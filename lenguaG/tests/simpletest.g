@@ -1,5 +1,4 @@
-int a = 1;
-int b = 2;
+int[] a = [1,2];
 int c;
 bool cond = true;
 
@@ -12,9 +11,9 @@ int foo(int a, int b, bool cond){
 }
 
 main {
-    c = foo(a,b, cond);
+    c = foo(a[0], a[1], cond);
     // c = a+b;
     out(c);
-    c = foo(a,b, not cond);
+    c = foo(a[0], a[1], not cond);
     out(c);
 }

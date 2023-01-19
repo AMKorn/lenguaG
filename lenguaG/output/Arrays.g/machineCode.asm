@@ -114,4 +114,3 @@ e0:
 	section .data
 t0:	 times 32 db 0
 fmtOutInt: db "%d",10,0
-fmtOutChar: db "%s",10,0
