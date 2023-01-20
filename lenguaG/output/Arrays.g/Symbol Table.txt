@@ -1,0 +1,10 @@
+Current level: 0
+
+Symbol Table: 
+array:
+	[Type: int[4][2]
+	Constant: false
+	Declared level: 0]
+
+Ambit table:[0]
+Expansion table:[]

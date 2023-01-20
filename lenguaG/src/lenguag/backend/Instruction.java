@@ -47,7 +47,7 @@ public class Instruction {
             case and:
                 return "\t" + destination + " = " + left + " and " + right;
             case call:
-                return "\tcall " + destination;
+                return "\t" + destination + " = call " + left;
             case div:
                 return "\t" + destination + " = " + left + " / " + right;
             case go_to:
@@ -83,7 +83,7 @@ public class Instruction {
             case pmb:
                 return "\tpmb " + destination;
             case rtn:
-                return "\trtn " + destination;
+                return "\trtn " + destination + ": " + left;
             case skip:
                 return destination + ": skip";
             case in:

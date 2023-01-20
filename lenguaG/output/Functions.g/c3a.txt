@@ -1,0 +1,28 @@
+	goto e0
+e1: skip
+	pmb foo
+	if t6=0 goto e2
+	t8 = t4 + t5
+	t7 = t8
+	rtn foo: t7
+e2: skip
+	t9 = t4 + t5
+	t9 = -t9
+	rtn foo: t9
+e3: skip
+e0: skip
+e4: skip
+	pmb main
+	param_s: t3
+	param_s: t1
+	param_s: t0
+	t10 = call foo
+	t2 = t10
+	out: t2
+	t3 = not t3
+	param_s: t3
+	param_s: t1
+	param_s: t0
+	t11 = call foo
+	t2 = t11
+	out: t2

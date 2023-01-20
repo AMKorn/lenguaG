@@ -38,6 +38,7 @@ public class SymbolList extends SymbolBase {
             this.contList = new SymbolList(unprocessedString, line, column);
             length = contList.length+1;
         } else {
+            c = '\0';
             length = 1;
         }
     }

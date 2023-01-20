@@ -1,0 +1,124 @@
+     1                                  	extern printf
+     2                                  	section .text
+     3                                  	global main
+     4                                  main:
+     5 00000000 4889E5                  	mov rbp,rsp
+     6 00000003 55                      	push rbp
+     7                                  
+     8                                  	; 	goto e0
+     9 00000004 EB50                    	jmp e0
+    10                                  	; e1: skip
+    11                                  e1:
+    12                                  	; 	pmb foo
+    13                                  	; 	if t6=0 goto e2
+    14 00000006 8B442420                	mov eax,[rsp+32]
+    15 0000000A BB00000000              	mov ebx,0
+    16 0000000F 39D8                    	cmp eax,ebx
+    17 00000011 7420                    	je e2
+    18                                  	; 	t8 = t4 + t5
+    19 00000013 8B442410                	mov eax,[rsp+16]
+    20 00000017 8B5C2418                	mov ebx,[rsp+24]
+    21 0000001B 01C3                    	add ebx,eax
+    22 0000001D 895C24F4                	mov [rsp+-12],ebx
+    23                                  	; 	t7 = t8
+    24 00000021 8B4424F4                	mov eax,[rsp+-12]
+    25 00000025 894424FC                	mov [rsp+-4],eax
+    26                                  	; 	rtn foo: t7
+    27 00000029 8B4424FC                	mov eax,[rsp+-4]
+    28 0000002D 89442408                	mov [rsp+8],eax
+    29 00000031 EB22                    	jmp e3
+    30                                  	; e2: skip
+    31                                  e2:
+    32                                  	; 	t9 = t4 + t5
+    33 00000033 8B442410                	mov eax,[rsp+16]
+    34 00000037 8B5C2418                	mov ebx,[rsp+24]
+    35 0000003B 01C3                    	add ebx,eax
+    36 0000003D 895C24F8                	mov [rsp+-8],ebx
+    37                                  	; 	t9 = -t9
+    38 00000041 8B4424F8                	mov eax,[rsp+-8]
+    39 00000045 F7D8                    	neg eax
+    40 00000047 894424F8                	mov [rsp+-8],eax
+    41                                  	; 	rtn foo: t9
+    42 0000004B 8B4424F8                	mov eax,[rsp+-8]
+    43 0000004F 89442408                	mov [rsp+8],eax
+    44 00000053 EB00                    	jmp e3
+    45                                  	; e3: skip
+    46                                  e3:
+    47 00000055 C3                      	ret
+    48                                  	; e0: skip
+    49                                  e0:
+    50                                  	; e4: skip
+    51                                  e4:
+    52                                  	; 	pmb main
+    53                                  	; 	param_s: t3
+    54 00000056 4831C0                  	xor rax,rax
+    55 00000059 8B0425[08000000]        	mov eax,[t3]
+    56 00000060 50                      	push rax
+    57                                  	; 	param_s: t1
+    58 00000061 4831C0                  	xor rax,rax
+    59 00000064 8B0425[00000000]        	mov eax,[t1]
+    60 0000006B 50                      	push rax
+    61                                  	; 	param_s: t0
+    62 0000006C 4831C0                  	xor rax,rax
+    63 0000006F 8B0425[04000000]        	mov eax,[t0]
+    64 00000076 50                      	push rax
+    65                                  	; 	t10 = call foo
+    66 00000077 50                      	push rax
+    67 00000078 E889FFFFFF              	call e1
+    68 0000007D 5B                      	pop rbx
+    69 0000007E 58                      	pop rax
+    70 0000007F 58                      	pop rax
+    71 00000080 58                      	pop rax
+    72 00000081 895C24F8                	mov [rsp+-8],ebx
+    73                                  	; 	t2 = t10
+    74 00000085 8B4424F8                	mov eax,[rsp+-8]
+    75 00000089 890425[0C000000]        	mov [t2],eax
+    76                                  	; 	out: t2
+    77 00000090 48BF-                   	mov rdi,fmtOutInt
+    77 00000092 [1000000000000000] 
+    78 0000009A 488B3425[0C000000]      	mov rsi,[t2]
+    79 000000A2 B800000000              	mov rax, 0
+    80 000000A7 E8(00000000)            	call printf
+    81                                  	; 	t3 = not t3
+    82 000000AC 8B0425[08000000]        	mov eax,[t3]
+    83 000000B3 F7D0                    	not eax
+    84 000000B5 890425[08000000]        	mov [t3],eax
+    85                                  	; 	param_s: t3
+    86 000000BC 4831C0                  	xor rax,rax
+    87 000000BF 8B0425[08000000]        	mov eax,[t3]
+    88 000000C6 50                      	push rax
+    89                                  	; 	param_s: t1
+    90 000000C7 4831C0                  	xor rax,rax
+    91 000000CA 8B0425[00000000]        	mov eax,[t1]
+    92 000000D1 50                      	push rax
+    93                                  	; 	param_s: t0
+    94 000000D2 4831C0                  	xor rax,rax
+    95 000000D5 8B0425[04000000]        	mov eax,[t0]
+    96 000000DC 50                      	push rax
+    97                                  	; 	t11 = call foo
+    98 000000DD 50                      	push rax
+    99 000000DE E823FFFFFF              	call e1
+   100 000000E3 5B                      	pop rbx
+   101 000000E4 58                      	pop rax
+   102 000000E5 58                      	pop rax
+   103 000000E6 58                      	pop rax
+   104 000000E7 895C24FC                	mov [rsp+-4],ebx
+   105                                  	; 	t2 = t11
+   106 000000EB 8B4424FC                	mov eax,[rsp+-4]
+   107 000000EF 890425[0C000000]        	mov [t2],eax
+   108                                  	; 	out: t2
+   109 000000F6 48BF-                   	mov rdi,fmtOutInt
+   109 000000F8 [1000000000000000] 
+   110 00000100 488B3425[0C000000]      	mov rsi,[t2]
+   111 00000108 B800000000              	mov rax, 0
+   112 0000010D E8(00000000)            	call printf
+   113                                  
+   114 00000112 5D                      	pop rbp
+   115 00000113 B800000000              	mov rax,0
+   116 00000118 C3                      	ret
+   117                                  	section .data
+   118 00000000 02000000                t1:	dd 2
+   119 00000004 01000000                t0:	dd 1
+   120 00000008 FFFFFFFF                t3:	dd -1
+   121 0000000C 00000000                t2:	dd 0
+   122 00000010 25640A00                fmtOutInt: db "%d",10,0

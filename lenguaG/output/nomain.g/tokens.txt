@@ -1,5 +1,0 @@
-Type: int
-Identifier: i
-AssignOp: =
-Number: 2
-Symbol : ;

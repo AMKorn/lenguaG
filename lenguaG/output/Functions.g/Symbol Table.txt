@@ -1,0 +1,26 @@
+Current level: 0
+
+Symbol Table: 
+a:
+	[Type: int
+	Constant: false
+	Declared level: 0]
+b:
+	[Type: int
+	Constant: false
+	Declared level: 0]
+c:
+	[Type: int
+	Constant: false
+	Declared level: 0]
+foo:
+	[Type: function (Returns: int, args:[int a, int b, bool cond])
+	Constant: false
+	Declared level: 0]
+cond:
+	[Type: bool
+	Constant: false
+	Declared level: 0]
+
+Ambit table:[0]
+Expansion table:[]

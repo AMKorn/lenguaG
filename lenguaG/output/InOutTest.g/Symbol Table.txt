@@ -1,12 +1,16 @@
 Current level: 0
 
 Symbol Table: 
-bar:
-	[Type: function (Returns: void, args:[])
+a:
+	[Type: int
 	Constant: false
 	Declared level: 0]
-foo:
-	[Type: function (Returns: int, args:[])
+b:
+	[Type: int
+	Constant: false
+	Declared level: 0]
+c:
+	[Type: int
 	Constant: false
 	Declared level: 0]
 

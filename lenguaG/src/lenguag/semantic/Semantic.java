@@ -69,6 +69,10 @@ public class Semantic {
             reportError("Function argument '" + identifier + "' cannot be of type void", arg.line, arg.column);
             return;
         }
+        if(type.isType(Constants.TYPE_ARRAY)) {
+            reportError("Error with function argument '" + identifier + "': arrays are not supported in this version of LenguaG", arg.line, arg.column);
+            return;
+        }
         SymbolDescription desc = new SymbolDescription();
         desc.changeType(type);
         try{

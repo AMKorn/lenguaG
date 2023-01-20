@@ -1,0 +1,7 @@
+e0: skip
+	pmb main
+	in: t0
+	in: t1
+	t3 = t0 + t1
+	t2 = t3
+	out: t2

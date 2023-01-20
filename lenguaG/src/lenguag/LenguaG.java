@@ -15,6 +15,7 @@ import lenguag.syntactic.symbols.*;
 import lenguag.semantic.*;
 import lenguag.LenguaGException.*;
 import lenguag.backend.IntermediateCodeGenerator;
+import lenguag.backend.MachineCodeGenerator;
 
 /**
  *
@@ -23,6 +24,8 @@ import lenguag.backend.IntermediateCodeGenerator;
 public class LenguaG {
 
     public static final boolean DEBUGGING = false;
+    public static final boolean SIMPLIFIED = true; // DO NOT CHANGE.
+
     public static final String OUTPUT_PATH = "../output/";
 
     public static String outputPath = OUTPUT_PATH;
@@ -82,11 +85,18 @@ public class LenguaG {
 
             // Intermediate code generation
             c3a.generate((SymbolBody) resultSyn);
-
-            // Machine code generation
             
             if(DEBUGGING) System.out.println("Writing three address code...");
             writeFile(outputPath, "c3a.txt", c3a.toString());
+
+            // Machine code generation
+            MachineCodeGenerator mcg = new MachineCodeGenerator(c3a);
+            mcg.generateCode();
+
+            if(DEBUGGING) System.out.println("Writing machine code...");
+            writeFile(outputPath, "machineCode.asm", mcg.toString());
+
+            System.out.println("Compilation completed! Files written in " + outputPath);
             
         } catch (FileNotFoundException fnf) {
             // User error
