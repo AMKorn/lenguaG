@@ -10,11 +10,19 @@ main:
 e0:
 	; 	pmb main
 	; 	in: t0
+	mov rdi,fmtOutChar
+	mov rsi,prompt
+	mov rax, 0
+	call printf
 	mov rsi,t0
 	mov rdi,fmtInInt
 	mov al, 0
 	call scanf
 	; 	in: t1
+	mov rdi,fmtOutChar
+	mov rsi,prompt
+	mov rax, 0
+	call printf
 	mov rsi,t1
 	mov rdi,fmtInInt
 	mov al, 0
@@ -42,3 +50,5 @@ t0:	dd 0
 t2:	dd 0
 fmtOutInt: db "%d",10,0
 fmtInInt:  db "%d", 0
+fmtOutChar:  db "%s", 0
+prompt: db "> ", 0

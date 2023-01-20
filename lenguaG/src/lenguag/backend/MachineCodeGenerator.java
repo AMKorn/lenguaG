@@ -201,6 +201,12 @@ public class MachineCodeGenerator {
                     break;
                 case in:
                     scanUsed = true;
+
+                    // We print a prompt to signal an input is expected
+                    text.add("\tmov rdi,fmtOutChar");
+                    text.add("\tmov rsi,prompt");
+                    text.add("\tmov rax, 0");
+                    text.add("\tcall printf");
                     
                     // This case is complex: we need the destionation's address into rsi instead of its contents
                     if(aDes.contains("rsp")){
@@ -349,7 +355,8 @@ public class MachineCodeGenerator {
         }
         if(scanUsed){
             data.add("fmtInInt:  db \"%d\", 0");
-            // data.add("fmtInChar:  db \"%s\", 0");
+            data.add("fmtOutChar:  db \"%s\", 0");
+            data.add("prompt: db \"> \", 0");
         }
     }
 
