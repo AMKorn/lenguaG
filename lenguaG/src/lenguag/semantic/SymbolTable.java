@@ -10,12 +10,12 @@ import lenguag.LenguaGException.SemanticException;
 
 public class SymbolTable {
     
-    // The main structure of the symbol table is an ArrayList of the information of each symbol.
+    // The main structure of the symbol table is a HashMap of the information of each symbol.
     private HashMap<String, SymbolDescription> symbolTable;
 
     private int currentLevel;
     private ArrayList<Integer> ambitsTable;
-    private ArrayList<tableEntry> expansionTable;
+    private ArrayList<TableEntry> expansionTable;
 
     public SymbolTable(){
         symbolTable = new HashMap<>();
@@ -40,7 +40,7 @@ public class SymbolTable {
             int idxe = ambitsTable.get(currentLevel); // idxe = ambitsTable[currentLevel]
             idxe++;
             ambitsTable.set(currentLevel, idxe); // ambitsTable[currentLevel] = idxe
-            expansionTable.add(new tableEntry(variable, oldVarDesc)); // expansionTable[idxe] = description of the obscured variable
+            expansionTable.add(new TableEntry(variable, oldVarDesc)); // expansionTable[idxe] = description of the obscured variable
         }
         desc.declaredLevel = currentLevel;
         symbolTable.put(variable, desc);
@@ -71,7 +71,7 @@ public class SymbolTable {
         ambitsTable.remove(currentLevel);       // we decrement the current level
         currentLevel--;
         int from = ambitsTable.get(currentLevel); // Starting index: first variable added to the expansion table in this level
-        for(tableEntry te : expansionTable.subList(from, to)){
+        for(TableEntry te : expansionTable.subList(from, to)){
             symbolTable.replace(te.variable, te.desc); // We restore the previous value
         }
         expansionTable.subList(from, to).clear(); // We clear the expansion table
@@ -104,11 +104,11 @@ public class SymbolTable {
     }
 
     // private class to simplify entry to expansion table.
-    private class tableEntry {
+    private class TableEntry {
         String variable;
         SymbolDescription desc;
 
-        public tableEntry(String variable, SymbolDescription desc){
+        public TableEntry(String variable, SymbolDescription desc){
             this.variable = variable;
             this.desc = desc;
         }
