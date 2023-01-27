@@ -74,7 +74,7 @@ public class MachineCodeGenerator {
                 + "\tpush rbp\n");
 
         for (Instruction instruction : instructions) {
-            //if (LenguaG.DEBUGGING) 
+            if (LenguaG.DEBUGGING) 
                 text.add("\t; " + instruction);
             
             String des = instruction.destination;
@@ -290,9 +290,9 @@ public class MachineCodeGenerator {
                     text.add("\tmov rax, 0");
                     text.add("\tcall printf");
                     break;
-                case param_c:
+                // case param_c:
                     
-                    break;
+                //     break;
                 case param_s:
                     if(firstParam){
                         text.add("\tadd rsp," + currentPte.getVarsOccupation());
@@ -361,7 +361,6 @@ public class MachineCodeGenerator {
 
         if(printUsed){
             data.add("fmtOutInt: db \"%d\",10,0");
-            // data.add("fmtOutChar: db \"%s\",10,0");
         }
         if(scanUsed){
             data.add("fmtInInt:  db \"%d\", 0");

@@ -727,9 +727,6 @@ public class IntermediateCodeGenerator {
             generate(oper);
             t = oper.reference;
         } else t = "0";
-
-        // ProcTableEntry pte = procedureTable.get(currentFunction);
-        // addInstruction(InstructionType.copy, t, pte.tReturn);
         
         String name = currentFunction.replace(".", "");
         addInstruction(InstructionType.rtn, t, name);

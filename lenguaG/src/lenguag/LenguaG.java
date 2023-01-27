@@ -24,7 +24,6 @@ import lenguag.backend.MachineCodeGenerator;
 public class LenguaG {
 
     public static final boolean DEBUGGING = false;
-    public static final boolean SIMPLIFIED = true; // DO NOT CHANGE.
 
     public static final String OUTPUT_PATH = "../output/";
 
@@ -139,6 +138,7 @@ public class LenguaG {
     static private String getOutputPath(String file) {
         String[] fileSplitSlash = file.split("/");
 
+        // Gets the name of the file, which is after the last /
         return fileSplitSlash[fileSplitSlash.length - 1] + "/";
     }
 }
