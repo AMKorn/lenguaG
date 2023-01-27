@@ -1,8 +1,9 @@
-val char i = '\n';
+int i = 0;
 
 main {
-    while(i != '\n'){
-
+    if (i < j) { // Semantic error: non-declared variable
+        out(i);
+    } else {
+        out(j);
     }
-    //i = 2;
 }

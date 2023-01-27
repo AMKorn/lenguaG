@@ -1,15 +1,12 @@
 int a;
 int b;
 int c;
-int[] d = [1, 2];
-// char[] numberAsk = "Introduce un numero:";
 
 main {
-    // out(numberAsk);
+    // We wait until the two numbers are input
     in(a);
-    // out(numberAsk);
     in(b);
-    // out("El resultado es:");
     c = a + b;
+    // Output the sum
     out(c);
 }
