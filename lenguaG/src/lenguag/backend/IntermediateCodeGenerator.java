@@ -75,6 +75,7 @@ public class IntermediateCodeGenerator {
         }
         for (String s : procedureTable.keySet()) {
             ProcTableEntry pte = procedureTable.get(s);
+            // We clean the procedure table to ease its use during machine code generation
             pte.prepareForMachineCode();
             if(LenguaG.DEBUGGING) System.out.println(s + ": " + pte);
         }
