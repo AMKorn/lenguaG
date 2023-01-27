@@ -10,8 +10,6 @@ public class ProcTableEntry {
     public String eStart;
     public String eEnd;
     public int numParams;
-    // private int localVarsOccup;
-    // public String tReturn;
     public ArrayList<String> params; // Arraylist to have the parameters in order
     public Hashtable<String, VarTableEntry> variableTable;
 
@@ -40,11 +38,6 @@ public class ProcTableEntry {
 
     private void calculateDisplacements(){
         VarTableEntry vte;
-        // if(tReturn != null){
-        //     vte = variableTable.get("0" + tReturn);
-        //     vte.displacement = paramDisplacement;
-        //     paramDisplacement += vte.getOccupation();
-        // }
 
         // We calculate the displacements of the parameters. They are positive.
         int paramDisplacement = Constants.REGISTER_SIZE * 2; // We reserve space for DISP and BP and for the return

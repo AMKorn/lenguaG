@@ -51,6 +51,7 @@ e0:
 e4:
 	; 	pmb main
 	; 	param_s: t3
+	add rsp,8
 	xor rax,rax
 	mov eax,[t3]
 	push rax
@@ -69,6 +70,7 @@ e4:
 	pop rax
 	pop rax
 	pop rax
+	sub rsp,8
 	mov [rsp+-8],ebx
 	; 	t2 = t10
 	mov eax,[rsp+-8]
@@ -83,6 +85,7 @@ e4:
 	not eax
 	mov [t3],eax
 	; 	param_s: t3
+	add rsp,8
 	xor rax,rax
 	mov eax,[t3]
 	push rax
@@ -101,6 +104,7 @@ e4:
 	pop rax
 	pop rax
 	pop rax
+	sub rsp,8
 	mov [rsp+-4],ebx
 	; 	t2 = t11
 	mov eax,[rsp+-4]

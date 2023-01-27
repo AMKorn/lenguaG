@@ -21,6 +21,7 @@ public class MachineCodeGenerator {
     // Info from the current process
     private Stack<ProcTableEntry> pteStack;
     private ProcTableEntry currentPte;
+    private boolean firstParam = true;
 
     private boolean printUsed = false;
     private boolean scanUsed = false;
@@ -73,7 +74,7 @@ public class MachineCodeGenerator {
                 + "\tpush rbp\n");
 
         for (Instruction instruction : instructions) {
-            //if (LenguaG.DEBUGGING) 
+            if (LenguaG.DEBUGGING) 
                 text.add("\t; " + instruction);
             
             String des = instruction.destination;
@@ -142,6 +143,10 @@ public class MachineCodeGenerator {
 
                     for(int i = 0; i < pte.numParams; i++){
                         text.add("\tpop rax");
+                    }
+                    if(!firstParam){
+                        text.add("\tsub rsp," + currentPte.getVarsOccupation());
+                        firstParam = true;
                     }
 
                     text.add("\tmov " + des + ",ebx");
@@ -285,10 +290,15 @@ public class MachineCodeGenerator {
                     text.add("\tmov rax, 0");
                     text.add("\tcall printf");
                     break;
-                case param_c:
+                // case param_c:
                     
-                    break;
+                //     break;
                 case param_s:
+                    if(firstParam){
+                        text.add("\tadd rsp," + currentPte.getVarsOccupation());
+                        firstParam = false;
+                    }
+
                     text.add("\txor rax,rax");
                     text.add("\tmov eax," + des);
                     text.add("\tpush rax");
@@ -351,7 +361,6 @@ public class MachineCodeGenerator {
 
         if(printUsed){
             data.add("fmtOutInt: db \"%d\",10,0");
-            // data.add("fmtOutChar: db \"%s\",10,0");
         }
         if(scanUsed){
             data.add("fmtInInt:  db \"%d\", 0");

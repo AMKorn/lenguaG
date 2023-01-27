@@ -240,10 +240,6 @@ public class Semantic {
      * @param sElse
      */
     private void manage(SymbolElse sElse){
-        /* Possible errors:
-         * 1. 
-         */
-
         SymbolIf nextIf = sElse.getIf();
         SymbolInstrs instrs = sElse.getInstructions();
         if(nextIf != null) manage(nextIf);
@@ -332,19 +328,10 @@ public class Semantic {
             symbolTable.insertVariable(name, currentFunction);
         } catch(SemanticException se){
             // If symbol table already found the name of the function, it's a compilation error. 
-            // This means that a variable and a function cannot share the same name. //FIXME later if we have enough time to think of an easy solution,
-            // otherwise this is by design. Sort of.
+            // This means that a variable and a function cannot share the same name.
             reportError(se.getMessage(), func.line, func.column);
             return;
         }
-        /* The following logic would work if we had a way to insert different names in the symbol table. Delete this if we end up not implementing it.
-        // Fortunately, the number of arguments is calculated during syntactical analysis so it is trivial to check for polymorphism.
-        SymbolDescription funcPrima = symbolTable.getDescription(name);
-        if(funcPrima != null) {
-            if(funcPrima.getType() == Constants.TYPE_FUNCTION && funcPrima.getNArgs() == func.getNArgs()){
-                reportError("Function already declared", func.line, func.column);
-            }
-        } */
 
         // Everything ok so far!
         // We enter a new ambit on the symbol table
@@ -653,7 +640,6 @@ public class Semantic {
 
     /**
      * Operation: getLValue(), getOp(), getRValue().
-     * //FIXME THIS IS AWFUL
      * @param operation
     */
     private void manage(SymbolOperation operation){
@@ -692,26 +678,6 @@ public class Semantic {
                     if(operation.isConstant) operation.setSemanticValue((Integer) lValue.getSemanticValue() + (Integer) rValue.getSemanticValue());
                     break; // Exit switch case
                 }
-                // list + an item of the list's subtype
-                // TODO remove and fix all this
-                // if((lValue.type.isType(Constants.TYPE_ARRAY)) && (lValue.type.getBaseType().isType(rValue.type.getType()))) {
-                //     // We accept. Result is same type as lValue, but the length is incremented by one.
-                //     // We create a different type so as to not modify the original type (reference)
-                //     operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
-                //     operation.type.arrayLength++;
-                //     //operation.type = lValue.type;
-                //     break;
-                // }
-                // // list + list of same baseType
-                // if((lValue.type.isType(Constants.TYPE_ARRAY)) 
-                //     && (rValue.type.isType(Constants.TYPE_ARRAY))
-                //     && (lValue.type.getBaseType() == rValue.type.getBaseType())) {
-                //         // We accept. Result is same type as either list.
-                //         operation.type = new SymbolType(Constants.TYPE_ARRAY, lValue.type.getBaseType());
-                //         operation.type.arrayLength++;
-                //         // operation.type = lValue.type;
-                //         break;
-                // }
                 // We do not accept.
                 reportError("Unsupported operation: " + lValue.type + " and " + rValue.type + " are incompatible", operation.line, operation.column);
                 return;
@@ -940,9 +906,6 @@ public class Semantic {
                 return;
             }
             SymbolArrSuff arrSuff = var.getArrSuff();
-            // if(arrSuff.getDimensions() != desc.getDepth()){
-            //     reportError("Stated dimensions for " + id + " different to what was declared (" + arrSuff.getDimensions() + " " + desc.getDepth()+ ")", var.line, var.column);
-            // }
             manage(arrSuff);
 
             // Array suffix correct!
