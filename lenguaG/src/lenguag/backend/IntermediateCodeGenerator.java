@@ -327,14 +327,11 @@ public class IntermediateCodeGenerator {
      */
     private void generate(SymbolFuncCall functionCall){
         String funcName = functionCall.getFunctionName();
-        ProcTableEntry pte = getProc(funcName);
         SymbolParams params = functionCall.getParams();
         if(params != null) generate(params);
 
         String t = newVariable();
         addInstruction(InstructionType.call, funcName, t);
-        // String t = newVariable();
-        // addInstruction(InstructionType.copy, pte.tReturn, t);
         functionCall.reference = t;
     }
 
@@ -868,10 +865,6 @@ public class IntermediateCodeGenerator {
         if(vte == null) {
             vte = variableTable.remove(DEF_FUNCTION + 0 + t);
         }
-    }
-
-    private ProcTableEntry getProc(String procName){
-        return procedureTable.get(procName + DEF_FUNCTION);
     }
     
     private void replaceVarTableKey(String oldKey, String newKey){
